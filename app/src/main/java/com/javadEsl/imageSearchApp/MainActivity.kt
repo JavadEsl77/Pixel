@@ -2,7 +2,6 @@ package com.javadEsl.imageSearchApp
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.JavadEsl77.imagesearchapp.R
 
 
 class MainActivity : AppCompatActivity() {
