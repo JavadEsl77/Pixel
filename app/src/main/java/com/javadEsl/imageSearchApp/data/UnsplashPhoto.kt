@@ -1,4 +1,4 @@
-package com.javadEsl.imageSearchApp.data.api
+package com.javadEsl.imageSearchApp.data
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
