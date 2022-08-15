@@ -6,8 +6,10 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import com.javadEsl.imageSearchApp.data.UnsplashRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+@HiltViewModel
 class GalleryViewModel @Inject constructor(private val unsplashRepository: UnsplashRepository) :
     ViewModel() {
 
