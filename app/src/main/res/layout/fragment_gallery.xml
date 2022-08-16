@@ -10,7 +10,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp">
+        android:layout_height="120dp">
 
         <ImageView
             android:layout_width="match_parent"
@@ -30,18 +30,6 @@
                 android:layout_marginStart="50dp"
                 android:layout_marginEnd="50dp"
                 android:gravity="center|left"
-                android:text="Unsplash"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="7dp"
-                android:layout_marginEnd="50dp"
-                android:gravity="center|left"
                 android:text="The internet’s source of freely-usable images.\n Powered by creators everywhere."
                 android:textColor="@color/white"
                 android:textSize="12sp" />
@@ -50,7 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="50dp"
-                android:layout_marginTop="14dp"
+                android:layout_marginTop="7dp"
                 android:layout_marginEnd="50dp"
                 android:background="@drawable/shape_edt_search"
                 android:gravity="center"

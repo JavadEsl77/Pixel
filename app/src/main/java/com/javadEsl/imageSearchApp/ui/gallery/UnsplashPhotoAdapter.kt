@@ -1,7 +1,9 @@
 package com.javadEsl.imageSearchApp.ui.gallery
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -9,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.javadEsl.imageSearchApp.R
 import com.javadEsl.imageSearchApp.data.UnsplashPhoto
+import com.javadEsl.imageSearchApp.data.convertedUrl
 import com.javadEsl.imageSearchApp.databinding.ItemUnsplashPhotoBinding
 
 class UnsplashPhotoAdapter(private val listener: OnItemClickListener) :
@@ -22,11 +25,7 @@ class UnsplashPhotoAdapter(private val listener: OnItemClickListener) :
     }
 
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
-        val currentItem = getItem(position)
-
-        if (currentItem != null) {
-            holder.bind(currentItem)
-        }
+        getItem(position)?.let { holder.bind(it) }
     }
 
     inner class PhotoViewHolder(private val binding: ItemUnsplashPhotoBinding) :
@@ -34,26 +33,33 @@ class UnsplashPhotoAdapter(private val listener: OnItemClickListener) :
 
         init {
             binding.root.setOnClickListener {
-                val position = bindingAdapterPosition
-                if (position != RecyclerView.NO_POSITION) {
-                    val item = getItem(position)
-                    if (item != null) {
-                        listener.onItemClick(item)
-                    }
-                }
+                getItem(bindingAdapterPosition)?.let { listener.onItemClick(it) }
             }
         }
 
         fun bind(photo: UnsplashPhoto) {
             binding.apply {
                 Glide.with(itemView)
-                    .load(photo.urls.regular)
+                    .load(photo.urls?.regular?.convertedUrl)
                     .centerCrop()
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .error(R.drawable.ic_baseline_error)
                     .into(imageView)
 
-                textViewUserName.text = photo.user.username
+
+                Glide.with(itemView)
+                    .load(photo.user?.profile_image?.medium?.convertedUrl)
+                    .centerCrop()
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .error(R.drawable.ic_user)
+                    .into(imageViewProfile)
+
+                textViewUserName.text = photo.user?.name
+                textViewTitleCreatedAt.isVisible = photo.created_at != null
+                textViewCreatedAt.isVisible = photo.created_at != null
+                textViewCreatedAt.text = photo.created_at
+                textViewLikes.text = photo.likes.toString()
+                cardViewColor.setBackgroundColor(Color.parseColor(photo.color))
             }
         }
     }

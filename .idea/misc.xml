@@ -7,8 +7,10 @@
         <entry key="..\:/androidProjects/ImageSearchApp/app/src/main/res/layout/activity_main.xml" value="0.10989583333333333" />
         <entry key="..\:/androidProjects/ImageSearchApp/app/src/main/res/layout/fragment_gallery.xml" value="0.24895833333333334" />
         <entry key="..\:/androidProjects/ImageSearchApp/app/src/main/res/layout/item_unsplash_photo.xml" value="0.4" />
+        <entry key="app/src/main/res/drawable/ic_arrow_downward.xml" value="0.218" />
         <entry key="app/src/main/res/drawable/ic_close.xml" value="0.218" />
         <entry key="app/src/main/res/drawable/ic_search.xml" value="0.218" />
+        <entry key="app/src/main/res/drawable/ic_user.xml" value="0.218" />
         <entry key="app/src/main/res/drawable/shape_edt_search.xml" value="0.218" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/fragment_details.xml" value="0.35520833333333335" />

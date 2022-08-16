@@ -14,21 +14,22 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.javadEsl.imageSearchApp.R
+import com.javadEsl.imageSearchApp.data.convertedUrl
 import com.javadEsl.imageSearchApp.databinding.FragmentDetailsBinding
 
 class DetailsFragment : Fragment(R.layout.fragment_details) {
 
-    private val args = navArgs<DetailsFragmentArgs>()
+    private val args by navArgs<DetailsFragmentArgs>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentDetailsBinding.bind(view)
 
         binding.apply {
-            val photo = args.value.photo
+            val photo = args.photo
 
             Glide.with(this@DetailsFragment)
-                .load(photo.urls.full)
+                .load(photo.urls?.full?.convertedUrl)
                 .error(R.drawable.ic_baseline_error)
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(
@@ -58,11 +59,11 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
 
             textViewDescription.text = photo.description
 
-            val uri = Uri.parse(photo.user.attributionUrl)
+            val uri = Uri.parse(photo.user?.attributionUrl)
             val intent = Intent(Intent.ACTION_VIEW, uri)
 
             textViewCreator.apply {
-                text = "photo by ${photo.user.name} on Unsplash"
+                text = "photo by ${photo.user?.name} on Unsplash"
                 setOnClickListener {
                     context.startActivity(intent)
                 }

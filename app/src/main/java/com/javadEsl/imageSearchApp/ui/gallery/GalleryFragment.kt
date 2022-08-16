@@ -17,7 +17,6 @@ import com.javadEsl.imageSearchApp.R
 import com.javadEsl.imageSearchApp.data.UnsplashPhoto
 import com.javadEsl.imageSearchApp.databinding.FragmentGalleryBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_gallery.*
 
 
 @AndroidEntryPoint
@@ -42,7 +41,7 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) ,UnsplashPhotoAdapte
                 adapter.retry()
             }
 
-            img_clean.setOnClickListener {
+            imgClean.setOnClickListener {
                 edtSearch.setText("")
                 imgClean.isVisible = false
             }
@@ -60,7 +59,6 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) ,UnsplashPhotoAdapte
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                     imgClean.isVisible = edtSearch.text != null
-
                 }
             })
 

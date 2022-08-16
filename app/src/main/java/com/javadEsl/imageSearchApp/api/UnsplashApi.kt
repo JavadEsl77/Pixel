@@ -8,7 +8,8 @@ import retrofit2.http.Query
 interface UnsplashApi {
 
     companion object{
-        const val BASE_URL = "https://api.unsplash.com/"
+//        const val BASE_URL = "https://api.unsplash.com/"
+        const val BASE_URL = "https://us.mahdi-saberi.ir/"
         const val CLIENT_ID = "KbhV9-G3KY1l7EtsmS0wI3BgeOVBhjWodZ9Ix9n1Btw"
     }
 
