@@ -5,18 +5,14 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
-import android.text.Layout
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.Button
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -25,19 +21,13 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.javadEsl.imageSearchApp.R
-import com.javadEsl.imageSearchApp.api.UnsplashApi
 import com.javadEsl.imageSearchApp.data.ModelPhoto
 import com.javadEsl.imageSearchApp.data.UnsplashPhoto
 import com.javadEsl.imageSearchApp.data.UnsplashRepository
 import com.javadEsl.imageSearchApp.data.convertedUrl
 import com.javadEsl.imageSearchApp.databinding.FragmentDetailsBinding
-import com.javadEsl.imageSearchApp.ui.gallery.GalleryFragmentDirections
 import com.javadEsl.imageSearchApp.ui.gallery.UnsplashPhotoAdapter
-import com.javadEsl.imageSearchApp.ui.gallery.UnsplashPhotoLoadStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import javax.inject.Inject
 
 
@@ -47,6 +37,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
     private var _binding: FragmentDetailsBinding? = null
     private val binding get() = _binding!!
+
 
     @Inject
     lateinit var photo: UnsplashRepository
@@ -65,7 +56,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         savedInstanceState: Bundle?
     ): View {
         if (_binding == null) {
-            _binding = FragmentDetailsBinding.inflate(inflater ,container , false)
+            _binding = FragmentDetailsBinding.inflate(inflater, container, false)
         }
         return binding.root
     }
@@ -188,6 +179,18 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     }
                 })
                 .into(imageView)
+
+
+
+            cardDownload.setOnClickListener {
+                val builder = AlertDialog.Builder(context!!)
+                    .create()
+                val view = layoutInflater.inflate(R.layout.download_dialog_layout,null)
+                builder.setView(view)
+
+                builder.setCanceledOnTouchOutside(false)
+                builder.show()
+            }
         }
 
     }
@@ -196,16 +199,15 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
         viewModel.liveDataUserPhotosList.observe(viewLifecycleOwner) {
             if (it.isNullOrEmpty()) return@observe
-
             val adapter = TodoAdapter(it, this)
 
-
             binding.apply {
-//                recViewUserPhotos.adapter = adapter
                 recViewUserPhotos.setHasFixedSize(true)
                 recViewUserPhotos.itemAnimator = null
                 recViewUserPhotos.adapter = adapter
             }
+
+
         }
 
     }
@@ -214,7 +216,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         binding.layoutLoading.isVisible = true
         viewModel.getPhotoDetail(photo.id)
         binding.apply {
-            nestedView.smoothScrollTo(0,0)
+            nestedView.smoothScrollTo(0, 0)
 
         }
     }
