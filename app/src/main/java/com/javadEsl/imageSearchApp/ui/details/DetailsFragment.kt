@@ -5,9 +5,14 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -16,14 +21,31 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.javadEsl.imageSearchApp.R
-import com.javadEsl.imageSearchApp.data.UnsplashPhoto
+import com.javadEsl.imageSearchApp.api.UnsplashApi
+import com.javadEsl.imageSearchApp.data.ModelPhoto
+import com.javadEsl.imageSearchApp.data.UnsplashRepository
 import com.javadEsl.imageSearchApp.data.convertedUrl
 import com.javadEsl.imageSearchApp.databinding.FragmentDetailsBinding
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import javax.inject.Inject
 
 
+@AndroidEntryPoint
 class DetailsFragment : Fragment(R.layout.fragment_details) {
 
+
+    @Inject
+    lateinit var photo: UnsplashRepository
+    private val viewModel by viewModels<DetailViewModel>()
     private val args by navArgs<DetailsFragmentArgs>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.getPhotoDetail(args.photo.id)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -32,23 +54,49 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
         binding.apply {
             val photo = args.photo
 
-            //set_detail
+//            textViewDescription.text = photo.description
+            val uri = Uri.parse(photo.user?.attributionUrl)
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+            textViewCreator.apply {
+                text = "photo by ${photo.user?.name} on Unsplash"
+                setOnClickListener {
+                    context.startActivity(intent)
+                }
+                paint.isUnderlineText = true
+            }
+
+            initViewModel(binding)
+
+
+        }
+    }
+
+    private fun initViewModel(binding: FragmentDetailsBinding) {
+
+        viewModel.liveDataList.observe(viewLifecycleOwner) {
+            if (it == null) return@observe
+            setDetail(binding,it)
+        }
+    }
+
+    private fun setDetail(binding: FragmentDetailsBinding,modelPhoto: ModelPhoto) {
+        binding.apply {
+            textViewUserName.text = modelPhoto.user?.name
             Glide.with(this@DetailsFragment)
-                .load(photo.user?.profile_image?.large?.convertedUrl)
+                .load(modelPhoto.user?.profileImage?.large?.convertedUrl)
                 .centerCrop()
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .error(R.drawable.ic_user)
                 .into(imageViewProfile)
 
-            textViewUserName.text = photo.user?.name
-            textViewTitleCreatedAt.isVisible = photo.created_at != null
-            textViewCreatedAt.isVisible = photo.created_at != null
-            textViewCreatedAt.text = photo.created_at
-            textViewLikes.text = photo.likes.toString()
-            cardViewColor.setBackgroundColor(Color.parseColor(photo.color))
+            textViewTitleCreatedAt.isVisible = modelPhoto.createdAt != null
+            textViewCreatedAt.isVisible = modelPhoto.createdAt != null
+            textViewCreatedAt.text = modelPhoto.createdAt
+            textViewLikes.text = modelPhoto.likes.toString()
+            cardViewColor.setBackgroundColor(Color.parseColor(modelPhoto.color))
 
             Glide.with(this@DetailsFragment)
-                .load(photo.urls?.full?.convertedUrl)
+                .load(modelPhoto.urls?.full?.convertedUrl)
                 .error(R.drawable.ic_baseline_error)
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(
@@ -70,24 +118,13 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
                     ): Boolean {
                         progressBar.isVisible = false
                         textViewCreator.isVisible = true
-                        textViewDescription.isVisible = photo.description != null
+//                        textViewDescription.isVisible = modelPhoto.description != null
                         return false
                     }
                 })
                 .into(imageView)
-
-            textViewDescription.text = photo.description
-            val uri = Uri.parse(photo.user?.attributionUrl)
-            val intent = Intent(Intent.ACTION_VIEW, uri)
-
-            textViewCreator.apply {
-                text = "photo by ${photo.user?.name} on Unsplash"
-                setOnClickListener {
-                    context.startActivity(intent)
-                }
-                paint.isUnderlineText = true
-            }
         }
+
     }
 
 
