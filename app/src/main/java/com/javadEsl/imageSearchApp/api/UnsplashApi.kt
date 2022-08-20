@@ -12,7 +12,8 @@ interface UnsplashApi {
 
     companion object {
         //        const val BASE_URL = "https://api.unsplash.com/"
-        const val BASE_URL = "https://us.mahdi-saberi.ir/"
+//        const val BASE_URL = "https://us.mahdi-saberi.ir/"
+        const val BASE_URL = "https://un.one-developer.ir/napi/"
         const val CLIENT_ID = "KbhV9-G3KY1l7EtsmS0wI3BgeOVBhjWodZ9Ix9n1Btw"
     }
 
@@ -30,4 +31,9 @@ interface UnsplashApi {
     suspend fun getPhoto(
         @Path("id") id: String
     ): Response<ModelPhoto>
+
+    @GET("users/{username}/photos")
+    suspend fun getUserPhotos(
+        @Path("username") userName: String
+    ): List<UnsplashPhoto>?
 }

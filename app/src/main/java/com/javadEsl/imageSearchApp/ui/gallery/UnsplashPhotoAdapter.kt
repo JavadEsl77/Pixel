@@ -1,8 +1,12 @@
 package com.javadEsl.imageSearchApp.ui.gallery
 
 import android.graphics.Color
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -13,6 +17,7 @@ import com.javadEsl.imageSearchApp.R
 import com.javadEsl.imageSearchApp.data.UnsplashPhoto
 import com.javadEsl.imageSearchApp.data.convertedUrl
 import com.javadEsl.imageSearchApp.databinding.ItemUnsplashPhotoBinding
+
 
 class UnsplashPhotoAdapter(private val listener: OnItemClickListener) :
     PagingDataAdapter<UnsplashPhoto, UnsplashPhotoAdapter.PhotoViewHolder>(PHOTO_COMPARATOR) {
@@ -59,7 +64,25 @@ class UnsplashPhotoAdapter(private val listener: OnItemClickListener) :
                 textViewCreatedAt.isVisible = photo.created_at != null
                 textViewCreatedAt.text = photo.created_at
                 textViewLikes.text = photo.likes.toString()
-                cardViewColor.setBackgroundColor(Color.parseColor(photo.color))
+                viewBackItem.setBackgroundColor(Color.parseColor(photo.color))
+
+
+                if (isBrightColor(Color.parseColor(photo.color.toString()))) {
+                    textViewUserName.setTextColor(Color.parseColor("#000000"))
+                    textViewTitleCreatedAt.setTextColor(Color.parseColor("#000000"))
+                    textViewCreatedAt.setTextColor(Color.parseColor("#000000"))
+                    textViewLikes.setTextColor(Color.parseColor("#000000"))
+                    lineItem.setBackgroundColor(Color.parseColor("#000000"))
+                    textViewLikes.compoundDrawables[0].setTint(Color.parseColor("#000000"))
+                } else {
+                    textViewUserName.setTextColor(Color.parseColor("#ffffff"))
+                    textViewTitleCreatedAt.setTextColor(Color.parseColor("#B3FFFFFF"))
+                    textViewCreatedAt.setTextColor(Color.parseColor("#ffffff"))
+                    textViewLikes.setTextColor(Color.parseColor("#B3FFFFFF"))
+                    lineItem.setBackgroundColor(Color.parseColor("#B3FFFFFF"))
+                    textViewLikes.compoundDrawables[0].setTint(Color.parseColor("#ffffff"))
+
+                }
             }
         }
     }
@@ -77,6 +100,23 @@ class UnsplashPhotoAdapter(private val listener: OnItemClickListener) :
                 oldItem == newItem
         }
     }
+
+    fun isBrightColor(color: Int): Boolean {
+        if (android.R.color.transparent == color) return true
+        var rtnValue = false
+        val rgb = intArrayOf(Color.red(color), Color.green(color), Color.blue(color))
+        val brightness = Math.sqrt(
+            rgb[0] * rgb[0] * .241 + (rgb[1]
+                    * rgb[1] * .691) + rgb[2] * rgb[2] * .068
+        ).toInt()
+
+        // color is light
+        if (brightness >= 200) {
+            rtnValue = true
+        }
+        return rtnValue
+    }
+
 }
 
 

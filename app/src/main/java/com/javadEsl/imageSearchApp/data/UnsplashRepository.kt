@@ -27,4 +27,6 @@ class UnsplashRepository @Inject constructor(private val unsplashApi: UnsplashAp
 
     suspend fun getPhotoDetail(id: String) = unsplashApi.getPhoto(id = id)
 
+    suspend fun getUserPhotos(userName: String) = unsplashApi.getUserPhotos(userName = userName)
+
 }

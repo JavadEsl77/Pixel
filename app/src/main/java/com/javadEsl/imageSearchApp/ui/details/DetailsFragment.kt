@@ -5,14 +5,18 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
+import android.text.Layout
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -23,9 +27,13 @@ import com.bumptech.glide.request.target.Target
 import com.javadEsl.imageSearchApp.R
 import com.javadEsl.imageSearchApp.api.UnsplashApi
 import com.javadEsl.imageSearchApp.data.ModelPhoto
+import com.javadEsl.imageSearchApp.data.UnsplashPhoto
 import com.javadEsl.imageSearchApp.data.UnsplashRepository
 import com.javadEsl.imageSearchApp.data.convertedUrl
 import com.javadEsl.imageSearchApp.databinding.FragmentDetailsBinding
+import com.javadEsl.imageSearchApp.ui.gallery.GalleryFragmentDirections
+import com.javadEsl.imageSearchApp.ui.gallery.UnsplashPhotoAdapter
+import com.javadEsl.imageSearchApp.ui.gallery.UnsplashPhotoLoadStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -34,8 +42,11 @@ import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class DetailsFragment : Fragment(R.layout.fragment_details) {
+class DetailsFragment : Fragment(R.layout.fragment_details),
+    UnsplashPhotoAdapter.OnItemClickListener, TodoAdapter.OnItemClickListener {
 
+    private var _binding: FragmentDetailsBinding? = null
+    private val binding get() = _binding!!
 
     @Inject
     lateinit var photo: UnsplashRepository
@@ -45,43 +56,100 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.getPhotoDetail(args.photo.id)
+        viewModel.getUserPhotos(args.photo.user?.username.toString())
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        if (_binding == null) {
+            _binding = FragmentDetailsBinding.inflate(inflater ,container , false)
+        }
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = FragmentDetailsBinding.bind(view)
-
         binding.apply {
             val photo = args.photo
 
 //            textViewDescription.text = photo.description
             val uri = Uri.parse(photo.user?.attributionUrl)
             val intent = Intent(Intent.ACTION_VIEW, uri)
-            textViewCreator.apply {
-                text = "photo by ${photo.user?.name} on Unsplash"
-                setOnClickListener {
-                    context.startActivity(intent)
-                }
-                paint.isUnderlineText = true
-            }
+//            textViewCreator.apply {
+//                text = "photo by ${photo.user?.name} on Unsplash"
+//                setOnClickListener {
+//                    context.startActivity(intent)
+//                }
+//                paint.isUnderlineText = true
+//            }
 
-            initViewModel(binding)
+            initViewModel()
 
 
         }
     }
 
-    private fun initViewModel(binding: FragmentDetailsBinding) {
+    private fun initViewModel() {
 
         viewModel.liveDataList.observe(viewLifecycleOwner) {
             if (it == null) return@observe
-            setDetail(binding,it)
+            setDetail(it)
         }
     }
 
-    private fun setDetail(binding: FragmentDetailsBinding,modelPhoto: ModelPhoto) {
+    private fun setDetail(modelPhoto: ModelPhoto) {
         binding.apply {
+            getUserPhotos(binding)
             textViewUserName.text = modelPhoto.user?.name
+
+            if (!modelPhoto.user?.bio.isNullOrEmpty()) {
+                textViewBio.isVisible = true
+                textViewTitleBio.isVisible = true
+                textViewBio.text = modelPhoto.user?.bio
+            }
+            if (!modelPhoto.user?.instagramUsername.isNullOrEmpty()) {
+                textViewInstagram.isVisible = true
+                textViewTitleInstagram.isVisible = true
+                textViewInstagram.text = modelPhoto.user?.instagramUsername
+            }
+
+            if (!modelPhoto.location?.name.isNullOrEmpty()) {
+                layoutLocation.isVisible = true
+                textViewTitleLocation.isVisible = true
+                textViewLocation.isVisible = true
+                textViewLocation.text = modelPhoto.location?.name
+            }
+
+            if (!modelPhoto.exif?.model.isNullOrEmpty()) {
+                layoutCameraInfo.isVisible = true
+                textViewTitleCamera.isVisible = true
+                textViewCameraModel.isVisible = true
+                textViewCameraModel.text = modelPhoto.exif?.make + " , " + modelPhoto.exif?.model
+            }
+
+            if (modelPhoto.views.toString().isNotEmpty()) {
+                textViewTitlePhotoInfo.isVisible = true
+                layoutViewInfo.isVisible = true
+                textViewPhotoViews.isVisible = true
+                textViewPhotoViews.text = modelPhoto.views.toString()
+            }
+
+            if (modelPhoto.downloads.toString().isNotEmpty()) {
+                textViewTitlePhotoInfo.isVisible = true
+                layoutDownloadInfo.isVisible = true
+                textViewPhotoDownload.isVisible = true
+                textViewPhotoDownload.text = modelPhoto.downloads.toString()
+            }
+
+            if (modelPhoto.likes.toString().isNotEmpty()) {
+                layoutLikeInfo.isVisible = true
+                textViewPhotoLikes.isVisible = true
+                textViewPhotoLikes.text = modelPhoto.likes.toString()
+            }
+
             Glide.with(this@DetailsFragment)
                 .load(modelPhoto.user?.profileImage?.large?.convertedUrl)
                 .centerCrop()
@@ -89,10 +157,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
                 .error(R.drawable.ic_user)
                 .into(imageViewProfile)
 
-            textViewTitleCreatedAt.isVisible = modelPhoto.createdAt != null
-            textViewCreatedAt.isVisible = modelPhoto.createdAt != null
-            textViewCreatedAt.text = modelPhoto.createdAt
-            textViewLikes.text = modelPhoto.likes.toString()
+
             cardViewColor.setBackgroundColor(Color.parseColor(modelPhoto.color))
 
             Glide.with(this@DetailsFragment)
@@ -105,7 +170,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
                         target: Target<Drawable>?,
                         isFirstResource: Boolean
                     ): Boolean {
-                        progressBar.isVisible = false
+                        layoutLoading.isVisible = false
                         return false
                     }
 
@@ -116,8 +181,8 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
                         dataSource: DataSource?,
                         isFirstResource: Boolean
                     ): Boolean {
-                        progressBar.isVisible = false
-                        textViewCreator.isVisible = true
+                        layoutLoading.isVisible = false
+//                        textViewCreator.isVisible = true
 //                        textViewDescription.isVisible = modelPhoto.description != null
                         return false
                     }
@@ -125,6 +190,33 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
                 .into(imageView)
         }
 
+    }
+
+    private fun getUserPhotos(binding: FragmentDetailsBinding) {
+
+        viewModel.liveDataUserPhotosList.observe(viewLifecycleOwner) {
+            if (it.isNullOrEmpty()) return@observe
+
+            val adapter = TodoAdapter(it, this)
+
+
+            binding.apply {
+//                recViewUserPhotos.adapter = adapter
+                recViewUserPhotos.setHasFixedSize(true)
+                recViewUserPhotos.itemAnimator = null
+                recViewUserPhotos.adapter = adapter
+            }
+        }
+
+    }
+
+    override fun onItemClick(photo: UnsplashPhoto) {
+        binding.layoutLoading.isVisible = true
+        viewModel.getPhotoDetail(photo.id)
+        binding.apply {
+            nestedView.smoothScrollTo(0,0)
+
+        }
     }
 
 
