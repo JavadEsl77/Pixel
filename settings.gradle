@@ -3,6 +3,8 @@ pluginManagement {
         kotlinVersion = '1.7.10'
     }
     repositories {
+        maven { url 'https://gradle.iranrepo.ir' }
+        maven { url 'https://maven.google.com' }
         gradlePluginPortal()
         google()
         mavenCentral()
@@ -12,6 +14,9 @@ pluginManagement {
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
+        maven { url 'https://gradle.iranrepo.ir' }
+        maven { url 'https://maven.google.com' }
+        gradlePluginPortal()
         google()
         mavenCentral()
     }

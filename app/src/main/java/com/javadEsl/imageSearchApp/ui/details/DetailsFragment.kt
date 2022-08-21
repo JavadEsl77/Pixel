@@ -1,15 +1,22 @@
 package com.javadEsl.imageSearchApp.ui.details
 
+import android.Manifest
+import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import androidx.appcompat.app.AlertDialog
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -20,6 +27,8 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.huxq17.download.Pump
+import com.huxq17.download.config.DownloadConfig
 import com.javadEsl.imageSearchApp.R
 import com.javadEsl.imageSearchApp.data.ModelPhoto
 import com.javadEsl.imageSearchApp.data.UnsplashPhoto
@@ -37,7 +46,17 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
     private var _binding: FragmentDetailsBinding? = null
     private val binding get() = _binding!!
+    private lateinit var progressDialog: ProgressDialog
+    private var downloadStatus: Boolean = false
 
+    private var modelPhoto: ModelPhoto? = null
+
+    private val permissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            if (it) {
+                modelPhoto?.let { model -> startDownloadImage(model) }
+            }
+        }
 
     @Inject
     lateinit var photo: UnsplashRepository
@@ -48,6 +67,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         super.onCreate(savedInstanceState)
         viewModel.getPhotoDetail(args.photo.id)
         viewModel.getUserPhotos(args.photo.user?.username.toString())
+
     }
 
     override fun onCreateView(
@@ -88,6 +108,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         viewModel.liveDataList.observe(viewLifecycleOwner) {
             if (it == null) return@observe
             setDetail(it)
+            modelPhoto = it
         }
     }
 
@@ -151,6 +172,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
             cardViewColor.setBackgroundColor(Color.parseColor(modelPhoto.color))
 
+
             Glide.with(this@DetailsFragment)
                 .load(modelPhoto.urls?.full?.convertedUrl)
                 .error(R.drawable.ic_baseline_error)
@@ -181,19 +203,27 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 .into(imageView)
 
 
-
             cardDownload.setOnClickListener {
-                val builder = AlertDialog.Builder(context!!)
-                    .create()
-                val view = layoutInflater.inflate(R.layout.download_dialog_layout,null)
-                builder.setView(view)
 
-                builder.setCanceledOnTouchOutside(false)
-                builder.show()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (ContextCompat.checkSelfPermission(
+                            requireContext(),
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                        )
+                        != PackageManager.PERMISSION_GRANTED
+                    ) {
+                        permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    } else {
+                        startDownloadImage(modelPhoto)
+                    }
+                } else {
+                    startDownloadImage(modelPhoto)
+                }
             }
         }
 
     }
+
 
     private fun getUserPhotos(binding: FragmentDetailsBinding) {
 
@@ -206,10 +236,54 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 recViewUserPhotos.itemAnimator = null
                 recViewUserPhotos.adapter = adapter
             }
-
-
         }
+    }
 
+    private fun startDownloadImage(modelPhoto: ModelPhoto) {
+        initProgressDialog(modelPhoto)
+
+        DownloadConfig.newBuilder()
+            .setMaxRunningTaskNum(2)
+            .setMinUsableStorageSpace(4 * 1024L)
+            .build()
+
+        progressDialog.progress = 0
+        progressDialog.show()
+        Pump.newRequest(modelPhoto.links?.download)
+
+            .listener(object : com.huxq17.download.core.DownloadListener() {
+                override fun onProgress(progress: Int) {
+                    progressDialog.progress = progress
+                    downloadStatus = true
+                }
+
+                override fun onSuccess() {
+                    progressDialog.dismiss()
+                    Toast.makeText(
+                        activity,
+                        "Download Finished 🟢",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    downloadStatus = false
+                }
+
+                override fun onFailed() {
+                    progressDialog.dismiss()
+                    Toast.makeText(
+                        activity,
+                        "Download Finished",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    downloadStatus = false
+
+                }
+            })
+
+            .forceReDownload(true)
+            //Optionally,Set how many threads are used when downloading,default 3.
+            .threadNum(3)
+            .setRetry(3, 200)
+            .submit()
     }
 
     override fun onItemClick(photo: UnsplashPhoto) {
@@ -218,6 +292,23 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         binding.apply {
             nestedView.smoothScrollTo(0, 0)
 
+        }
+    }
+
+    private fun initProgressDialog(modelPhoto: ModelPhoto) {
+        progressDialog = ProgressDialog(activity)
+        progressDialog.setTitle("Download " + modelPhoto.id)
+        progressDialog.setMessage("Downloading ${modelPhoto.location?.city} ${modelPhoto.id} ...");
+        progressDialog.progress = 0
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        if (downloadStatus) {
+            progressDialog.dismiss()
+            Pump.shutdown()
         }
     }
 
