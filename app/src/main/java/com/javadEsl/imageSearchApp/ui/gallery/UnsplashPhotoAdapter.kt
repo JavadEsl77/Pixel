@@ -7,6 +7,7 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.net.Uri
 import android.os.Environment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -22,6 +23,7 @@ import com.javadEsl.imageSearchApp.R
 import com.javadEsl.imageSearchApp.data.UnsplashPhoto
 import com.javadEsl.imageSearchApp.data.convertedUrl
 import com.javadEsl.imageSearchApp.databinding.ItemUnsplashPhotoBinding
+import com.javadEsl.imageSearchApp.isBrightColor
 import kotlinx.coroutines.NonDisposableHandle.parent
 import java.io.File
 import kotlin.coroutines.coroutineContext
@@ -71,10 +73,9 @@ class UnsplashPhotoAdapter(private val listener: OnItemClickListener) :
 
                 textViewUserName.text = photo.user?.name
                 textViewLikes.text = photo.likes.toString()
-                viewBackItem.setBackgroundColor(Color.parseColor(photo.color))
+                viewBackItem.setBackgroundColor(Color.parseColor("#cc"+photo.color?.replace("#","")))
 
-
-                if (isBrightColor(Color.parseColor(photo.color.toString()))) {
+                if (Color.parseColor(photo.color.toString()).isBrightColor) {
                     textViewUserName.setTextColor(Color.parseColor("#000000"))
                     textViewLikes.setTextColor(Color.parseColor("#000000"))
                     textViewLikes.compoundDrawables[0].setTint(Color.parseColor("#000000"))
@@ -102,21 +103,6 @@ class UnsplashPhotoAdapter(private val listener: OnItemClickListener) :
         }
     }
 
-    fun isBrightColor(color: Int): Boolean {
-        if (android.R.color.transparent == color) return true
-        var rtnValue = false
-        val rgb = intArrayOf(Color.red(color), Color.green(color), Color.blue(color))
-        val brightness = Math.sqrt(
-            rgb[0] * rgb[0] * .241 + (rgb[1]
-                    * rgb[1] * .691) + rgb[2] * rgb[2] * .068
-        ).toInt()
-
-        // color is light
-        if (brightness >= 200) {
-            rtnValue = true
-        }
-        return rtnValue
-    }
 
 }
 

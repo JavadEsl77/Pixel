@@ -14,6 +14,7 @@ import com.javadEsl.imageSearchApp.data.convertedUrl
 import com.javadEsl.imageSearchApp.databinding.ItemUnsplashPhotoBinding
 import com.javadEsl.imageSearchApp.databinding.ItemUnsplashUserPhotoBinding
 import com.javadEsl.imageSearchApp.databinding.UnsplashPhotoLoadStateFooterBinding
+import com.javadEsl.imageSearchApp.isBrightColor
 import com.javadEsl.imageSearchApp.ui.gallery.UnsplashPhotoAdapter
 
 class TodoAdapter(
@@ -55,9 +56,34 @@ class TodoAdapter(
                     .error(R.drawable.ic_baseline_error)
                     .into(imageView)
 
+                if (photo.likes.toString().isNotEmpty()) {
+                    textViewItemTitlePhotoLikes.isVisible = true
+                    textViewItemPhotoLikes.isVisible = true
+                    textViewItemPhotoLikes.text = photo.likes.toString()
+                }
 
-                textViewItemPhotoLikes.text = photo.likes.toString()
-                cardViewColor.setBackgroundColor(Color.parseColor(photo.color))
+                if (photo.user?.name.toString().isNotEmpty()) {
+                    textViewItemTitlePhotoDownload.isVisible = true
+                    textViewItemPhotoDownload.isVisible = true
+                    textViewItemPhotoDownload.text = photo.user?.name.toString()
+                }
+
+                layoutItemUserPhoto.setBackgroundColor(
+                    Color.parseColor(
+                        "#cc" + photo.color?.replace("#", "")
+                    )
+                )
+                if (Color.parseColor(photo.color.toString()).isBrightColor) {
+                    textViewItemPhotoLikes.setTextColor(Color.parseColor("#000000"))
+                    textViewItemTitlePhotoLikes.setTextColor(Color.parseColor("#000000"))
+                    textViewItemTitlePhotoDownload.setTextColor(Color.parseColor("#000000"))
+                    textViewItemPhotoDownload.setTextColor(Color.parseColor("#000000"))
+                } else {
+                    textViewItemPhotoLikes.setTextColor(Color.parseColor("#ffffff"))
+                    textViewItemTitlePhotoLikes.setTextColor(Color.parseColor("#B3FFFFFF"))
+                    textViewItemTitlePhotoDownload.setTextColor(Color.parseColor("#B3FFFFFF"))
+                    textViewItemPhotoDownload.setTextColor(Color.parseColor("#ffffff"))
+                }
             }
         }
     }

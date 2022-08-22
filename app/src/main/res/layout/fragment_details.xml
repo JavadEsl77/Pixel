@@ -99,11 +99,11 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:drawableStart="@drawable/ic_eye"
                             android:drawablePadding="4dp"
                             android:gravity="center|left"
                             android:text="Views"
-                            android:textSize="12dp" />
+                            android:textSize="12dp"
+                            app:drawableStartCompat="@drawable/ic_eye" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/text_view_photo_views"
@@ -131,11 +131,11 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:drawableStart="@drawable/ic_downward"
                             android:drawablePadding="4dp"
                             android:gravity="center|left"
                             android:text="Downloads"
-                            android:textSize="12dp" />
+                            android:textSize="12dp"
+                            app:drawableStartCompat="@drawable/ic_downward" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/text_view_photo_download"
@@ -163,11 +163,12 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:drawableStart="@drawable/ic_like"
                             android:drawablePadding="4dp"
                             android:gravity="center|left"
                             android:text="Likes"
-                            android:textSize="12dp" />
+                            android:textSize="12dp"
+                            app:drawableStartCompat="@drawable/ic_like"
+                            app:drawableTint="@android:color/darker_gray" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/text_view_photo_likes"

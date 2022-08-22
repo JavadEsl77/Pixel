@@ -27,16 +27,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true">
 
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@android:color/transparent"
+                android:layout_margin="10dp"
+                app:cardCornerRadius="15dp">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/view_back_item"
-                    android:layout_width="wrap_content"
-                    android:layout_height="60dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:gravity="center|left"
                     android:orientation="horizontal"
                     android:background="#99000000"
@@ -64,11 +68,12 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center|left"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/text_view_user_name"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginEnd="8dp"
@@ -86,21 +91,24 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="10dp"
                             android:layout_marginEnd="8dp"
-                            android:drawableLeft="@drawable/ic_like_border"
+                            android:drawableLeft="@drawable/ic_like"
                             android:drawablePadding="4dp"
                             android:ellipsize="end"
                             android:gravity="center_vertical"
                             android:maxLines="1"
                             android:text="likes"
                             android:textColor="#B3FFFFFF"
-                            android:textSize="11sp"
+                            android:textSize="14sp"
                             tools:text="likes" />
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
-            </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+
+
 
         </RelativeLayout>
 
