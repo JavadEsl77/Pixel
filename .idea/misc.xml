@@ -11,6 +11,7 @@
         <entry key="app/src/main/res/drawable/ic_camera.xml" value="0.238" />
         <entry key="app/src/main/res/drawable/ic_close.xml" value="0.218" />
         <entry key="app/src/main/res/drawable/ic_downward.xml" value="0.1345" />
+        <entry key="app/src/main/res/drawable/ic_error_photos.xml" value="0.238" />
         <entry key="app/src/main/res/drawable/ic_eye.xml" value="0.1345" />
         <entry key="app/src/main/res/drawable/ic_like.xml" value="0.238" />
         <entry key="app/src/main/res/drawable/ic_like_border.xml" value="0.238" />
@@ -20,7 +21,7 @@
         <entry key="app/src/main/res/drawable/shape_edt_search.xml" value="0.218" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/download_dialog_layout.xml" value="0.35520833333333335" />
-        <entry key="app/src/main/res/layout/fragment_details.xml" value="0.3458528951486698" />
+        <entry key="app/src/main/res/layout/fragment_details.xml" value="0.29153605015673983" />
         <entry key="app/src/main/res/layout/fragment_gallery.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/item_unsplash_photo.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/item_unsplash_user_photo.xml" value="0.35625" />

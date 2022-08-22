@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.TransformationUtils.centerCrop
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.javadEsl.imageSearchApp.R
@@ -52,8 +53,9 @@ class TodoAdapter(
                 Glide.with(itemView)
                     .load(photo.urls?.regular?.convertedUrl)
                     .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                     .transition(DrawableTransitionOptions.withCrossFade())
-                    .error(R.drawable.ic_baseline_error)
+                    .error(R.drawable.ic_error_photos)
                     .into(imageView)
 
                 if (photo.likes.toString().isNotEmpty()) {

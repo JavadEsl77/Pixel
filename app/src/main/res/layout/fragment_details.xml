@@ -27,7 +27,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
                     android:adjustViewBounds="true"
-                    tools:scaleType="fitXY"
                     tools:src="@drawable/ic_launcher_background" />
 
                 <androidx.cardview.widget.CardView

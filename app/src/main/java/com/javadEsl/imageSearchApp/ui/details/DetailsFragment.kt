@@ -1,7 +1,6 @@
 package com.javadEsl.imageSearchApp.ui.details
 
 import android.Manifest
-import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -10,12 +9,13 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -23,6 +23,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
@@ -30,20 +31,19 @@ import com.bumptech.glide.request.target.Target
 import com.huxq17.download.Pump
 import com.huxq17.download.config.DownloadConfig
 import com.javadEsl.imageSearchApp.R
-import com.javadEsl.imageSearchApp.data.ModelPhoto
-import com.javadEsl.imageSearchApp.data.UnsplashPhoto
-import com.javadEsl.imageSearchApp.data.UnsplashRepository
-import com.javadEsl.imageSearchApp.data.convertedUrl
+import com.javadEsl.imageSearchApp.data.*
 import com.javadEsl.imageSearchApp.databinding.FragmentDetailsBinding
 import com.javadEsl.imageSearchApp.ui.gallery.UnsplashPhotoAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import okhttp3.OkHttpClient
+import java.io.File
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class DetailsFragment : Fragment(R.layout.fragment_details),
     UnsplashPhotoAdapter.OnItemClickListener, TodoAdapter.OnItemClickListener {
-
+    private var okHttpClient: OkHttpClient? = null
     private var _binding: FragmentDetailsBinding? = null
     private val binding get() = _binding!!
     private lateinit var progressDialog: ProgressDialog
@@ -175,7 +175,9 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
             Glide.with(this@DetailsFragment)
                 .load(modelPhoto.urls?.full?.convertedUrl)
-                .error(R.drawable.ic_baseline_error)
+                .error(R.drawable.ic_error_photos)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(
                         e: GlideException?,
@@ -184,6 +186,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                         isFirstResource: Boolean
                     ): Boolean {
                         layoutLoading.isVisible = false
+                        imageView.scaleType = ImageView.ScaleType.CENTER
                         return false
                     }
 
@@ -195,8 +198,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                         isFirstResource: Boolean
                     ): Boolean {
                         layoutLoading.isVisible = false
-//                        textViewCreator.isVisible = true
-//                        textViewDescription.isVisible = modelPhoto.description != null
                         return false
                     }
                 })
@@ -239,6 +240,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         }
     }
 
+
     private fun startDownloadImage(modelPhoto: ModelPhoto) {
         initProgressDialog(modelPhoto)
 
@@ -249,7 +251,12 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
         progressDialog.progress = 0
         progressDialog.show()
-        Pump.newRequest(modelPhoto.links?.download)
+
+
+        val filename = "MyApp/Images/" + modelPhoto.id + ".jpg"
+        val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), filename)
+
+        Pump.newRequest(modelPhoto.urls?.full?.convertedUrl)
 
             .listener(object : com.huxq17.download.core.DownloadListener() {
                 override fun onProgress(progress: Int) {
@@ -311,6 +318,4 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             Pump.shutdown()
         }
     }
-
-
 }

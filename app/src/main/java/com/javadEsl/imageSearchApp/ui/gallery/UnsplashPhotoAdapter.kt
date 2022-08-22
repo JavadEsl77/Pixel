@@ -18,6 +18,7 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.javadEsl.imageSearchApp.R
 import com.javadEsl.imageSearchApp.data.UnsplashPhoto
@@ -25,6 +26,7 @@ import com.javadEsl.imageSearchApp.data.convertedUrl
 import com.javadEsl.imageSearchApp.databinding.ItemUnsplashPhotoBinding
 import com.javadEsl.imageSearchApp.isBrightColor
 import kotlinx.coroutines.NonDisposableHandle.parent
+import okhttp3.OkHttpClient
 import java.io.File
 import kotlin.coroutines.coroutineContext
 
@@ -59,8 +61,9 @@ class UnsplashPhotoAdapter(private val listener: OnItemClickListener) :
                 Glide.with(itemView)
                     .load(photo.urls?.regular?.convertedUrl)
                     .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                     .transition(DrawableTransitionOptions.withCrossFade())
-                    .error(R.drawable.ic_baseline_error)
+                    .error(R.drawable.ic_error_photos)
                     .into(imageView)
 
 
