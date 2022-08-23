@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_background_wallpaper_dialog"
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:layout_marginBottom="15dp"
+    android:orientation="vertical"
+    app:cardElevation="0dp"
+    app:cardCornerRadius="10dp"
+    app:cardBackgroundColor="#B3000000">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center|left"
+        android:orientation="horizontal"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp">
+
+        <ImageView
+            android:id="@+id/image_view_icon_wallpaper_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_wallpaper" />
+
+        <TextView
+            android:id="@+id/text_title_wallpaper_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="7dp"
+            android:gravity="center|left"
+            tools:text="Wallpaper applied successfully"
+            android:textColor="@color/white" />
+
+        <ImageView
+            android:id="@+id/image_view_success_wallpaper_dialog"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@drawable/ic_check_circle" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</com.google.android.material.card.MaterialCardView>

@@ -8,6 +8,7 @@
         <entry key="..\:/androidProjects/ImageSearchApp/app/src/main/res/layout/fragment_gallery.xml" value="0.24895833333333334" />
         <entry key="..\:/androidProjects/ImageSearchApp/app/src/main/res/layout/item_unsplash_photo.xml" value="0.4" />
         <entry key="app/src/main/res/drawable/ic_arrow_downward.xml" value="0.218" />
+        <entry key="app/src/main/res/drawable/ic_brush.xml" value="0.238" />
         <entry key="app/src/main/res/drawable/ic_camera.xml" value="0.238" />
         <entry key="app/src/main/res/drawable/ic_close.xml" value="0.218" />
         <entry key="app/src/main/res/drawable/ic_downward.xml" value="0.1345" />
@@ -18,6 +19,8 @@
         <entry key="app/src/main/res/drawable/ic_location.xml" value="0.238" />
         <entry key="app/src/main/res/drawable/ic_search.xml" value="0.218" />
         <entry key="app/src/main/res/drawable/ic_user.xml" value="0.218" />
+        <entry key="app/src/main/res/drawable/ic_wallpaper.xml" value="0.238" />
+        <entry key="app/src/main/res/drawable/sahpe_background_dialog.xml" value="0.238" />
         <entry key="app/src/main/res/drawable/shape_edt_search.xml" value="0.218" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/download_dialog_layout.xml" value="0.35520833333333335" />
@@ -25,6 +28,7 @@
         <entry key="app/src/main/res/layout/fragment_gallery.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/item_unsplash_photo.xml" value="0.35625" />
         <entry key="app/src/main/res/layout/item_unsplash_user_photo.xml" value="0.35625" />
+        <entry key="app/src/main/res/layout/layout_dialog_set_wallapper.xml" value="0.35520833333333335" />
         <entry key="app/src/main/res/layout/unsplash_photo_load_state_footer.xml" value="0.35520833333333335" />
         <entry key="app/src/main/res/menu/menu_gallery.xml" value="0.35520833333333335" />
       </map>

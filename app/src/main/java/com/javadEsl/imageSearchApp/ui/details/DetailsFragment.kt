@@ -1,22 +1,23 @@
 package com.javadEsl.imageSearchApp.ui.details
 
 import android.Manifest
+import android.app.Dialog
 import android.app.ProgressDialog
-import android.content.Intent
+import android.app.WallpaperManager
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.os.Handler
+import android.view.*
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -31,28 +32,26 @@ import com.bumptech.glide.request.target.Target
 import com.huxq17.download.Pump
 import com.huxq17.download.config.DownloadConfig
 import com.javadEsl.imageSearchApp.R
-import com.javadEsl.imageSearchApp.data.*
+import com.javadEsl.imageSearchApp.data.ModelPhoto
+import com.javadEsl.imageSearchApp.data.UnsplashPhoto
+import com.javadEsl.imageSearchApp.data.UnsplashRepository
+import com.javadEsl.imageSearchApp.data.convertedUrl
 import com.javadEsl.imageSearchApp.databinding.FragmentDetailsBinding
+import com.javadEsl.imageSearchApp.isBrightColor
 import com.javadEsl.imageSearchApp.ui.gallery.UnsplashPhotoAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import okhttp3.OkHttpClient
-import java.io.File
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class DetailsFragment : Fragment(R.layout.fragment_details),
     UnsplashPhotoAdapter.OnItemClickListener, TodoAdapter.OnItemClickListener {
-    private var okHttpClient: OkHttpClient? = null
     private var _binding: FragmentDetailsBinding? = null
     private val binding get() = _binding!!
     private lateinit var progressDialog: ProgressDialog
     private var downloadStatus: Boolean = false
-
     private var modelPhoto: ModelPhoto? = null
-
-    private val permissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+    private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
             if (it) {
                 modelPhoto?.let { model -> startDownloadImage(model) }
             }
@@ -84,22 +83,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
-            val photo = args.photo
-
-//            textViewDescription.text = photo.description
-            val uri = Uri.parse(photo.user?.attributionUrl)
-            val intent = Intent(Intent.ACTION_VIEW, uri)
-//            textViewCreator.apply {
-//                text = "photo by ${photo.user?.name} on Unsplash"
-//                setOnClickListener {
-//                    context.startActivity(intent)
-//                }
-//                paint.isUnderlineText = true
-//            }
-
             initViewModel()
-
-
         }
     }
 
@@ -166,18 +150,49 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 .load(modelPhoto.user?.profileImage?.large?.convertedUrl)
                 .centerCrop()
                 .transition(DrawableTransitionOptions.withCrossFade())
-                .error(R.drawable.ic_user)
+                .error(com.javadEsl.imageSearchApp.R.drawable.ic_user)
                 .into(imageViewProfile)
 
 
-            cardViewColor.setBackgroundColor(Color.parseColor(modelPhoto.color))
+            cardViewColor.setCardBackgroundColor(
+                Color.parseColor(
+                    "#cc" + modelPhoto.color?.replace(
+                        "#",
+                        ""
+                    )
+                )
+            )
+            cardDownload.setCardBackgroundColor(
+                Color.parseColor(
+                    "#cc" + modelPhoto.color?.replace(
+                        "#",
+                        ""
+                    )
+                )
+            )
+            cardWallpaper.setCardBackgroundColor(
+                Color.parseColor(
+                    "#cc" + modelPhoto.color?.replace(
+                        "#",
+                        ""
+                    )
+                )
+            )
 
+            if (Color.parseColor(modelPhoto.color.toString()).isBrightColor) {
+                val color = Color.parseColor("#2E2E2E") //The color u want
+                imageViewDownload.setColorFilter(color)
+                imageViewWallpaper.setColorFilter(color)
+                textViewDownload.setTextColor(color)
+                textViewWallpaper.setTextColor(color)
+
+            }
 
             Glide.with(this@DetailsFragment)
-                .load(modelPhoto.urls?.full?.convertedUrl)
-                .error(R.drawable.ic_error_photos)
+                .load(modelPhoto.urls?.regular?.convertedUrl)
+                .error(com.javadEsl.imageSearchApp.R.drawable.ic_error_photos)
                 .transition(DrawableTransitionOptions.withCrossFade())
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(
                         e: GlideException?,
@@ -186,6 +201,8 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                         isFirstResource: Boolean
                     ): Boolean {
                         layoutLoading.isVisible = false
+                        cardDownload.isVisible = false
+                        cardWallpaper.isVisible = false
                         imageView.scaleType = ImageView.ScaleType.CENTER
                         return false
                     }
@@ -203,9 +220,32 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 })
                 .into(imageView)
 
+            cardWallpaper.setOnClickListener {
+
+                progressBarWallpaper.isVisible = true
+
+                val thread = Thread {
+                    val drawable = imageView.drawable
+                    val bitmap = drawable.toBitmap()
+                    val wallpaperManager =
+                        WallpaperManager.getInstance(activity!!.applicationContext)
+                    wallpaperManager.setBitmap(bitmap)
+                }
+                thread.start()
+
+                Handler().postDelayed({
+                    progressBarWallpaper.isVisible = false
+                    successWallpaperDialog(
+                        "Wallpaper applied successfully",
+                        activity!!.getDrawable(R.drawable.ic_wallpaper)!!,
+                        modelPhoto.color.toString()
+                    )
+                }, 1500)
+
+
+            }
 
             cardDownload.setOnClickListener {
-
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (ContextCompat.checkSelfPermission(
                             requireContext(),
@@ -222,9 +262,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 }
             }
         }
-
     }
-
 
     private fun getUserPhotos(binding: FragmentDetailsBinding) {
 
@@ -240,7 +278,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         }
     }
 
-
     private fun startDownloadImage(modelPhoto: ModelPhoto) {
         initProgressDialog(modelPhoto)
 
@@ -252,9 +289,8 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         progressDialog.progress = 0
         progressDialog.show()
 
-
-        val filename = "MyApp/Images/" + modelPhoto.id + ".jpg"
-        val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), filename)
+//        val filename = "MyApp/Images/" + modelPhoto.id + ".jpg"
+//        val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), filename)
 
         Pump.newRequest(modelPhoto.urls?.full?.convertedUrl)
 
@@ -266,19 +302,19 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
                 override fun onSuccess() {
                     progressDialog.dismiss()
-                    Toast.makeText(
-                        activity,
-                        "Download Finished 🟢",
-                        Toast.LENGTH_SHORT
-                    ).show()
                     downloadStatus = false
+                    successWallpaperDialog(
+                        "Download was done successfully",
+                        activity!!.getDrawable(R.drawable.ic_downward)!!,
+                        modelPhoto.color.toString()
+                    )
                 }
 
                 override fun onFailed() {
                     progressDialog.dismiss()
                     Toast.makeText(
                         activity,
-                        "Download Finished",
+                        "Download Error",
                         Toast.LENGTH_SHORT
                     ).show()
                     downloadStatus = false
@@ -318,4 +354,42 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             Pump.shutdown()
         }
     }
+
+    private fun successWallpaperDialog(message: String, drawable: Drawable, color: String) {
+        val dialog = Dialog(activity!!, R.style.WallpaperAlertDialog)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.layout_dialog_set_wallapper)
+
+        val cardBackground = dialog.findViewById<CardView>(R.id.card_background_wallpaper_dialog)
+        val textViewTitle = dialog.findViewById<TextView>(R.id.text_title_wallpaper_dialog)
+        val imageViewIcon = dialog.findViewById<ImageView>(R.id.image_view_icon_wallpaper_dialog)
+        val imageViewSuccess =
+            dialog.findViewById<ImageView>(R.id.image_view_success_wallpaper_dialog)
+        cardBackground.setCardBackgroundColor(
+            Color.parseColor(color)
+        )
+        textViewTitle.text = message
+        imageViewIcon.setImageDrawable(drawable)
+        if (Color.parseColor(modelPhoto?.color.toString()).isBrightColor) {
+            val color = Color.parseColor("#2E2E2E") //The color u want
+            imageViewIcon.setColorFilter(color)
+            imageViewSuccess.setColorFilter(color)
+            textViewTitle.setTextColor(color)
+
+        }else{
+            val colorLight = Color.parseColor("#ffffff") //The color u want
+            imageViewIcon.setColorFilter(colorLight)
+            imageViewSuccess.setColorFilter(colorLight)
+            textViewTitle.setTextColor(colorLight)
+        }
+
+        Handler().postDelayed({
+            dialog.dismiss()
+        }, 1500)
+        dialog.window?.setGravity(Gravity.BOTTOM)
+        dialog.show()
+
+    }
+
 }
