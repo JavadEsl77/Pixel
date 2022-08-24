@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="6dp"
-    android:layout_marginTop="3dp"
-    android:layout_marginRight="6dp"
-    android:layout_marginBottom="3dp"
+    android:layout_marginLeft="7dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginRight="7dp"
+    android:layout_marginBottom="5dp"
     android:orientation="vertical"
-    app:cardCornerRadius="10dp"
+    app:cardCornerRadius="15dp"
     app:cardElevation="4dp">
 
     <androidx.appcompat.widget.LinearLayoutCompat

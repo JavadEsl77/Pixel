@@ -1,19 +1,8 @@
 package com.javadEsl.imageSearchApp.ui.gallery
 
-import android.app.DownloadManager
-import android.content.Context
 import android.graphics.Color
-import android.graphics.PorterDuff
-import android.graphics.PorterDuffColorFilter
-import android.net.Uri
-import android.os.Environment
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -25,10 +14,6 @@ import com.javadEsl.imageSearchApp.data.UnsplashPhoto
 import com.javadEsl.imageSearchApp.data.convertedUrl
 import com.javadEsl.imageSearchApp.databinding.ItemUnsplashPhotoBinding
 import com.javadEsl.imageSearchApp.isBrightColor
-import kotlinx.coroutines.NonDisposableHandle.parent
-import okhttp3.OkHttpClient
-import java.io.File
-import kotlin.coroutines.coroutineContext
 
 
 class UnsplashPhotoAdapter(private val listener: OnItemClickListener) :
@@ -46,8 +31,6 @@ class UnsplashPhotoAdapter(private val listener: OnItemClickListener) :
 
     inner class PhotoViewHolder(private val binding: ItemUnsplashPhotoBinding) :
         RecyclerView.ViewHolder(binding.root) {
-
-
 
         init {
             binding.root.setOnClickListener {
@@ -76,7 +59,14 @@ class UnsplashPhotoAdapter(private val listener: OnItemClickListener) :
 
                 textViewUserName.text = photo.user?.name
                 textViewLikes.text = photo.likes.toString()
-                viewBackItem.setBackgroundColor(Color.parseColor("#cc"+photo.color?.replace("#","")))
+                viewBackItem.setBackgroundColor(
+                    Color.parseColor(
+                        "#cc" + photo.color?.replace(
+                            "#",
+                            ""
+                        )
+                    )
+                )
 
                 if (Color.parseColor(photo.color.toString()).isBrightColor) {
                     textViewUserName.setTextColor(Color.parseColor("#000000"))

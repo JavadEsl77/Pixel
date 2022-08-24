@@ -1,5 +1,7 @@
 package com.javadEsl.imageSearchApp.data
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
@@ -44,3 +46,4 @@ data class UnsplashPhoto(
 
 val String.convertedUrl: String
     get() = this.replace("https://images.unsplash.com/", "https://im.mahdi-saberi.ir/")
+

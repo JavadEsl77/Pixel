@@ -1,6 +1,8 @@
 package com.javadEsl.imageSearchApp.ui.gallery
 
 import android.app.Activity
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,14 +15,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import com.google.android.material.snackbar.Snackbar
 import com.javadEsl.imageSearchApp.R
 import com.javadEsl.imageSearchApp.data.UnsplashPhoto
 import com.javadEsl.imageSearchApp.databinding.FragmentGalleryBinding
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
-class GalleryFragment : Fragment(R.layout.fragment_gallery) ,UnsplashPhotoAdapter.OnItemClickListener{
+class GalleryFragment  :
+    Fragment(R.layout.fragment_gallery),
+    UnsplashPhotoAdapter.OnItemClickListener {
 
     private val viewModel by viewModels<GalleryViewModel>()
     private var _binding: FragmentGalleryBinding? = null
@@ -84,8 +88,6 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) ,UnsplashPhotoAdapte
                 recyclerView.isVisible = loadState.source.refresh is LoadState.NotLoading
                 textViewError.isVisible = loadState.source.refresh is LoadState.Error
                 buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
-
-
                 if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && adapter.itemCount < 1) {
                     recyclerView.isVisible = false
                     textViewEmpty.isVisible = true
@@ -95,7 +97,6 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) ,UnsplashPhotoAdapte
             }
         }
     }
-
 
     private fun performSearch() {
         if (binding.edtSearch.text.toString().isEmpty()) {
@@ -111,7 +112,28 @@ class GalleryFragment : Fragment(R.layout.fragment_gallery) ,UnsplashPhotoAdapte
     }
 
     override fun onItemClick(photo: UnsplashPhoto) {
-        val action = GalleryFragmentDirections.actionGalleryFragmentToDetailsFragment(photo)
-        findNavController().navigate(action)
+        if (checkConnection()) {
+            val action = GalleryFragmentDirections.actionGalleryFragmentToDetailsFragment(photo)
+            findNavController().navigate(action)
+        } else {
+            val view: View = requireView()
+            Snackbar.make(
+                view, "check your internet 😐",
+                Snackbar.LENGTH_LONG
+            ).show()
+        }
     }
+
+    fun checkConnection(): Boolean {
+        val connectionManager =
+            requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val wifiConnection = connectionManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+        val mobileDataConnection = connectionManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
+
+        if (return wifiConnection?.isConnectedOrConnecting == true || (mobileDataConnection?.isConnectedOrConnecting == true)) true
+
+
+    }
+
+
 }

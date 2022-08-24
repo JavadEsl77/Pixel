@@ -1,10 +1,16 @@
 package com.javadEsl.imageSearchApp.ui.details
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.javadEsl.imageSearchApp.data.ModelPhoto
 import com.javadEsl.imageSearchApp.data.UnsplashPhoto
 import com.javadEsl.imageSearchApp.data.UnsplashRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -12,7 +18,7 @@ import javax.inject.Inject
 class DetailViewModel @Inject constructor(
     private val unsplashRepository: UnsplashRepository
 ) : ViewModel() {
-
+    private val scope = CoroutineScope(Dispatchers.Main + Job())
     private val _liveDataList = MutableLiveData<ModelPhoto>()
     val liveDataList: LiveData<ModelPhoto> = _liveDataList
 
@@ -40,5 +46,4 @@ class DetailViewModel @Inject constructor(
             }
         }
     }
-
 }

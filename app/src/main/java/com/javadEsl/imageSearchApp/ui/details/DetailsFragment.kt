@@ -4,14 +4,19 @@ import android.Manifest
 import android.app.Dialog
 import android.app.ProgressDialog
 import android.app.WallpaperManager
+import android.content.Context
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
 import android.view.*
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,12 +28,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.google.android.material.snackbar.Snackbar
 import com.huxq17.download.Pump
 import com.huxq17.download.config.DownloadConfig
 import com.javadEsl.imageSearchApp.R
@@ -40,6 +45,7 @@ import com.javadEsl.imageSearchApp.databinding.FragmentDetailsBinding
 import com.javadEsl.imageSearchApp.isBrightColor
 import com.javadEsl.imageSearchApp.ui.gallery.UnsplashPhotoAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import java.io.File
 import javax.inject.Inject
 
 
@@ -48,13 +54,13 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
     UnsplashPhotoAdapter.OnItemClickListener, TodoAdapter.OnItemClickListener {
     private var _binding: FragmentDetailsBinding? = null
     private val binding get() = _binding!!
-    private lateinit var progressDialog: ProgressDialog
     private var downloadStatus: Boolean = false
     private var modelPhoto: ModelPhoto? = null
-    private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-            if (it) {
-                modelPhoto?.let { model -> startDownloadImage(model) }
-            }
+    private val permissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+//            if (it) {
+//                modelPhoto?.let { model -> startDownloadImage(model) }
+//            }
         }
 
     @Inject
@@ -64,9 +70,9 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         viewModel.getPhotoDetail(args.photo.id)
         viewModel.getUserPhotos(args.photo.user?.username.toString())
-
     }
 
     override fun onCreateView(
@@ -82,9 +88,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.apply {
-            initViewModel()
-        }
+        initViewModel()
     }
 
     private fun initViewModel() {
@@ -211,7 +215,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                         resource: Drawable?,
                         model: Any?,
                         target: Target<Drawable>?,
-                        dataSource: DataSource?,
+                        dataSource: com.bumptech.glide.load.DataSource?,
                         isFirstResource: Boolean
                     ): Boolean {
                         layoutLoading.isVisible = false
@@ -225,11 +229,19 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 progressBarWallpaper.isVisible = true
 
                 val thread = Thread {
+
+//                    val metrics: DisplayMetrics = Resources.getSystem().displayMetrics
+//                    val height = metrics.heightPixels
+//                    val width = metrics.widthPixels
+
                     val drawable = imageView.drawable
-                    val bitmap = drawable.toBitmap()
+                    val subBitmap = drawable.toBitmap()
+
                     val wallpaperManager =
                         WallpaperManager.getInstance(activity!!.applicationContext)
-                    wallpaperManager.setBitmap(bitmap)
+                    wallpaperManager.setWallpaperOffsetSteps(1f, 1f);
+                    //wallpaperManager.suggestDesiredDimensions(standardViewHeightForStory, height);
+                    wallpaperManager.setBitmap(subBitmap)
                 }
                 thread.start()
 
@@ -246,6 +258,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             }
 
             cardDownload.setOnClickListener {
+
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (ContextCompat.checkSelfPermission(
                             requireContext(),
@@ -255,10 +268,10 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     ) {
                         permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     } else {
-                        startDownloadImage(modelPhoto)
+                        downloadDialog(modelPhoto)
                     }
                 } else {
-                    startDownloadImage(modelPhoto)
+                    downloadDialog(modelPhoto)
                 }
             }
         }
@@ -278,30 +291,67 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         }
     }
 
-    private fun startDownloadImage(modelPhoto: ModelPhoto) {
-        initProgressDialog(modelPhoto)
+    override fun onItemClick(photo: UnsplashPhoto) {
+        if (checkConnection()) {
+            binding.layoutLoading.isVisible = true
+            viewModel.getPhotoDetail(photo.id)
+            binding.apply {
+                nestedView.smoothScrollTo(0, 0)
+
+            }
+        } else {
+            val view: View = requireView()
+            Snackbar.make(
+                view, "check your internet 😐",
+                Snackbar.LENGTH_LONG
+            ).show()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        if (downloadStatus) {
+            // progressDialog.dismiss()
+            //Pump.shutdown()
+        }
+    }
+
+    private fun downloadDialog(modelPhoto: ModelPhoto) {
+        val dialog = Dialog(activity!!, R.style.WallpaperAlertDialog)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.layout_downlaod_dialog)
+
+        val processBarDownload = dialog.findViewById<ProgressBar>(R.id.progress_bar_download)
+        val textViewTitleFile = dialog.findViewById<TextView>(R.id.text_view_title_file)
+
+
+        textViewTitleFile.text = modelPhoto.id + ".jpg"
 
         DownloadConfig.newBuilder()
             .setMaxRunningTaskNum(2)
             .setMinUsableStorageSpace(4 * 1024L)
             .build()
 
-        progressDialog.progress = 0
-        progressDialog.show()
+        val file = File("/Lilac/${modelPhoto.id}.jpg")
+        if (!file.exists()) {
+            file.mkdirs()
+        }
+        val folderFile = File(Environment.getExternalStorageDirectory(), file.absolutePath)
+        folderFile.mkdirs()
 
-//        val filename = "MyApp/Images/" + modelPhoto.id + ".jpg"
-//        val file = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), filename)
-
-        Pump.newRequest(modelPhoto.urls?.full?.convertedUrl)
+        Pump.newRequest(modelPhoto.urls?.full?.convertedUrl, folderFile.toString())
 
             .listener(object : com.huxq17.download.core.DownloadListener() {
                 override fun onProgress(progress: Int) {
-                    progressDialog.progress = progress
+
+                    processBarDownload.progress = progress
                     downloadStatus = true
                 }
 
                 override fun onSuccess() {
-                    progressDialog.dismiss()
+                    dialog.dismiss()
                     downloadStatus = false
                     successWallpaperDialog(
                         "Download was done successfully",
@@ -311,7 +361,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 }
 
                 override fun onFailed() {
-                    progressDialog.dismiss()
+                    dialog.dismiss()
                     Toast.makeText(
                         activity,
                         "Download Error",
@@ -327,32 +377,14 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             .threadNum(3)
             .setRetry(3, 200)
             .submit()
-    }
 
-    override fun onItemClick(photo: UnsplashPhoto) {
-        binding.layoutLoading.isVisible = true
-        viewModel.getPhotoDetail(photo.id)
-        binding.apply {
-            nestedView.smoothScrollTo(0, 0)
 
-        }
-    }
+//        Handler().postDelayed({
+//            dialog.dismiss()
+//        }, 1500)
+        dialog.window?.setGravity(Gravity.BOTTOM)
+        dialog.show()
 
-    private fun initProgressDialog(modelPhoto: ModelPhoto) {
-        progressDialog = ProgressDialog(activity)
-        progressDialog.setTitle("Download " + modelPhoto.id)
-        progressDialog.setMessage("Downloading ${modelPhoto.location?.city} ${modelPhoto.id} ...");
-        progressDialog.progress = 0
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        if (downloadStatus) {
-            progressDialog.dismiss()
-            Pump.shutdown()
-        }
     }
 
     private fun successWallpaperDialog(message: String, drawable: Drawable, color: String) {
@@ -377,7 +409,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             imageViewSuccess.setColorFilter(color)
             textViewTitle.setTextColor(color)
 
-        }else{
+        } else {
             val colorLight = Color.parseColor("#ffffff") //The color u want
             imageViewIcon.setColorFilter(colorLight)
             imageViewSuccess.setColorFilter(colorLight)
@@ -392,4 +424,14 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
     }
 
+    fun checkConnection(): Boolean {
+        val connectionManager =
+            requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val wifiConnection = connectionManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
+        val mobileDataConnection = connectionManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
+
+        if (return wifiConnection?.isConnectedOrConnecting == true || (mobileDataConnection?.isConnectedOrConnecting == true)) true
+
+
+    }
 }

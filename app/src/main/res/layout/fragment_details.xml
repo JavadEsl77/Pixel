@@ -522,13 +522,14 @@
 
     </androidx.core.widget.NestedScrollView>
 
-
     <LinearLayout
         android:id="@+id/layout_loading"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#fff"
         android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="visible"
         tools:visibility="gone">
 
         <ProgressBar
@@ -536,6 +537,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
+
+        <TextView
+            android:id="@+id/text_view_network_error"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/button_retry"
+            android:layout_centerHorizontal="true"
+            android:text="Check Internet Connection ..."
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <Button
+            android:id="@+id/button_retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="4dp"
+            android:text="Retry"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
     </LinearLayout>
 
