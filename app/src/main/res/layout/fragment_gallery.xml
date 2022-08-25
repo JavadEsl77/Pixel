@@ -13,6 +13,7 @@
         android:layout_height="120dp">
 
         <ImageView
+            android:id="@+id/image_view_banner"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
@@ -62,28 +63,6 @@
                 android:paddingRight="7dp">
 
                 <ImageButton
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="7dp"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/ic_search" />
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edt_search"
-                    android:layout_width="0dp"
-                    android:layout_height="45dp"
-                    android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:ellipsize="end"
-                    android:hint="search free high-resolution photo"
-                    android:imeOptions="actionSearch"
-                    android:inputType="text"
-                    android:maxLines="1"
-                    android:textColor="@color/white"
-                    android:textColorHint="#767676"
-                    android:textSize="13sp" />
-
-                <ImageButton
                     android:id="@+id/img_clean"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
@@ -92,6 +71,29 @@
                     android:src="@drawable/ic_close"
                     android:visibility="invisible"
                     tools:visibility="visible" />
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_search"
+                    android:layout_width="0dp"
+                    android:layout_height="45dp"
+                    android:layout_marginEnd="7dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:ellipsize="end"
+                    android:hint="@string/string_hint_edittext_search"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:textColor="@color/white"
+                    android:textColorHint="#767676"
+                    android:textSize="13sp" />
+
+                <ImageButton
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="7dp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_search" />
 
 
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -127,7 +129,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@id/button_retry"
             android:layout_centerHorizontal="true"
-            android:text="Results could not be loaded"
+            android:text="@string/string_error_loading_results"
             android:visibility="gone"
             tools:visibility="visible" />
 
@@ -136,7 +138,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Retry"
+            android:text="@string/string_retry_find_results"
             android:visibility="gone"
             tools:visibility="visible" />
 
@@ -145,7 +147,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="No results found for this query"
+            android:text="@string/string_error_not_find_results"
             android:visibility="gone"
             tools:visibility="visible" />
 

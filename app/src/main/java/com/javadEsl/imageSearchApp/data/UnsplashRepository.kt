@@ -26,6 +26,8 @@ class UnsplashRepository @Inject constructor(
             pagingSourceFactory = { UnsplashPagingSource(unsplashApi, query) }
         ).liveData
 
+    suspend fun getRandomPhoto() = unsplashApi.getRandomPhotos()
+
     suspend fun getPhotoDetail(id: String) = unsplashApi.getPhoto(id = id)
 
     suspend fun getUserPhotos(userName: String) = unsplashApi.getUserPhotos(userName = userName)

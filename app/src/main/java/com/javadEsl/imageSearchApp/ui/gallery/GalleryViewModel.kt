@@ -1,20 +1,36 @@
 package com.javadEsl.imageSearchApp.ui.gallery
 
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.switchMap
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.paging.cachedIn
+import com.javadEsl.imageSearchApp.NetworkHelper
+import com.javadEsl.imageSearchApp.api.UnsplashResponse
+import com.javadEsl.imageSearchApp.data.ModelPhoto
 import com.javadEsl.imageSearchApp.data.UnsplashRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class GalleryViewModel @Inject constructor(
     private val unsplashRepository: UnsplashRepository,
+    private val networkHelper: NetworkHelper,
     state: SavedStateHandle
 ) :
     ViewModel() {
+
+    private val _liveDataRandomPhoto = MutableLiveData<ModelPhoto?>()
+    val liveDataRandomPhoto: MutableLiveData<ModelPhoto?> = _liveDataRandomPhoto
+    fun getRandomPhoto() {
+        viewModelScope.launch {
+            if (networkHelper.checkConnection()){
+                val response = unsplashRepository.getRandomPhoto()
+                _liveDataRandomPhoto.postValue(response)
+            }else{
+                _liveDataRandomPhoto.postValue(null)
+            }
+
+        }
+    }
 
     private val currentQuery = state.getLiveData(CURRENT_QUERY, DEFAULT_QUERY)
 

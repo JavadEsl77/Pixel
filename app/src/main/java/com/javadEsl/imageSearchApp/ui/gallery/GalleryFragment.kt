@@ -2,6 +2,7 @@ package com.javadEsl.imageSearchApp.ui.gallery
 
 import android.app.Activity
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.text.Editable
@@ -15,25 +16,73 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.google.android.material.snackbar.Snackbar
 import com.javadEsl.imageSearchApp.R
 import com.javadEsl.imageSearchApp.data.UnsplashPhoto
+import com.javadEsl.imageSearchApp.data.convertedUrl
 import com.javadEsl.imageSearchApp.databinding.FragmentGalleryBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class GalleryFragment  :
+class GalleryFragment :
     Fragment(R.layout.fragment_gallery),
     UnsplashPhotoAdapter.OnItemClickListener {
 
     private val viewModel by viewModels<GalleryViewModel>()
     private var _binding: FragmentGalleryBinding? = null
     private val binding get() = _binding!!
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.getRandomPhoto()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentGalleryBinding.bind(view)
+
         val adapter = UnsplashPhotoAdapter(this)
         binding.apply {
+
+            viewModel.liveDataRandomPhoto.observe(viewLifecycleOwner) {
+                if (it != null) {
+                    Glide.with(requireActivity())
+                        .load(it?.urls?.small?.convertedUrl)
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .error(R.drawable.img)
+                        .listener(object : RequestListener<Drawable> {
+                            override fun onLoadFailed(
+                                p0: GlideException?,
+                                p1: Any?,
+                                p2: Target<Drawable>?,
+                                p3: Boolean
+                            ): Boolean {
+                                return false
+                            }
+
+                            override fun onResourceReady(
+                                p0: Drawable?,
+                                p1: Any?,
+                                p2: Target<Drawable>?,
+                                p3: DataSource?,
+                                p4: Boolean
+                            ): Boolean {
+                                return false
+                            }
+
+                        })
+                        .into(imageViewBanner)
+                }
+            }
+
             recyclerView.setHasFixedSize(true)
             recyclerView.itemAnimator = null
             recyclerView.adapter = adapter.withLoadStateHeaderAndFooter(

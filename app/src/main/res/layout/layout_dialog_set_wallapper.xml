@@ -14,16 +14,17 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center|left"
+        android:gravity="center|right"
         android:orientation="horizontal"
         android:paddingStart="10dp"
         android:paddingEnd="10dp">
 
+
         <ImageView
-            android:id="@+id/image_view_icon_wallpaper_dialog"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_wallpaper" />
+            android:id="@+id/image_view_success_wallpaper_dialog"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:src="@drawable/ic_check_circle" />
 
         <TextView
             android:id="@+id/text_title_wallpaper_dialog"
@@ -32,14 +33,15 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="7dp"
             android:gravity="center|left"
-            tools:text="Wallpaper applied successfully"
+            tools:text="@string/string_alert_success_download"
             android:textColor="@color/white" />
 
+
         <ImageView
-            android:id="@+id/image_view_success_wallpaper_dialog"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:src="@drawable/ic_check_circle" />
+            android:id="@+id/image_view_icon_wallpaper_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_wallpaper" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

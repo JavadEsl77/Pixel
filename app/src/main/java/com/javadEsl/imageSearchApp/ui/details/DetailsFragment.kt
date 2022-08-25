@@ -2,14 +2,15 @@ package com.javadEsl.imageSearchApp.ui.details
 
 import android.Manifest
 import android.app.Dialog
-import android.app.ProgressDialog
 import android.app.WallpaperManager
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -51,16 +52,16 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class DetailsFragment : Fragment(R.layout.fragment_details),
-    UnsplashPhotoAdapter.OnItemClickListener, TodoAdapter.OnItemClickListener {
+    UnsplashPhotoAdapter.OnItemClickListener, UnsplashUserPhotoAdapter.OnItemClickListener {
     private var _binding: FragmentDetailsBinding? = null
     private val binding get() = _binding!!
     private var downloadStatus: Boolean = false
     private var modelPhoto: ModelPhoto? = null
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-//            if (it) {
-//                modelPhoto?.let { model -> startDownloadImage(model) }
-//            }
+            if (it) {
+                modelPhoto?.let { model -> downloadDialog(model) }
+            }
         }
 
     @Inject
@@ -110,6 +111,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 textViewTitleBio.isVisible = true
                 textViewBio.text = modelPhoto.user?.bio
             }
+
             if (!modelPhoto.user?.instagramUsername.isNullOrEmpty()) {
                 textViewInstagram.isVisible = true
                 textViewTitleInstagram.isVisible = true
@@ -150,22 +152,16 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 textViewPhotoLikes.text = modelPhoto.likes.toString()
             }
 
+            if (modelPhoto.location?.name.isNullOrEmpty() || modelPhoto.exif?.model.isNullOrEmpty()) {
+                viewLineCameraLocation.isVisible = false
+            }
+
             Glide.with(this@DetailsFragment)
                 .load(modelPhoto.user?.profileImage?.large?.convertedUrl)
                 .centerCrop()
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .error(com.javadEsl.imageSearchApp.R.drawable.ic_user)
                 .into(imageViewProfile)
-
-
-            cardViewColor.setCardBackgroundColor(
-                Color.parseColor(
-                    "#cc" + modelPhoto.color?.replace(
-                        "#",
-                        ""
-                    )
-                )
-            )
             cardDownload.setCardBackgroundColor(
                 Color.parseColor(
                     "#cc" + modelPhoto.color?.replace(
@@ -189,7 +185,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 imageViewWallpaper.setColorFilter(color)
                 textViewDownload.setTextColor(color)
                 textViewWallpaper.setTextColor(color)
-
             }
 
             Glide.with(this@DetailsFragment)
@@ -224,37 +219,43 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 })
                 .into(imageView)
 
+            textViewInstagram.setOnClickListener {
+                val uri: Uri = Uri.parse("http://instagram.com/${modelPhoto.user?.instagramUsername}")
+                val likeIng = Intent(Intent.ACTION_VIEW, uri)
+                likeIng.setPackage("com.instagram.android")
+
+                try {
+                    startActivity(likeIng)
+                } catch (e: ActivityNotFoundException) {
+                    startActivity(
+                        Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("http://instagram.com/${modelPhoto.user?.instagramUsername}")
+                        )
+                    )
+                }
+            }
+
             cardWallpaper.setOnClickListener {
-
                 progressBarWallpaper.isVisible = true
-
                 val thread = Thread {
-
-//                    val metrics: DisplayMetrics = Resources.getSystem().displayMetrics
-//                    val height = metrics.heightPixels
-//                    val width = metrics.widthPixels
-
                     val drawable = imageView.drawable
                     val subBitmap = drawable.toBitmap()
-
                     val wallpaperManager =
                         WallpaperManager.getInstance(activity!!.applicationContext)
                     wallpaperManager.setWallpaperOffsetSteps(1f, 1f);
-                    //wallpaperManager.suggestDesiredDimensions(standardViewHeightForStory, height);
                     wallpaperManager.setBitmap(subBitmap)
                 }
                 thread.start()
 
                 Handler().postDelayed({
                     progressBarWallpaper.isVisible = false
-                    successWallpaperDialog(
-                        "Wallpaper applied successfully",
+                    successDialog(
+                        getString(R.string.string_alert_success_wallpaper),
                         activity!!.getDrawable(R.drawable.ic_wallpaper)!!,
                         modelPhoto.color.toString()
                     )
                 }, 1500)
-
-
             }
 
             cardDownload.setOnClickListener {
@@ -281,7 +282,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
         viewModel.liveDataUserPhotosList.observe(viewLifecycleOwner) {
             if (it.isNullOrEmpty()) return@observe
-            val adapter = TodoAdapter(it, this)
+            val adapter = UnsplashUserPhotoAdapter(it, this)
 
             binding.apply {
                 recViewUserPhotos.setHasFixedSize(true)
@@ -313,7 +314,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
         if (downloadStatus) {
             // progressDialog.dismiss()
-            //Pump.shutdown()
+            Pump.shutdown()
         }
     }
 
@@ -325,8 +326,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
         val processBarDownload = dialog.findViewById<ProgressBar>(R.id.progress_bar_download)
         val textViewTitleFile = dialog.findViewById<TextView>(R.id.text_view_title_file)
-
-
         textViewTitleFile.text = modelPhoto.id + ".jpg"
 
         DownloadConfig.newBuilder()
@@ -342,7 +341,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         folderFile.mkdirs()
 
         Pump.newRequest(modelPhoto.urls?.full?.convertedUrl, folderFile.toString())
-
             .listener(object : com.huxq17.download.core.DownloadListener() {
                 override fun onProgress(progress: Int) {
 
@@ -353,8 +351,8 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 override fun onSuccess() {
                     dialog.dismiss()
                     downloadStatus = false
-                    successWallpaperDialog(
-                        "Download was done successfully",
+                    successDialog(
+                        getString(R.string.string_alert_success_download),
                         activity!!.getDrawable(R.drawable.ic_downward)!!,
                         modelPhoto.color.toString()
                     )
@@ -371,23 +369,16 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
                 }
             })
-
             .forceReDownload(true)
-            //Optionally,Set how many threads are used when downloading,default 3.
             .threadNum(3)
             .setRetry(3, 200)
             .submit()
-
-
-//        Handler().postDelayed({
-//            dialog.dismiss()
-//        }, 1500)
         dialog.window?.setGravity(Gravity.BOTTOM)
         dialog.show()
 
     }
 
-    private fun successWallpaperDialog(message: String, drawable: Drawable, color: String) {
+    private fun successDialog(message: String, drawable: Drawable, color: String) {
         val dialog = Dialog(activity!!, R.style.WallpaperAlertDialog)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)

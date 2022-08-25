@@ -27,6 +27,10 @@ interface UnsplashApi {
     ): UnsplashResponse
 
 
+    @GET("napi//photos/random")
+    suspend fun getRandomPhotos(): ModelPhoto
+
+
     @Headers("Accept-Version: v1", "Authorization: Client-ID $CLIENT_ID")
     @GET("napi/photos/{id}")
     suspend fun getPhoto(
