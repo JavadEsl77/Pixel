@@ -4,6 +4,9 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/androidProjects/ImageSearchApp/app/src/main/res/drawable/gradient.xml" value="0.145" />
+        <entry key="..\:/androidProjects/ImageSearchApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.136" />
+        <entry key="..\:/androidProjects/ImageSearchApp/app/src/main/res/drawable/ic_logo.xml" value="0.136" />
+        <entry key="..\:/androidProjects/ImageSearchApp/app/src/main/res/drawable/ic_luncher_main.xml" value="0.136" />
         <entry key="..\:/androidProjects/ImageSearchApp/app/src/main/res/drawable/ic_search.xml" value="0.136" />
         <entry key="..\:/androidProjects/ImageSearchApp/app/src/main/res/layout/activity_main.xml" value="0.10989583333333333" />
         <entry key="..\:/androidProjects/ImageSearchApp/app/src/main/res/layout/fragment_details.xml" value="0.25" />

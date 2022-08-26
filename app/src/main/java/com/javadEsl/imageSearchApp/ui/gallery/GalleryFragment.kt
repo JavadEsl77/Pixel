@@ -53,7 +53,7 @@ class GalleryFragment :
             viewModel.liveDataRandomPhoto.observe(viewLifecycleOwner) {
                 if (it != null) {
                     Glide.with(requireActivity())
-                        .load(it?.urls?.small?.convertedUrl)
+                        .load(it.urls?.regular?.convertedUrl)
                         .centerCrop()
                         .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .transition(DrawableTransitionOptions.withCrossFade())
