@@ -16,4 +16,5 @@
     <string name="string_waiting_download_dialog">لطفا صبر کنید تا دانلود بارگیری شود...</string>
     <string name="string_alert_success_wallpaper">تصویر پس زمینه با موفقیت اعمال شد</string>
     <string name="string_alert_success_download">دانلود با موفقیت انجام شد</string>
+    <string name="string_alert_permission">خطا در ساخت مسیر ذخیره فایل</string>
 </resources>

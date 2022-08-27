@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/galleryFragment"
-        android:name="com.javadEsl.imageSearchApp.ui.gallery.GalleryFragment"
+        android:name="com.javadEsl.pixel.ui.gallery.GalleryFragment"
         android:label="Gallery"
         tools:layout="@layout/fragment_gallery">
         <action
@@ -16,11 +16,11 @@
     </fragment>
     <fragment
         android:id="@+id/detailsFragment"
-        android:name="com.javadEsl.imageSearchApp.ui.details.DetailsFragment"
+        android:name="com.javadEsl.pixel.ui.details.DetailsFragment"
         android:label="Photo"
         tools:layout="@layout/fragment_details">
         <argument
             android:name="photo"
-            app:argType="com.javadEsl.imageSearchApp.data.UnsplashPhoto" />
+            app:argType="com.javadEsl.pixel.data.UnsplashPhoto" />
     </fragment>
 </navigation>
