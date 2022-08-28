@@ -258,7 +258,8 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     successDialog(
                         getString(R.string.string_alert_success_wallpaper),
                         activity!!.getDrawable(R.drawable.ic_wallpaper)!!,
-                        modelPhoto.color.toString()
+                        modelPhoto.color.toString(),
+                        1500
                     )
                 }, 1500)
             }
@@ -273,7 +274,20 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     return@setOnClickListener
                 }
                 isOnSaveClicked = true
-                downloadDialog(modelPhoto)
+
+
+                val root = Environment.getExternalStorageDirectory()
+                val myDir = File("${root}/Pixel/${modelPhoto.id}.jpg")
+
+                if (!myDir.exists()) {
+                    downloadDialog(modelPhoto)
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "این تصویر در حافظه موجود می باشد",
+                        Snackbar.LENGTH_LONG
+                    ).show()
+                }
             }
         }
     }
@@ -374,7 +388,8 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     successDialog(
                         getString(R.string.string_alert_success_download),
                         activity!!.getDrawable(R.drawable.ic_downward)!!,
-                        modelPhoto.color.toString()
+                        modelPhoto.color.toString(),
+                        1500
                     )
                 }
 
@@ -398,7 +413,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
     }
 
-    private fun successDialog(message: String, drawable: Drawable, color: String) {
+    private fun successDialog(message: String, drawable: Drawable, color: String, duration: Long) {
         val dialog = Dialog(activity!!, R.style.WallpaperAlertDialog)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
@@ -429,7 +444,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
         Handler().postDelayed({
             dialog.dismiss()
-        }, 1500)
+        }, duration)
         dialog.window?.setGravity(Gravity.BOTTOM)
         dialog.show()
 
