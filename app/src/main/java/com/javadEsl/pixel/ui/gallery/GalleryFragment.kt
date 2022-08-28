@@ -40,7 +40,7 @@ class GalleryFragment :
     private val viewModel by viewModels<GalleryViewModel>()
     private var _binding: FragmentGalleryBinding? = null
     private val binding get() = _binding!!
-    var sharedPreference: SharedPreferences? = null
+    private var sharedPreference: SharedPreferences? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.getRandomPhoto()
