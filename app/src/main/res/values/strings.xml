@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Pixel</string>
     <string name="string_hint_edittext_search">جستجوی رایگان عکس با وضوح بالا</string>
+    <string name="string_error_edittext_search">لطفا این قسمت رو پر کنید</string>
     <string name="string_error_loading_results">اتصال اینترنت خود را برسی کنید</string>
     <string name="string_error_not_find_results">هیچ نتیجه ای برای این جستجو یافت نشد</string>
     <string name="string_retry_find_results">تلاش مجدد</string>

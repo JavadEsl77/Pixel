@@ -149,7 +149,7 @@ class GalleryFragment :
 
     private fun performSearch() {
         if (binding.edtSearch.text.toString().isEmpty()) {
-            binding.edtSearch.error = "please fill out this field"
+            binding.edtSearch.error = getString(R.string.string_error_edittext_search)
         } else {
             viewModel.searchPhotos(binding.edtSearch.text.toString())
         }
