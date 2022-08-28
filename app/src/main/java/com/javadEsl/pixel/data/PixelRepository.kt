@@ -1,15 +1,19 @@
 package com.javadEsl.pixel.data
 
+import androidx.paging.LoadState
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.liveData
+import com.javadEsl.pixel.NetworkHelper
 import com.javadEsl.pixel.api.PixelApi
+import java.lang.Error
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class PixelRepository @Inject constructor(
-    private val pixelApi: PixelApi
+    private val pixelApi: PixelApi,
+    private val networkHelper: NetworkHelper,
 ) {
     fun getSearchResults(query: String) =
         Pager(
@@ -18,7 +22,9 @@ class PixelRepository @Inject constructor(
                 maxSize = 100,
                 enablePlaceholders = false
             ),
-            pagingSourceFactory = { UnsplashPagingSource(pixelApi, query) }
+            pagingSourceFactory = {
+                UnsplashPagingSource(pixelApi, query, networkHelper)
+            }
         ).liveData
 
     suspend fun getRandomPhoto() = pixelApi.getRandomPhotos()

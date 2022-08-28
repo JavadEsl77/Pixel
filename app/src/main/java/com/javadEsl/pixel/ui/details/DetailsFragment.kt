@@ -24,6 +24,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.isVisible
@@ -263,21 +264,16 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             }
 
             cardDownload.setOnClickListener {
-                isOnSaveClicked = true
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (ContextCompat.checkSelfPermission(
-                            requireContext(),
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                        )
-                        != PackageManager.PERMISSION_GRANTED
-                    ) {
-                        permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    } else {
-                        downloadDialog(modelPhoto)
-                    }
-                } else {
-                    downloadDialog(modelPhoto)
+                if (ActivityCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    return@setOnClickListener
                 }
+                isOnSaveClicked = true
+                downloadDialog(modelPhoto)
             }
         }
     }
@@ -331,6 +327,12 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
     }
 
     private fun downloadDialog(modelPhoto: ModelPhoto) {
+
+        if (isRequireExternalStorageManager()) {
+            requestPermission()
+            return
+        }
+
         val dialog = Dialog(activity!!, R.style.WallpaperAlertDialog)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
@@ -345,23 +347,22 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             .setMinUsableStorageSpace(4 * 1024L)
             .build()
 
-        if (isRequireExternalStorageManager()) {
-            requestPermission()
-            return
-        }
         val root = Environment.getExternalStorageDirectory()
         val myDir = File("${root}/Pixel/${modelPhoto.id}.jpg")
         myDir.mkdirs()
 
         if (!myDir.exists()) {
-            Toast.makeText(requireContext(), getString(R.string.string_alert_permission), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.string_alert_permission),
+                Toast.LENGTH_SHORT
+            ).show()
             return
         }
 
         Pump.newRequest(modelPhoto.urls?.full?.convertedUrl, myDir.path)
             .listener(object : com.huxq17.download.core.DownloadListener() {
                 override fun onProgress(progress: Int) {
-
                     processBarDownload.progress = progress
                     downloadStatus = true
                 }
@@ -369,6 +370,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 override fun onSuccess() {
                     dialog.dismiss()
                     downloadStatus = false
+                    isOnSaveClicked = false
                     successDialog(
                         getString(R.string.string_alert_success_download),
                         activity!!.getDrawable(R.drawable.ic_downward)!!,
