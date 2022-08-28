@@ -25,7 +25,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -64,7 +63,22 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) {
             if (it) {
-                modelPhoto?.let { model -> downloadDialog(model) }
+                modelPhoto?.let { model ->
+
+                    val root = Environment.getExternalStorageDirectory()
+                    val myDir = File("${root}/Pixel/${model.id}.jpg")
+
+                    if (!myDir.exists()) {
+                        downloadDialog(model)
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "این تصویر در حافظه موجود می باشد",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+
+                }
             }
         }
 
@@ -275,7 +289,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 }
                 isOnSaveClicked = true
 
-
                 val root = Environment.getExternalStorageDirectory()
                 val myDir = File("${root}/Pixel/${modelPhoto.id}.jpg")
 
@@ -285,7 +298,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     Toast.makeText(
                         requireContext(),
                         "این تصویر در حافظه موجود می باشد",
-                        Snackbar.LENGTH_LONG
+                        Toast.LENGTH_LONG
                     ).show()
                 }
             }
@@ -307,7 +320,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
     }
 
     override fun onItemClick(photo: UnsplashPhoto) {
-        if (checkConnection()) {
+        if (checkIsConnection()) {
             binding.layoutLoading.isVisible = true
             viewModel.getPhotoDetail(photo.id)
             binding.apply {
@@ -450,7 +463,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
     }
 
-    private fun checkConnection(): Boolean {
+    private fun checkIsConnection(): Boolean {
         val connectionManager =
             requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val wifiConnection = connectionManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
