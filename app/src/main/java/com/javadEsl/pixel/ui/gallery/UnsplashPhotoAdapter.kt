@@ -36,7 +36,6 @@ class UnsplashPhotoAdapter(private val listener: OnItemClickListener) :
             binding.root.setOnClickListener {
                 getItem(bindingAdapterPosition)?.let { listener.onItemClick(it) }
             }
-
         }
 
         fun bind(photo: UnsplashPhoto) {

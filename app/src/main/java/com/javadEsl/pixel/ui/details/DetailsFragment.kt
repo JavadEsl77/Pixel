@@ -65,17 +65,22 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             if (it) {
                 modelPhoto?.let { model ->
 
-                    val root = Environment.getExternalStorageDirectory()
-                    val myDir = File("${root}/Pixel/${model.id}.jpg")
+                    if (checkIsConnection()) {
 
-                    if (!myDir.exists()) {
-                        downloadDialog(model)
+                        val root = Environment.getExternalStorageDirectory()
+                        val myDir = File("${root}/Pixel/${model.id}.jpg")
+
+                        if (!myDir.exists()) {
+                            downloadDialog(model)
+                        } else {
+                            Toast.makeText(
+                                requireContext(),
+                                "این تصویر در حافظه موجود می باشد",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                     } else {
-                        Toast.makeText(
-                            requireContext(),
-                            "این تصویر در حافظه موجود می باشد",
-                            Toast.LENGTH_LONG
-                        ).show()
+                        alertNetworkDialog(requireContext(), model.color.toString())
                     }
 
                 }
@@ -302,6 +307,8 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                             Toast.LENGTH_LONG
                         ).show()
                     }
+                } else {
+                    alertNetworkDialog(requireContext(), modelPhoto.color.toString())
                 }
             }
         }
@@ -330,11 +337,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
             }
         } else {
-            val view: View = requireView()
-            Snackbar.make(
-                view, "check your internet 😐",
-                Snackbar.LENGTH_LONG
-            ).show()
+            alertNetworkDialog(requireContext(), modelPhoto?.color.toString())
         }
     }
 
@@ -362,7 +365,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             return
         }
 
-        val dialog = Dialog(activity!!, R.style.WallpaperAlertDialog)
+        val dialog = Dialog(activity!!, R.style.AlertDialog)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
         dialog.setContentView(R.layout.layout_downlaod_dialog)
@@ -428,17 +431,50 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
     }
 
-    private fun successDialog(message: String, drawable: Drawable, color: String, duration: Long) {
-        val dialog = Dialog(activity!!, R.style.WallpaperAlertDialog)
+    private fun alertNetworkDialog(context: Context, color: String) {
+        val dialog = Dialog(context, R.style.AlertDialog)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
-        dialog.setContentView(R.layout.layout_dialog_set_wallapper)
+        dialog.setContentView(R.layout.layout_dialog_network_alert)
 
-        val cardBackground = dialog.findViewById<CardView>(R.id.card_background_wallpaper_dialog)
+        val cardBackground = dialog.findViewById<CardView>(R.id.card_background_network_dialog)
+        val textViewTitle = dialog.findViewById<TextView>(R.id.text_title_network_dialog)
+        val imageViewIcon = dialog.findViewById<ImageView>(R.id.image_view_icon_network_dialog)
+
+        cardBackground.setCardBackgroundColor(
+            Color.parseColor(color)
+        )
+
+        if (Color.parseColor(modelPhoto?.color.toString()).isBrightColor) {
+            val color = Color.parseColor("#2E2E2E") //The color u want
+            imageViewIcon.setColorFilter(color)
+            textViewTitle.setTextColor(color)
+
+        } else {
+            val colorLight = Color.parseColor("#ffffff") //The color u want
+            imageViewIcon.setColorFilter(colorLight)
+            textViewTitle.setTextColor(colorLight)
+        }
+
+        Handler().postDelayed({
+            dialog.dismiss()
+        }, 2000)
+
+        dialog.window?.setGravity(Gravity.BOTTOM)
+        dialog.show()
+    }
+
+    private fun successDialog(message: String, drawable: Drawable, color: String, duration: Long) {
+        val dialog = Dialog(activity!!, R.style.AlertDialog)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.layout_dialog_success)
+
+        val cardBackground = dialog.findViewById<CardView>(R.id.card_background_success_dialog)
         val textViewTitle = dialog.findViewById<TextView>(R.id.text_title_wallpaper_dialog)
-        val imageViewIcon = dialog.findViewById<ImageView>(R.id.image_view_icon_wallpaper_dialog)
+        val imageViewIcon = dialog.findViewById<ImageView>(R.id.image_view_icon_success_dialog)
         val imageViewSuccess =
-            dialog.findViewById<ImageView>(R.id.image_view_success_wallpaper_dialog)
+            dialog.findViewById<ImageView>(R.id.image_view_success_dialog)
         cardBackground.setCardBackgroundColor(
             Color.parseColor(color)
         )

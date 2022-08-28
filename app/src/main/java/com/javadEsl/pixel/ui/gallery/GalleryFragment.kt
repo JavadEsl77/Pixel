@@ -1,23 +1,31 @@
 package com.javadEsl.pixel.ui.gallery
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Gravity
 import android.view.View
+import android.view.Window
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.TextView.OnEditorActionListener
-import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import androidx.paging.PagingData
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -27,9 +35,11 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.snackbar.Snackbar
 import com.javadEsl.pixel.R
+import com.javadEsl.pixel.data.ModelPhoto
 import com.javadEsl.pixel.data.UnsplashPhoto
 import com.javadEsl.pixel.data.convertedUrl
 import com.javadEsl.pixel.databinding.FragmentGalleryBinding
+import com.javadEsl.pixel.isBrightColor
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -181,19 +191,15 @@ class GalleryFragment :
     }
 
     override fun onItemClick(photo: UnsplashPhoto) {
-        if (checkConnection()) {
+        if (checkIsConnection()) {
             val action = GalleryFragmentDirections.actionGalleryFragmentToDetailsFragment(photo)
             findNavController().navigate(action)
         } else {
-            val view: View = requireView()
-            Snackbar.make(
-                view, "check your internet 😐",
-                Snackbar.LENGTH_LONG
-            ).show()
+            alertNetworkDialog(requireContext())
         }
     }
 
-    fun checkConnection(): Boolean {
+    fun checkIsConnection(): Boolean {
         val connectionManager =
             requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val wifiConnection = connectionManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
@@ -204,5 +210,17 @@ class GalleryFragment :
 
     }
 
+    private fun alertNetworkDialog(context: Context) {
+        val dialog = Dialog(context, R.style.AlertDialog)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.layout_dialog_network_alert)
+        Handler().postDelayed({
+            dialog.dismiss()
+        }, 2000)
+
+        dialog.window?.setGravity(Gravity.BOTTOM)
+        dialog.show()
+    }
 
 }

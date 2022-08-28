@@ -19,7 +19,7 @@
         <item name="fontFamily">@font/roboto_regular</item>
     </style>
 
-    <style name="WallpaperAlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="AlertDialog" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="android:windowBackground">@drawable/shape_background_dialog</item>
     </style>
 
