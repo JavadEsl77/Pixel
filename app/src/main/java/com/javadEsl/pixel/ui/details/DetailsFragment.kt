@@ -287,19 +287,21 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     return@setOnClickListener
                 }
-                isOnSaveClicked = true
 
-                val root = Environment.getExternalStorageDirectory()
-                val myDir = File("${root}/Pixel/${modelPhoto.id}.jpg")
+                if (checkIsConnection()) {
+                    isOnSaveClicked = true
+                    val root = Environment.getExternalStorageDirectory()
+                    val myDir = File("${root}/Pixel/${modelPhoto.id}.jpg")
 
-                if (!myDir.exists()) {
-                    downloadDialog(modelPhoto)
-                } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "این تصویر در حافظه موجود می باشد",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    if (!myDir.exists()) {
+                        downloadDialog(modelPhoto)
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            "این تصویر در حافظه موجود می باشد",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 }
             }
         }
