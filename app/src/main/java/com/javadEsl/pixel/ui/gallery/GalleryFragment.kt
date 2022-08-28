@@ -2,6 +2,7 @@ package com.javadEsl.pixel.ui.gallery
 
 import android.app.Activity
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.os.Bundle
@@ -11,6 +12,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView.OnEditorActionListener
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -38,9 +40,12 @@ class GalleryFragment :
     private val viewModel by viewModels<GalleryViewModel>()
     private var _binding: FragmentGalleryBinding? = null
     private val binding get() = _binding!!
+    var sharedPreference: SharedPreferences? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.getRandomPhoto()
+        sharedPreference =
+            requireContext().getSharedPreferences("Search_value", Context.MODE_PRIVATE)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -151,7 +156,22 @@ class GalleryFragment :
         if (binding.edtSearch.text.toString().isEmpty()) {
             binding.edtSearch.error = getString(R.string.string_error_edittext_search)
         } else {
-            viewModel.searchPhotos(binding.edtSearch.text.toString())
+            val editor = sharedPreference?.edit()
+            if (sharedPreference?.getString("search", "").equals("")) {
+                editor?.putString("search", binding.edtSearch.text.toString())
+                editor?.apply()
+                viewModel.searchPhotos(binding.edtSearch.text.toString())
+            } else {
+                if (!sharedPreference?.getString("search", "")
+                        .equals(binding.edtSearch.text.toString())
+                ) {
+                    editor?.putString("search", binding.edtSearch.text.toString())
+                    editor?.apply()
+                    viewModel.searchPhotos(binding.edtSearch.text.toString())
+                }
+            }
+
+
         }
     }
 
