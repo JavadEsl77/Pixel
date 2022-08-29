@@ -16,6 +16,8 @@ data class ModelPhoto(
     val location: Location?,
     @SerializedName("updated_at")
     val updatedAt: String?,
+    @SerializedName("current_user_collections")
+    val currentUserCollections: List<CurrentUserCollections>?,
     val urls: Urls?,
     val user: User?,
     val views: Int?,

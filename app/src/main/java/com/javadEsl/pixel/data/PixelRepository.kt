@@ -1,12 +1,10 @@
 package com.javadEsl.pixel.data
 
-import androidx.paging.LoadState
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.liveData
 import com.javadEsl.pixel.NetworkHelper
 import com.javadEsl.pixel.api.PixelApi
-import java.lang.Error
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -23,7 +21,7 @@ class PixelRepository @Inject constructor(
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
-                UnsplashPagingSource(pixelApi, query, networkHelper)
+                UnsplashPagingSource(pixelApi, query)
             }
         ).liveData
 

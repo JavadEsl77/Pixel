@@ -2,18 +2,14 @@ package com.javadEsl.pixel.data
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.javadEsl.pixel.NetworkHelper
 import com.javadEsl.pixel.api.PixelApi
-import retrofit2.HttpException
-import java.io.IOException
 import javax.inject.Inject
 
 private const val UNSPLASH_STARTING_PAGE_INDEX = 1
 
 class UnsplashPagingSource @Inject constructor(
     private val pixelApi: PixelApi,
-    private val query: String,
-    private val networkHelper: NetworkHelper
+    private val query: String
 ) :
     PagingSource<Int, UnsplashPhoto>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, UnsplashPhoto> {

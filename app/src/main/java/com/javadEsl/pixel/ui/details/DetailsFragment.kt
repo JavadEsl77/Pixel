@@ -419,6 +419,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                         Toast.LENGTH_SHORT
                     ).show()
                     downloadStatus = false
+                    isOnSaveClicked = false
 
                 }
             })

@@ -2,6 +2,7 @@ package com.javadEsl.pixel.ui.gallery
 
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
+import com.bumptech.glide.load.engine.Resource
 import com.javadEsl.pixel.NetworkHelper
 import com.javadEsl.pixel.data.ModelPhoto
 import com.javadEsl.pixel.data.PixelRepository
@@ -18,13 +19,19 @@ class GalleryViewModel @Inject constructor(
     ViewModel() {
 
     private val _liveDataRandomPhoto = MutableLiveData<ModelPhoto?>()
-    val liveDataRandomPhoto: MutableLiveData<ModelPhoto?> = _liveDataRandomPhoto
+    val liveDataRandomPhoto: LiveData<ModelPhoto?> = _liveDataRandomPhoto
     fun getRandomPhoto() {
         viewModelScope.launch {
-            if (networkHelper.checkConnection()){
+
+            if (!networkHelper.hasInternetConnection()) {
+                _liveDataRandomPhoto.postValue(null)
+                return@launch
+            }
+
+            try {
                 val response = pixelRepository.getRandomPhoto()
                 _liveDataRandomPhoto.postValue(response)
-            }else{
+            } catch (e: Exception) {
                 _liveDataRandomPhoto.postValue(null)
             }
 
@@ -43,7 +50,7 @@ class GalleryViewModel @Inject constructor(
 
     companion object {
         private const val CURRENT_QUERY = "current_query"
-        private const val DEFAULT_QUERY = "new"
+        private const val DEFAULT_QUERY = "photo"
     }
 
 }
