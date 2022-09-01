@@ -3,6 +3,7 @@ package com.javadEsl.pixel.ui.gallery
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
@@ -29,11 +30,20 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.javadEsl.pixel.NetworkHelper
 import com.javadEsl.pixel.R
 import com.javadEsl.pixel.data.UnsplashPhoto
 import com.javadEsl.pixel.data.convertedUrl
 import com.javadEsl.pixel.databinding.FragmentGalleryBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.io.IOException
+import java.net.URL
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class GalleryFragment :
@@ -53,63 +63,42 @@ class GalleryFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentGalleryBinding.bind(view)
         val adapter = UnsplashPhotoAdapter(this)
+        _binding = FragmentGalleryBinding.bind(view)
+
         binding.apply {
+
             viewModel.liveDataRandomPhoto.observe(viewLifecycleOwner) {
-                if (it == null) {
-                    recyclerView.isVisible = false
-                    textViewError.isVisible = true
-                    buttonRetry.isVisible = true
-
-                    buttonRetry.setOnClickListener { view->
-                        val query = it?.location?.name ?: "photo"
-                        viewModel.photos.observe(viewLifecycleOwner) { data ->
-                            data?.let {
-                                adapter.submitData(viewLifecycleOwner.lifecycle, data)
+                if (it != null) {
+                    Glide.with(requireActivity())
+                        .load(it.urls?.regular?.convertedUrl)
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.DATA)
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .error(R.drawable.img)
+                        .listener(object : RequestListener<Drawable> {
+                            override fun onLoadFailed(
+                                p0: GlideException?,
+                                p1: Any?,
+                                p2: Target<Drawable>?,
+                                p3: Boolean
+                            ): Boolean {
+                                return false
                             }
-                        }
-                        viewModel.searchPhotos(query)
-                    }
 
-                    return@observe
+                            override fun onResourceReady(
+                                p0: Drawable?,
+                                p1: Any?,
+                                p2: Target<Drawable>?,
+                                p3: DataSource?,
+                                p4: Boolean
+                            ): Boolean {
+                                return false
+                            }
+                        })
+                        .into(imageViewBanner)
                 }
 
-                Glide.with(requireActivity())
-                    .load(it.urls?.regular?.convertedUrl)
-                    .centerCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.DATA)
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .error(R.drawable.img)
-                    .listener(object : RequestListener<Drawable> {
-                        override fun onLoadFailed(
-                            p0: GlideException?,
-                            p1: Any?,
-                            p2: Target<Drawable>?,
-                            p3: Boolean
-                        ): Boolean {
-                            return false
-                        }
-
-                        override fun onResourceReady(
-                            p0: Drawable?,
-                            p1: Any?,
-                            p2: Target<Drawable>?,
-                            p3: DataSource?,
-                            p4: Boolean
-                        ): Boolean {
-                            val query = it.location?.name ?: "photo"
-                            viewModel.photos.observe(viewLifecycleOwner) { data ->
-                                data?.let {
-                                    adapter.submitData(viewLifecycleOwner.lifecycle, data)
-                                }
-                            }
-                            viewModel.searchPhotos(query)
-
-                            return false
-                        }
-                    })
-                    .into(imageViewBanner)
             }
             recyclerView.setHasFixedSize(true)
             recyclerView.itemAnimator = null
@@ -117,10 +106,17 @@ class GalleryFragment :
                 header = UnsplashPhotoLoadStateAdapter { adapter.retry() },
                 footer = UnsplashPhotoLoadStateAdapter { adapter.retry() },
             )
+            viewModel.photos.observe(viewLifecycleOwner) { data ->
+                data?.let {
+                    adapter.submitData(viewLifecycleOwner.lifecycle, data)
+                }
+            }
+
             adapter.addLoadStateListener { loadState ->
                 binding.apply {
                     progressBar.isVisible = loadState.source.refresh is LoadState.Loading
-                    recyclerView.isVisible = loadState.source.refresh is LoadState.NotLoading
+                    recyclerView.isVisible =
+                        loadState.source.refresh is LoadState.NotLoading
                     textViewError.isVisible = loadState.source.refresh is LoadState.Error
                     buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
                     if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && adapter.itemCount < 1) {
@@ -131,6 +127,7 @@ class GalleryFragment :
                     }
                 }
             }
+
             buttonRetry.setOnClickListener {
                 adapter.retry()
             }
@@ -151,7 +148,12 @@ class GalleryFragment :
                 ) {
                 }
 
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                override fun onTextChanged(
+                    s: CharSequence?,
+                    start: Int,
+                    before: Int,
+                    count: Int
+                ) {
 
                 }
             })
@@ -165,7 +167,9 @@ class GalleryFragment :
                 }
                 false
             })
+
         }
+
     }
 
     private fun performSearch() {
