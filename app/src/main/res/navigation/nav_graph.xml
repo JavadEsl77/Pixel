@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/galleryFragment">
+    app:startDestination="@id/splashFragment">
 
     <fragment
         android:id="@+id/galleryFragment"
@@ -22,5 +22,13 @@
         <argument
             android:name="photo"
             app:argType="com.javadEsl.pixel.data.UnsplashPhoto" />
+    </fragment>
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.javadEsl.pixel.ui.splash.SplashFragment"
+        android:label="SplashFragment" >
+        <action
+            android:id="@+id/action_splashFragment_to_galleryFragment"
+            app:destination="@id/galleryFragment" />
     </fragment>
 </navigation>
