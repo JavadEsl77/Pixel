@@ -54,6 +54,48 @@
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:layout_alignParentEnd="true"
+                    app:cardBackgroundColor="#80FFFFFF"
+                    app:cardCornerRadius="15dp"
+                    app:cardElevation="0dp"
+                    tools:background="#80000000">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingStart="15dp"
+                        android:paddingEnd="5dp">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/text_view_more"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="گزینه های بیشتر"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/image_view_more"
+                            android:layout_width="35dp"
+                            android:layout_height="35dp"
+                            android:scaleType="center"
+                            android:src="@drawable/ic_expand_more" />
+
+
+                    </LinearLayout>
+
+
+                </androidx.cardview.widget.CardView>
+
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -67,47 +109,6 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />
-
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/card_download"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="7dp"
-                        app:cardBackgroundColor="#80FFFFFF"
-                        app:cardCornerRadius="15dp"
-                        app:cardElevation="0dp"
-                        tools:background="#80000000">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:orientation="horizontal"
-                            android:paddingStart="15dp"
-                            android:paddingEnd="5dp">
-
-                            <androidx.appcompat.widget.AppCompatTextView
-                                android:id="@+id/text_view_download"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="@string/string_download_images"
-                                android:textColor="@color/white"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-
-                            <ImageView
-                                android:id="@+id/image_view_download"
-                                android:layout_width="35dp"
-                                android:layout_height="35dp"
-                                android:scaleType="center"
-                                android:src="@drawable/ic_arrow_downward" />
-
-
-                        </LinearLayout>
-
-
-                    </androidx.cardview.widget.CardView>
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/card_wallpaper"
@@ -150,6 +151,47 @@
                                 android:layout_height="35dp"
                                 android:scaleType="center"
                                 android:src="@drawable/ic_wallpaper" />
+
+
+                        </LinearLayout>
+
+
+                    </androidx.cardview.widget.CardView>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/card_download"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="7dp"
+                        app:cardBackgroundColor="#80FFFFFF"
+                        app:cardCornerRadius="15dp"
+                        app:cardElevation="0dp"
+                        tools:background="#80000000">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:paddingStart="15dp"
+                            android:paddingEnd="5dp">
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/text_view_download"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/string_download_images"
+                                android:textColor="@color/white"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+
+                            <ImageView
+                                android:id="@+id/image_view_download"
+                                android:layout_width="35dp"
+                                android:layout_height="35dp"
+                                android:scaleType="center"
+                                android:src="@drawable/ic_arrow_downward" />
 
 
                         </LinearLayout>

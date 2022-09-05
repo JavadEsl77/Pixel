@@ -7,15 +7,23 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
+import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.Color.BLACK
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.RippleDrawable
 import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
+import android.provider.MediaStore
 import android.provider.Settings
+import android.util.TypedValue
 import android.view.*
 import android.widget.ImageView
 import android.widget.ProgressBar
@@ -26,6 +34,7 @@ import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.view.MenuCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -38,27 +47,26 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.huxq17.download.Pump
 import com.huxq17.download.config.DownloadConfig
-import com.javadEsl.pixel.NetworkHelper
-import com.javadEsl.pixel.R
+import com.javadEsl.pixel.*
 import com.javadEsl.pixel.data.ModelPhoto
 import com.javadEsl.pixel.data.PixelRepository
 import com.javadEsl.pixel.data.UnsplashPhoto
 import com.javadEsl.pixel.data.convertedUrl
 import com.javadEsl.pixel.databinding.FragmentDetailsBinding
-import com.javadEsl.pixel.isBrightColor
-import com.javadEsl.pixel.toDecimal
 import com.javadEsl.pixel.ui.gallery.UnsplashPhotoAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import me.saket.cascade.CascadePopupMenu
+import me.saket.cascade.allChildren
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import java.io.File
-import java.io.IOException
+import java.io.*
 import java.net.URL
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class DetailsFragment : Fragment(R.layout.fragment_details),
@@ -211,6 +219,14 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     )
                 )
             )
+            cardMore.setCardBackgroundColor(
+                Color.parseColor(
+                    "#cc" + modelPhoto.color?.replace(
+                        "#",
+                        ""
+                    )
+                )
+            )
             cardWallpaper.setCardBackgroundColor(
                 Color.parseColor(
                     "#cc" + modelPhoto.color?.replace(
@@ -223,9 +239,11 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             if (Color.parseColor(modelPhoto.color.toString()).isBrightColor) {
                 val color = Color.parseColor("#2E2E2E") //The color u want
                 imageViewDownload.setColorFilter(color)
+                imageViewMore.setColorFilter(color)
                 imageViewWallpaper.setColorFilter(color)
                 textViewDownload.setTextColor(color)
                 textViewWallpaper.setTextColor(color)
+                textViewMore.setTextColor(color)
             }
 
             Glide.with(this@DetailsFragment)
@@ -278,7 +296,21 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 }
             }
 
+            cardMore.setOnClickListener {
+                if (ActivityCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    return@setOnClickListener
+                }
+
+                showCascadeMenu(anchor = it)
+            }
+
             cardWallpaper.setOnClickListener {
+
                 progressBarWallpaper.isVisible = true
                 val thread = Thread {
                     val drawable = imageView.drawable
@@ -302,35 +334,143 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             }
 
             cardDownload.setOnClickListener {
-                if (ActivityCompat.checkSelfPermission(
-                        requireContext(),
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    return@setOnClickListener
-                }
+//                if (ActivityCompat.checkSelfPermission(
+//                        requireContext(),
+//                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+//                    ) != PackageManager.PERMISSION_GRANTED
+//                ) {
+//                    permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+//                    return@setOnClickListener
+//                }
+//
+//                showCascadeMenu(anchor = it)
 
-                if (checkIsConnection()) {
-                    isOnSaveClicked = true
-                    val root = Environment.getExternalStorageDirectory()
-                    val myDir = File("${root}/Pixel/${modelPhoto.id}.jpg")
-
-                    if (!myDir.exists()) {
-                        downloadDialog(modelPhoto)
-                    } else {
-                        Toast.makeText(
-                            requireContext(),
-                            "این تصویر در حافظه موجود می باشد",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    }
-                } else {
-                    alertNetworkDialog(requireContext(), modelPhoto.color.toString())
-                }
+//                if (checkIsConnection()) {
+//                    isOnSaveClicked = true
+//                    val root = Environment.getExternalStorageDirectory()
+//                    val myDir = File("${root}/Pixel/${modelPhoto.id}.jpg")
+//
+//                    if (!myDir.exists()) {
+//                        downloadDialog(modelPhoto)
+//                    } else {
+//                        Toast.makeText(
+//                            requireContext(),
+//                            "این تصویر در حافظه موجود می باشد",
+//                            Toast.LENGTH_LONG
+//                        ).show()
+//                    }
+//                } else {
+//                    alertNetworkDialog(requireContext(), modelPhoto.color.toString())
+//                }
             }
         }
     }
+
+    private fun showCascadeMenu(anchor: View) {
+        val popupMenu = CascadePopupMenu(requireContext(), anchor, styler = cascadeMenuStyler())
+        popupMenu.menu.apply {
+            MenuCompat.setGroupDividerEnabled(this, true)
+            addSubMenu("اشتراک گزاری").setIcon(R.drawable.ic_share).also {
+                it.add("اشتراک به عنوان تصویر")
+            }
+            addSubMenu("دانلود").setIcon(R.drawable.ic_cloud_download).also {
+                it.add("کوچیک (425×640)")
+                it.add("متوسط (1277×1920)")
+                it.add("بزرگ (1596×2400)")
+                it.add("اصلی (4024×6048)")
+
+                it.add("شروع دانلود")
+                it.add("بازگشت")
+            }
+            popupMenu.show()
+
+            allChildren.filter { it.intent == null }.forEach {
+                it.setOnMenuItemClickListener { menuItem ->
+                    when (menuItem.toString()) {
+                        "شروع دانلود" -> {
+                            if (checkIsConnection()) {
+                                isOnSaveClicked = true
+                                val root = Environment.getExternalStorageDirectory()
+                                val myDir = File("${root}/Pixel/${modelPhoto?.id}.jpg")
+
+                                if (!myDir.exists()) {
+                                    modelPhoto?.let { it1 -> downloadDialog(it1) }
+                                } else {
+                                    Toast.makeText(
+                                        requireContext(),
+                                        "این تصویر در حافظه موجود می باشد",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            } else {
+                                alertNetworkDialog(requireContext(), modelPhoto?.color.toString())
+                                popupMenu.dismiss()
+                            }
+                        }
+                        "اشتراک به عنوان تصویر" -> {
+
+                            val root = Environment.getExternalStorageDirectory()
+                            val myDir = File("${root}/Pixel/${modelPhoto?.id}.jpg")
+                        }
+                    }
+
+
+                    popupMenu.navigateBack()
+                }
+            }
+        }
+
+    }
+
+    private fun cascadeMenuStyler(): CascadePopupMenu.Styler {
+        val rippleDrawable = {
+            RippleDrawable(
+                ColorStateList.valueOf(Color.parseColor("#B1DDC6")),
+                null,
+                ColorDrawable(BLACK)
+            )
+
+        }
+
+        return CascadePopupMenu.Styler(
+            background = {
+                RoundedRectDrawable(Color.parseColor("#E0EEE7"), radius = 8f.dip)
+            },
+            menuTitle = {
+//                it.titleView.typeface = ResourcesCompat.getFont(requireContext(), R.font.work_sans_medium)
+                it.setBackground(rippleDrawable())
+            },
+            menuItem = {
+//                it.titleView.typeface = ResourcesCompat.getFont(requireContext(), R.font.work_sans_medium)
+                it.setBackground(rippleDrawable())
+                it.setGroupDividerColor(Color.parseColor("#BED9CF"))
+            }
+        )
+    }
+
+    private val Float.dip: Float
+        get() {
+            val metrics = resources.displayMetrics
+            return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, metrics)
+        }
+
+    private fun shareImage(mBitmap: Bitmap, file: File) {
+        val icon: Bitmap = mBitmap
+        val share = Intent(Intent.ACTION_SEND)
+        share.type = "image/jpeg"
+        val bytes = ByteArrayOutputStream()
+        icon.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        try {
+            file.createNewFile()
+            val fo = FileOutputStream(file)
+            fo.write(bytes.toByteArray())
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        share.putExtra(Intent.EXTRA_STREAM, Uri.parse("file:///sdcard/temporary_file.jpg"))
+        startActivity(Intent.createChooser(share, "Share Image"))
+    }
+
 
     private fun getUserPhotos(binding: FragmentDetailsBinding) {
 
