@@ -31,11 +31,8 @@
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:gravity="center"
+                    android:layout_margin="15dp"
+                    android:gravity="center|bottom"
                     android:orientation="horizontal">
 
                     <androidx.appcompat.widget.AppCompatImageView
@@ -46,7 +43,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="7dp"
+                        android:layout_marginStart="4dp"
                         android:text="@string/app_name"
                         android:textColor="@color/white"
                         android:textSize="16dp"
@@ -58,7 +55,7 @@
                     android:id="@+id/card_download"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="7dp"
+                    android:layout_margin="15dp"
                     android:layout_alignParentRight="true"
                     app:cardBackgroundColor="#80FFFFFF"
                     app:cardCornerRadius="15dp"
@@ -80,12 +77,12 @@
                             android:gravity="center"
                             android:text="@string/string_download_images"
                             android:textColor="@color/white"
-                            android:textSize="14sp"
+                            android:textSize="14dp"
                             android:textStyle="bold" />
 
                         <ImageView
                             android:id="@+id/image_view_download"
-                            android:layout_width="35dp"
+                            android:layout_width="25dp"
                             android:layout_height="35dp"
                             android:scaleType="center"
                             android:src="@drawable/ic_expand_more" />

@@ -31,6 +31,7 @@ import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.MenuCompat
 import androidx.core.view.isVisible
@@ -207,7 +208,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             }
 
             Glide.with(this@DetailsFragment)
-                .load(modelPhoto.user?.profileImage?.large?.convertedUrl)
+                .load(modelPhoto.user?.profileImage?.medium?.convertedUrl)
                 .centerCrop()
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .error(R.drawable.ic_user)
@@ -246,8 +247,9 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 textViewWallpaper.setTextColor(color)
                 textViewShare.setTextColor(color)
             }
+
             Glide.with(this@DetailsFragment)
-                .load(modelPhoto.urls?.small?.convertedUrl)
+                .load(modelPhoto.urls?.regular?.convertedUrl)
                 .error(R.drawable.ic_error_photos)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .diskCacheStrategy(DiskCacheStrategy.DATA)
@@ -451,7 +453,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         return CascadePopupMenu.Styler(
             background = {
                 RoundedRectDrawable(
-                    requireContext().resources.getColor(R.color.color_menu_download),
+                    ResourcesCompat.getColor(resources, R.color.color_menu_download, null),
                     radius = 10f.dip
                 )
             },
@@ -557,13 +559,15 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     dialog.dismiss()
                     downloadStatus = false
                     isOnSaveClicked = false
-                    successDialog(
-                        getString(R.string.string_alert_success_download),
-                        activity!!.getDrawable(R.drawable.ic_downward)!!,
-                        modelPhoto.color.toString(),
-                        1500
-                    )
-                    if (shareAfter) {
+
+                    if (!shareAfter) {
+                        successDialog(
+                            getString(R.string.string_alert_success_download),
+                            activity!!.getDrawable(R.drawable.ic_downward)!!,
+                            modelPhoto.color.toString(),
+                            1500
+                        )
+                    } else {
                         shareImage(modelPhoto)
                     }
                 }
