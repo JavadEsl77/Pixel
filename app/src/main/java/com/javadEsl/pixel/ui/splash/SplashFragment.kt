@@ -2,6 +2,7 @@ package com.javadEsl.pixel.ui.splash
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
@@ -33,7 +34,7 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
         binding.apply {
 
             viewModel.connection.observe(viewLifecycleOwner) {
-                stateNetwork = it!!
+                stateNetwork = it == true
                 if (it == false) {
                     layoutError.isVisible = true
                     layoutLoading.isVisible = false
@@ -43,17 +44,17 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
                     animationView.isVisible = true
                     layoutLoading.isVisible = true
                     layoutError.isVisible = false
-                    Handler().postDelayed({
-                        val action =
-                            SplashFragmentDirections.actionSplashFragmentToGalleryFragment()
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        val action = SplashFragmentDirections.actionSplashFragmentToGalleryFragment()
                         findNavController().navigate(action)
+
+
                     }, 3000)
                 }
             }
 
-            val versionCode: Int = BuildConfig.VERSION_CODE
             val versionName: String = BuildConfig.VERSION_NAME
-            textViewVersion.text = " نسخه $versionName"
+            textViewVersion.text = "نسخه   $versionName"
 
             textViewRetry.setOnClickListener {
                 viewModel.getStartNavigate()
@@ -66,11 +67,10 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
                     anim.repeatCount = Animation.INFINITE
                     textViewNetworkError.startAnimation(anim)
 
-                    Handler().postDelayed({
+                    Handler(Looper.getMainLooper()).postDelayed({
                         anim.cancel()
                     }, 1000)
                 }
-
 
 
             }

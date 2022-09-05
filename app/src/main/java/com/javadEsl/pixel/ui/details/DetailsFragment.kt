@@ -392,7 +392,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             modelPhoto?.urls?.raw?.let {
                 add(IMAGE_RAW)
             }
-            add(CANCEL_DOWNLOAD_MENU)
         }
         popupMenu.show()
 

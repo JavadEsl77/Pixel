@@ -127,10 +127,10 @@
                 android:id="@+id/text_view_version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="نسخه 1.1.0"
+                android:layout_margin="7dp"
+                android:text="نسخه  1.1.0"
                 android:textColor="@color/white"
-                android:textSize="12sp" />
+                android:textSize="14dp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
