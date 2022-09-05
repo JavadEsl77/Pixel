@@ -9,7 +9,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.Color.BLACK
+import android.graphics.Color.WHITE
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.RippleDrawable
@@ -50,7 +50,10 @@ import com.javadEsl.IMAGE_RAW
 import com.javadEsl.IMAGE_REGULAR
 import com.javadEsl.IMAGE_SMALL
 import com.javadEsl.pixel.*
-import com.javadEsl.pixel.data.*
+import com.javadEsl.pixel.data.ModelPhoto
+import com.javadEsl.pixel.data.PixelRepository
+import com.javadEsl.pixel.data.UnsplashPhoto
+import com.javadEsl.pixel.data.convertedUrl
 import com.javadEsl.pixel.databinding.FragmentDetailsBinding
 import com.javadEsl.pixel.ui.gallery.UnsplashPhotoAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -133,7 +136,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         super.onViewCreated(view, savedInstanceState)
         initViewModel()
     }
-
 
     private fun initViewModel() {
 
@@ -360,6 +362,20 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         }
     }
 
+    private fun getUserPhotos(binding: FragmentDetailsBinding) {
+
+        viewModel.liveDataUserPhotosList.observe(viewLifecycleOwner) {
+            if (it.isNullOrEmpty()) return@observe
+
+            val adapter = UnsplashUserPhotoAdapter(it, this)
+            binding.apply {
+                recViewUserPhotos.setHasFixedSize(true)
+                recViewUserPhotos.itemAnimator = null
+                recViewUserPhotos.adapter = adapter
+            }
+        }
+    }
+
     private fun showDownloadMenu(anchor: View) {
         val popupMenu = CascadePopupMenu(requireContext(), anchor, styler = cascadeMenuStyler())
         popupMenu.menu.apply {
@@ -423,19 +439,21 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
     }
 
-
     private fun cascadeMenuStyler(): CascadePopupMenu.Styler {
         val rippleDrawable = {
             RippleDrawable(
                 ColorStateList.valueOf(Color.parseColor("#b1cadd")),
                 null,
-                ColorDrawable(BLACK)
+                ColorDrawable(WHITE)
             )
         }
 
         return CascadePopupMenu.Styler(
             background = {
-                RoundedRectDrawable(Color.parseColor("#b4cfec"), radius = 8f.dip)
+                RoundedRectDrawable(
+                    requireContext().resources.getColor(R.color.color_menu_download),
+                    radius = 10f.dip
+                )
             },
             menuTitle = {
                 it.setBackground(rippleDrawable())
@@ -469,50 +487,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             startActivity(Intent.createChooser(sharingIntent, "Share using"))
         } catch (e: Exception) {
             Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun getUserPhotos(binding: FragmentDetailsBinding) {
-
-        viewModel.liveDataUserPhotosList.observe(viewLifecycleOwner) {
-            if (it.isNullOrEmpty()) return@observe
-
-            val adapter = UnsplashUserPhotoAdapter(it, this)
-            binding.apply {
-                recViewUserPhotos.setHasFixedSize(true)
-                recViewUserPhotos.itemAnimator = null
-                recViewUserPhotos.adapter = adapter
-            }
-        }
-    }
-
-    override fun onItemClick(photo: UnsplashPhoto) {
-        if (checkIsConnection()) {
-            binding.layoutLoading.isVisible = true
-            viewModel.getPhotoDetail(photo.id)
-            binding.apply {
-                nestedView.smoothScrollTo(0, 0)
-
-            }
-        } else {
-            alertNetworkDialog(requireContext(), modelPhoto?.color.toString())
-        }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (downloadStatus) {
-            Pump.shutdown()
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
-            Environment.isExternalStorageManager() &&
-            isOnSaveClicked
-        ) {
-            binding.cardDownload.performClick()
         }
     }
 
@@ -739,6 +713,36 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     action = NetworkHelper.DISCONNECTED_ACTION
                 })
             }
+        }
+    }
+
+    override fun onItemClick(photo: UnsplashPhoto) {
+        if (checkIsConnection()) {
+            binding.layoutLoading.isVisible = true
+            viewModel.getPhotoDetail(photo.id)
+            binding.apply {
+                nestedView.smoothScrollTo(0, 0)
+
+            }
+        } else {
+            alertNetworkDialog(requireContext(), modelPhoto?.color.toString())
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (downloadStatus) {
+            Pump.shutdown()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+            Environment.isExternalStorageManager() &&
+            isOnSaveClicked
+        ) {
+            binding.cardDownload.performClick()
         }
     }
 }
