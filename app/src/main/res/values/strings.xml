@@ -6,6 +6,7 @@
     <string name="string_error_not_find_results">هیچ نتیجه ای برای این جستجو یافت نشد</string>
     <string name="string_retry_find_results">تلاش مجدد</string>
     <string name="string_download_images">دانلود</string>
+    <string name="string_download_share">اشتراک گزاری</string>
     <string name="string_wallpaper_images">تنظیم به عنوان تصویر پس زمینه</string>
     <string name="string_views_images">بازدیدها</string>
     <string name="string_downloads_images">دانلود ها</string>

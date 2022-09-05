@@ -55,11 +55,11 @@
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/card_more"
+                    android:id="@+id/card_download"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_alignParentEnd="true"
+                    android:layout_margin="15dp"
+                    android:layout_alignParentRight="true"
                     app:cardBackgroundColor="#80FFFFFF"
                     app:cardCornerRadius="15dp"
                     app:cardElevation="0dp"
@@ -74,17 +74,17 @@
                         android:paddingEnd="5dp">
 
                         <androidx.appcompat.widget.AppCompatTextView
-                            android:id="@+id/text_view_more"
+                            android:id="@+id/text_view_download"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="گزینه های بیشتر"
+                            android:text="@string/string_download_images"
                             android:textColor="@color/white"
                             android:textSize="14sp"
                             android:textStyle="bold" />
 
                         <ImageView
-                            android:id="@+id/image_view_more"
+                            android:id="@+id/image_view_download"
                             android:layout_width="35dp"
                             android:layout_height="35dp"
                             android:scaleType="center"
@@ -159,12 +159,12 @@
                     </androidx.cardview.widget.CardView>
 
                     <androidx.cardview.widget.CardView
-                        android:id="@+id/card_download"
+                        android:id="@+id/card_share"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="7dp"
                         app:cardBackgroundColor="#80FFFFFF"
                         app:cardCornerRadius="15dp"
+                        android:layout_marginStart="7dp"
                         app:cardElevation="0dp"
                         tools:background="#80000000">
 
@@ -177,27 +177,28 @@
                             android:paddingEnd="5dp">
 
                             <androidx.appcompat.widget.AppCompatTextView
-                                android:id="@+id/text_view_download"
+                                android:id="@+id/text_view_share"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:gravity="center"
-                                android:text="@string/string_download_images"
+                                android:text="@string/string_download_share"
                                 android:textColor="@color/white"
-                                android:textSize="13sp"
+                                android:textSize="14sp"
                                 android:textStyle="bold" />
 
                             <ImageView
-                                android:id="@+id/image_view_download"
+                                android:id="@+id/image_view_share"
                                 android:layout_width="35dp"
                                 android:layout_height="35dp"
                                 android:scaleType="center"
-                                android:src="@drawable/ic_arrow_downward" />
+                                android:src="@drawable/ic_share" />
 
 
                         </LinearLayout>
 
 
                     </androidx.cardview.widget.CardView>
+
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
