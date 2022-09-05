@@ -64,11 +64,11 @@ import kotlinx.coroutines.launch
 import me.saket.cascade.CascadePopupMenu
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import java.io.*
+import java.io.File
+import java.io.IOException
 import java.net.URL
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-
 
 @AndroidEntryPoint
 class DetailsFragment : Fragment(R.layout.fragment_details),
