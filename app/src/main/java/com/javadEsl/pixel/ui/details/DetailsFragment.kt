@@ -319,7 +319,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
 //                addWaterMark(bitmap)
 
-//                imageView.setImageBitmap(addWatermark(bitmap))
+                imageView.setImageBitmap(addWatermark(bitmap))
 
                 addWatermark(bitmap)?.let { it1 ->
                     saveImage(it1)?.let { it2 ->
@@ -487,23 +487,19 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
         val watermark: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.img_water_mark)
 
-        scale = ((256.toFloat() * 0.30f) / watermark.height)
+        scale = ((200.toFloat() * 0.43f) / watermark.height)
         val matrix: Matrix = Matrix()
         matrix.postScale(scale, scale)
         rectF = RectF(0f, 0f, watermark.width.toFloat(), watermark.height.toFloat())
         matrix.mapRect(rectF)
 
-        matrix.postTranslate(15f, 15f)
+        matrix.postTranslate(20f, height.toFloat()-(watermark.height))
 
         canvas.drawBitmap(watermark, matrix, paint)
         watermark.recycle()
 
         return bitmap
     }
-
-
-    val Int.px: Int
-        get() = (this * Resources.getSystem().displayMetrics.density).toInt()
 
     private fun saveImage(image: Bitmap): Uri? {
         //TODO - Should be processed in another thread
@@ -534,7 +530,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         intent.type = "image/png"
         startActivity(intent)
     }
-
 
     private fun downloadDialog(modelPhoto: ModelPhoto) {
 
