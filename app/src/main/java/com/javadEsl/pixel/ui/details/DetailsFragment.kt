@@ -4,11 +4,13 @@ import android.Manifest
 import android.app.Dialog
 import android.app.WallpaperManager
 import android.content.ActivityNotFoundException
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
-import android.graphics.Color
+import android.content.res.Resources
+import android.graphics.*
 import android.graphics.Color.WHITE
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
@@ -20,6 +22,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.provider.Settings
+import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import android.widget.ImageView
@@ -64,10 +67,12 @@ import me.saket.cascade.CascadePopupMenu
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import java.net.URL
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class DetailsFragment : Fragment(R.layout.fragment_details),
@@ -89,7 +94,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                         val myDir = File("${root}/Pixel/${model.id}.jpg")
 
                         if (!myDir.exists()) {
-                            downloadDialog(model, false)
+                            downloadDialog(model)
                         } else {
                             Toast.makeText(
                                 requireContext(),
@@ -307,22 +312,20 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     return@setOnClickListener
                 }
 
-                if (checkIsConnection()) {
-                    resolutionType = IMAGE_REGULAR
-                    isOnSaveClicked = true
-                    val root = Environment.getExternalStorageDirectory()
-                    val myDir = File("${root}/Pixel/${modelPhoto.id}/HD.jpg")
 
-                    if (!myDir.exists()) {
-                        downloadDialog(modelPhoto, true)
+                imageView.invalidate()
+                val drawable = imageView.drawable
+                val bitmap = drawable.toBitmap()
 
-                    } else {
-                        shareImage(modelPhoto)
+//                addWaterMark(bitmap)
+
+//                imageView.setImageBitmap(addWatermark(bitmap))
+
+                addWatermark(bitmap)?.let { it1 ->
+                    saveImage(it1)?.let { it2 ->
+                        shareImageUri(it2)
                     }
-                } else {
-                    alertNetworkDialog(requireContext(), modelPhoto.color.toString())
                 }
-
             }
 
             cardWallpaper.setOnClickListener {
@@ -396,39 +399,39 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
         popupMenu.setOnMenuItemClickListener { menuItem ->
 
-                resolutionType = menuItem.toString()
-                if (checkIsConnection()) {
-                    isOnSaveClicked = true
-                    var resolutionTypeSelected = ""
-                    when (resolutionType) {
-                        IMAGE_REGULAR -> {
-                            resolutionTypeSelected = "HD"
-                        }
-                        IMAGE_RAW     -> {
-                            resolutionTypeSelected = "Full-HD"
-                        }
-                        IMAGE_SMALL   -> {
-                            resolutionTypeSelected = "SD"
-                        }
+            resolutionType = menuItem.toString()
+            if (checkIsConnection()) {
+                isOnSaveClicked = true
+                var resolutionTypeSelected = ""
+                when (resolutionType) {
+                    IMAGE_REGULAR -> {
+                        resolutionTypeSelected = "HD"
                     }
-                    val root = Environment.getExternalStorageDirectory()
-                    val myDir =
-                        File("${root}/Pixel/${modelPhoto?.id}/${resolutionTypeSelected}.jpg")
-
-                    if (!myDir.exists()) {
-                        modelPhoto?.let { it1 -> downloadDialog(it1, false) }
-                        popupMenu.dismiss()
-                    } else {
-                        Toast.makeText(
-                            requireContext(),
-                            "این تصویر در حافظه موجود می باشد",
-                            Toast.LENGTH_LONG
-                        ).show()
+                    IMAGE_RAW     -> {
+                        resolutionTypeSelected = "Full-HD"
                     }
-                } else {
-                    alertNetworkDialog(requireContext(), modelPhoto?.color.toString())
-                    popupMenu.dismiss()
+                    IMAGE_SMALL   -> {
+                        resolutionTypeSelected = "SD"
+                    }
                 }
+                val root = Environment.getExternalStorageDirectory()
+                val myDir =
+                    File("${root}/Pixel/${modelPhoto?.id}/${resolutionTypeSelected}.jpg")
+
+                if (!myDir.exists()) {
+                    modelPhoto?.let { it1 -> downloadDialog(it1) }
+                    popupMenu.dismiss()
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "این تصویر در حافظه موجود می باشد",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            } else {
+                alertNetworkDialog(requireContext(), modelPhoto?.color.toString())
+                popupMenu.dismiss()
+            }
             popupMenu.navigateBack()
 
         }
@@ -468,25 +471,72 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, metrics)
         }
 
-    private fun shareImage(modelPhoto: ModelPhoto) {
-        try {
+    private fun addWatermark(source: Bitmap): Bitmap? {
+        val canvas: Canvas
+        val bitmap: Bitmap
+        val scale: Float
+        val rectF: RectF
+        val width: Int = source.width
+        val height: Int = source.height
 
-            val root = Environment.getExternalStorageDirectory()
-            val myFile = File("${root}/Pixel/${modelPhoto.id}/HD.jpg")
+        bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val paint: Paint =
+            Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG or Paint.FILTER_BITMAP_FLAG)
+        canvas = Canvas(bitmap)
+        canvas.drawBitmap(source, 0f, 0f, paint)
 
-            val imageUri = FileProvider.getUriForFile(
-                requireContext(), "com.example.homefolder.example.provider", myFile
-            )
-            val sharingIntent = Intent("android.intent.action.SEND")
-            sharingIntent.type = "*/*"
-            sharingIntent.putExtra("android.intent.extra.STREAM", imageUri)
-            startActivity(Intent.createChooser(sharingIntent, "Share using"))
-        } catch (e: Exception) {
-            Toast.makeText(requireContext(), e.message, Toast.LENGTH_SHORT).show()
-        }
+        val watermark: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.img_water_mark)
+
+        scale = ((256.toFloat() * 0.30f) / watermark.height)
+        val matrix: Matrix = Matrix()
+        matrix.postScale(scale, scale)
+        rectF = RectF(0f, 0f, watermark.width.toFloat(), watermark.height.toFloat())
+        matrix.mapRect(rectF)
+
+        matrix.postTranslate(15f, 15f)
+
+        canvas.drawBitmap(watermark, matrix, paint)
+        watermark.recycle()
+
+        return bitmap
     }
 
-    private fun downloadDialog(modelPhoto: ModelPhoto, shareAfter: Boolean) {
+
+    val Int.px: Int
+        get() = (this * Resources.getSystem().displayMetrics.density).toInt()
+
+    private fun saveImage(image: Bitmap): Uri? {
+        //TODO - Should be processed in another thread
+        val imagesFolder: File = File(requireContext().cacheDir, "images")
+        var uri: Uri? = null
+        try {
+            imagesFolder.mkdirs()
+            val file = File(imagesFolder, "shared_image.jpg")
+            val stream = FileOutputStream(file)
+            image.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+            stream.flush()
+            stream.close()
+            uri = FileProvider.getUriForFile(
+                requireContext(),
+                "${requireContext().packageName}.provider",
+                file
+            );
+        } catch (e: IOException) {
+            Log.d(TAG, "IOException while trying to write file for sharing: " + e.message)
+        }
+        return uri
+    }
+
+    private fun shareImageUri(uri: Uri) {
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.putExtra(Intent.EXTRA_STREAM, uri)
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        intent.type = "image/png"
+        startActivity(intent)
+    }
+
+
+    private fun downloadDialog(modelPhoto: ModelPhoto) {
 
         if (isRequireExternalStorageManager()) {
             requestPermission()
@@ -553,17 +603,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     dialog.dismiss()
                     downloadStatus = false
                     isOnSaveClicked = false
-
-                    if (!shareAfter) {
-                        successDialog(
-                            getString(R.string.string_alert_success_download),
-                            activity!!.getDrawable(R.drawable.ic_downward)!!,
-                            modelPhoto.color.toString(),
-                            1500
-                        )
-                    } else {
-                        shareImage(modelPhoto)
-                    }
                 }
 
                 override fun onFailed() {
