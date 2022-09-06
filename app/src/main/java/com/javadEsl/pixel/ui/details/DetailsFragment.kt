@@ -46,11 +46,10 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.huxq17.download.Pump
 import com.huxq17.download.config.DownloadConfig
-import com.javadEsl.CANCEL_DOWNLOAD_MENU
-import com.javadEsl.IMAGE_RAW
-import com.javadEsl.IMAGE_REGULAR
-import com.javadEsl.IMAGE_SMALL
 import com.javadEsl.pixel.*
+import com.javadEsl.pixel.api.IMAGE_RAW
+import com.javadEsl.pixel.api.IMAGE_REGULAR
+import com.javadEsl.pixel.api.IMAGE_SMALL
 import com.javadEsl.pixel.data.ModelPhoto
 import com.javadEsl.pixel.data.PixelRepository
 import com.javadEsl.pixel.data.UnsplashPhoto
@@ -397,7 +396,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
         popupMenu.setOnMenuItemClickListener { menuItem ->
 
-            if (menuItem.toString() != CANCEL_DOWNLOAD_MENU) {
                 resolutionType = menuItem.toString()
                 if (checkIsConnection()) {
                     isOnSaveClicked = true
@@ -431,9 +429,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     alertNetworkDialog(requireContext(), modelPhoto?.color.toString())
                     popupMenu.dismiss()
                 }
-            } else {
-                popupMenu.dismiss()
-            }
             popupMenu.navigateBack()
 
         }
