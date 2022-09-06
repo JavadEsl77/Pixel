@@ -50,6 +50,14 @@
             </meta-data>
         </provider>
 
+
+        <meta-data android:name="io.sentry.dsn" android:value="https://bc0ca84c55524a53a63269270fa93faa@o1396923.ingest.sentry.io/6721739" />
+        <!-- Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
+           We recommend adjusting this value in production. -->
+        <meta-data android:name="io.sentry.traces.sample-rate" android:value="1.0" />
+        <!-- Enable user interaction tracing to capture transactions for various UI events (such as clicks or scrolls). -->
+        <meta-data android:name="io.sentry.traces.user-interaction.enable" android:value="true" />
+
     </application>
 
 </manifest>
