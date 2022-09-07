@@ -29,7 +29,7 @@
             android:layout_centerHorizontal="true"
             android:gravity="center|bottom"
             android:orientation="vertical"
-            android:padding="23dp">
+            android:padding="16sp">
 
             <Space
                 android:layout_width="match_parent"

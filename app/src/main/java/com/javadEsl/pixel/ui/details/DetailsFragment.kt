@@ -9,9 +9,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
-import android.content.res.Resources
 import android.graphics.*
 import android.graphics.Color.WHITE
+import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.RippleDrawable
@@ -312,19 +312,12 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     return@setOnClickListener
                 }
 
-
                 imageView.invalidate()
                 val drawable = imageView.drawable
                 val bitmap = drawable.toBitmap()
 
-//                addWaterMark(bitmap)
-
-                imageView.setImageBitmap(addWatermark(bitmap))
-
-                addWatermark(bitmap)?.let { it1 ->
-                    saveImage(it1)?.let { it2 ->
-                        shareImageUri(it2)
-                    }
+                saveImage(bitmap)?.let { it2 ->
+                    shareImageUri(it2)
                 }
             }
 
@@ -493,7 +486,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         rectF = RectF(0f, 0f, watermark.width.toFloat(), watermark.height.toFloat())
         matrix.mapRect(rectF)
 
-        matrix.postTranslate(20f, height.toFloat()-(watermark.height))
+        matrix.postTranslate(20f, height.toFloat() - (watermark.height))
 
         canvas.drawBitmap(watermark, matrix, paint)
         watermark.recycle()
