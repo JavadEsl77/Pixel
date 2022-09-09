@@ -11,7 +11,6 @@ import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.*
 import android.graphics.Color.WHITE
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.RippleDrawable
@@ -25,10 +24,7 @@ import android.provider.Settings
 import android.util.Log
 import android.util.TypedValue
 import android.view.*
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
@@ -107,6 +103,8 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     }
 
                 }
+            } else {
+                showPermissionInfoDialog()
             }
         }
 
@@ -401,10 +399,10 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     IMAGE_REGULAR -> {
                         resolutionTypeSelected = "HD"
                     }
-                    IMAGE_RAW     -> {
+                    IMAGE_RAW -> {
                         resolutionTypeSelected = "Full-HD"
                     }
-                    IMAGE_SMALL   -> {
+                    IMAGE_SMALL -> {
                         resolutionTypeSelected = "SD"
                     }
                 }
@@ -688,6 +686,35 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         dialog.window?.setGravity(Gravity.BOTTOM)
         dialog.show()
 
+    }
+
+    private fun showPermissionInfoDialog() {
+        val dialog = Dialog(activity!!, R.style.AlertDialog)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(true)
+        dialog.setContentView(R.layout.layout_dialog_permissiont_info)
+
+        val btnSetting = dialog.findViewById<Button>(R.id.btn_setting)
+        val btnCancel = dialog.findViewById<Button>(R.id.btn_cancel)
+
+        btnSetting.setOnClickListener {
+            requireContext().openAppSystemSettings()
+            dialog.dismiss()
+        }
+
+        btnCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.window?.setGravity(Gravity.BOTTOM)
+        dialog.show()
+
+    }
+
+    private fun Context.openAppSystemSettings() {
+        startActivity(Intent().apply {
+            action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+            data = Uri.fromParts("package", packageName, null)
+        })
     }
 
     private fun checkIsConnection(): Boolean {
