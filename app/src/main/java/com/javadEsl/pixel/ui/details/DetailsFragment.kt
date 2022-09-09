@@ -219,7 +219,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 .into(imageViewProfile)
             cardDownload.setCardBackgroundColor(
                 Color.parseColor(
-                    "#cc" + modelPhoto.color?.replace(
+                    "#E6" + modelPhoto.color?.replace(
                         "#",
                         ""
                     )
@@ -266,6 +266,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     ): Boolean {
                         layoutLoading.isVisible = false
                         cardDownload.isVisible = false
+                        cardShare.isVisible = false
                         cardWallpaper.isVisible = false
                         imageView.scaleType = ImageView.ScaleType.CENTER
                         return false

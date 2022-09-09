@@ -152,6 +152,7 @@ class GalleryFragment :
                         requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
                     inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
                     performSearch()
+                    recyclerView.verticalScrollbarPosition = 0
                     return@OnEditorActionListener true
                 }
                 false
@@ -177,6 +178,7 @@ class GalleryFragment :
                     editor?.putString("search", binding.edtSearch.text.toString())
                     editor?.apply()
                     viewModel.searchPhotos(binding.edtSearch.text.toString())
+
                 }
             }
 
