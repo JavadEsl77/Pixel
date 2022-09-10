@@ -16,7 +16,7 @@ import com.javadEsl.pixel.isBrightColor
 
 class UnsplashUserPhotoAdapter(
     var todos: List<UnsplashPhoto>,
-    private val listener: UnsplashUserPhotoAdapter.OnItemClickListener
+    private val listener: OnItemClickListener
 ) : RecyclerView.Adapter<UnsplashUserPhotoAdapter.TodoViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {

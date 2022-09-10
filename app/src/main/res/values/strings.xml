@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">Pixel</string>
     <string name="string_hint_edittext_search">جستجوی رایگان عکس با وضوح بالا</string>
     <string name="string_error_edittext_search">لطفا این قسمت رو پر کنید</string>
     <string name="string_error_loading_results">اتصال اینترنت خود را برسی کنید</string>

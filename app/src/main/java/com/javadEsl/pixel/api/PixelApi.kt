@@ -27,7 +27,7 @@ interface PixelApi {
     ): PixelResponse
 
 
-    @GET("napi//photos/random")
+    @GET("napi/photos/random")
     suspend fun getRandomPhotos(): ModelPhoto
 
 

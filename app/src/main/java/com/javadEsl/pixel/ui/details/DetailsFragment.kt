@@ -69,7 +69,6 @@ import java.net.URL
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-
 @AndroidEntryPoint
 class DetailsFragment : Fragment(R.layout.fragment_details),
     UnsplashPhotoAdapter.OnItemClickListener, UnsplashUserPhotoAdapter.OnItemClickListener {
