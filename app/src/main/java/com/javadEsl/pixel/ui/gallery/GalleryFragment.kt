@@ -33,6 +33,7 @@ import com.javadEsl.pixel.data.UnsplashPhoto
 import com.javadEsl.pixel.data.convertedUrl
 import com.javadEsl.pixel.databinding.FragmentGalleryBinding
 import dagger.hilt.android.AndroidEntryPoint
+import io.sentry.Sentry
 
 @AndroidEntryPoint
 class GalleryFragment :
@@ -171,6 +172,9 @@ class GalleryFragment :
                 editor?.putString("search", binding.edtSearch.text.toString())
                 editor?.apply()
                 viewModel.searchPhotos(binding.edtSearch.text.toString())
+                Sentry.configureScope { scope ->
+                    scope.setTag("search_box", binding.edtSearch.text.toString())
+                }
             } else {
                 if (!sharedPreference?.getString("search", "")
                         .equals(binding.edtSearch.text.toString())
@@ -178,7 +182,9 @@ class GalleryFragment :
                     editor?.putString("search", binding.edtSearch.text.toString())
                     editor?.apply()
                     viewModel.searchPhotos(binding.edtSearch.text.toString())
-
+                    Sentry.configureScope { scope ->
+                        scope.setTag("search_box", binding.edtSearch.text.toString())
+                    }
                 }
             }
 
