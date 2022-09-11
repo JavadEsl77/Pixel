@@ -55,8 +55,8 @@
                     android:id="@+id/card_download"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="15dp"
                     android:layout_alignParentRight="true"
+                    android:layout_margin="15dp"
                     app:cardBackgroundColor="#80FFFFFF"
                     app:cardCornerRadius="15dp"
                     app:cardElevation="0dp"
@@ -159,9 +159,9 @@
                         android:id="@+id/card_share"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="7dp"
                         app:cardBackgroundColor="#80FFFFFF"
                         app:cardCornerRadius="15dp"
-                        android:layout_marginStart="7dp"
                         app:cardElevation="0dp"
                         tools:background="#80000000">
 
@@ -571,9 +571,9 @@
             android:id="@+id/progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:indeterminate="true"
-            android:indeterminateTint="@color/purple_500"
-            android:layout_gravity="center" />
+            android:indeterminateTint="@color/purple_500" />
 
         <TextView
             android:id="@+id/text_view_network_error"

@@ -28,6 +28,15 @@
                 android:layout_height="match_parent"
                 android:scaleType="center" />
 
+            <ProgressBar
+                android:id="@+id/progress_bar_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/purple_500" />
+
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
