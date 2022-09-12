@@ -69,7 +69,6 @@ class UnsplashPhotoAdapter(private val listener: OnItemClickListener) :
                             dataSource: com.bumptech.glide.load.DataSource?,
                             isFirstResource: Boolean
                         ): Boolean {
-                            progressBarImage.isVisible = false
                             return false
                         }
                     })
