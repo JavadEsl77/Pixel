@@ -33,7 +33,6 @@ import com.javadEsl.pixel.data.UnsplashPhoto
 import com.javadEsl.pixel.data.convertedUrl
 import com.javadEsl.pixel.databinding.FragmentGalleryBinding
 import dagger.hilt.android.AndroidEntryPoint
-import io.sentry.Sentry
 
 @AndroidEntryPoint
 class GalleryFragment :
@@ -101,7 +100,6 @@ class GalleryFragment :
                     adapter.submitData(viewLifecycleOwner.lifecycle, data)
                 }
             }
-
             adapter.addLoadStateListener { loadState ->
                 binding.apply {
                     progressBar.isVisible = loadState.source.refresh is LoadState.Loading
@@ -158,6 +156,10 @@ class GalleryFragment :
                 }
                 false
             })
+            lyMyDownload.setOnClickListener {
+                val action = GalleryFragmentDirections.actionGalleryFragmentToMyDownloadFragment()
+                findNavController().navigate(action)
+            }
 
         }
 

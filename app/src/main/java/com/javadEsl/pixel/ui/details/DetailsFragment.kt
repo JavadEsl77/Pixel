@@ -86,7 +86,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     if (checkIsConnection()) {
 
                         val root = Environment.getExternalStorageDirectory()
-                        val myDir = File("${root}/Pixel/${model.id}.jpg")
+                        val myDir = File("${root}/${getString(R.string.app_name)}/${model.id}.jpg")
 
                         if (!myDir.exists()) {
                             downloadDialog(model)
@@ -398,16 +398,16 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     IMAGE_REGULAR -> {
                         resolutionTypeSelected = "HD"
                     }
-                    IMAGE_RAW -> {
+                    IMAGE_RAW     -> {
                         resolutionTypeSelected = "Full-HD"
                     }
-                    IMAGE_SMALL -> {
+                    IMAGE_SMALL   -> {
                         resolutionTypeSelected = "SD"
                     }
                 }
                 val root = Environment.getExternalStorageDirectory()
                 val myDir =
-                    File("${root}/Pixel/${modelPhoto?.id}/${resolutionTypeSelected}.jpg")
+                    File("${root}/${getString(R.string.app_name)}/${modelPhoto?.id}/${resolutionTypeSelected}.jpg")
 
                 if (!myDir.exists()) {
                     modelPhoto?.let { it1 -> downloadDialog(it1) }
@@ -565,7 +565,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
         val root = Environment.getExternalStorageDirectory()
         val myDir = File(
-            "${root}/Pixel/${modelPhoto.id}/${typeFile}.jpg"
+            "${root}/${getString(R.string.app_name)}/${modelPhoto.id}/${typeFile}.jpg"
         )
         myDir.mkdirs()
 
@@ -586,6 +586,12 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 }
 
                 override fun onSuccess() {
+                    successDialog(
+                        getString(R.string.string_alert_success_download),
+                        activity!!.getDrawable(R.drawable.ic_cloud_download)!!,
+                        modelPhoto.color.toString(),
+                        1500
+                    )
                     dialog.dismiss()
                     downloadStatus = false
                     isOnSaveClicked = false

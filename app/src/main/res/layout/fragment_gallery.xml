@@ -31,6 +31,7 @@
             android:orientation="vertical">
 
             <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/ly_my_download"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
