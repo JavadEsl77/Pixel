@@ -44,14 +44,13 @@ class MyDownloadAdapter(
         fun bind(photo: File) {
             binding.apply {
                 val quality = photo.name.replace(".jpg", "")
-
                 textViewQuality.text = quality
                 textViewFileSize.text = photo.size()
 
                 Glide.with(itemView)
                     .load(photo)
                     .centerCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .diskCacheStrategy(DiskCacheStrategy.DATA)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .error(R.drawable.ic_error_photos)
                     .into(imageView)
