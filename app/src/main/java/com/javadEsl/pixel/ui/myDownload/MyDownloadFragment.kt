@@ -1,7 +1,6 @@
 package com.javadEsl.pixel.ui.myDownload
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -34,7 +33,6 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
 
             }
         }
-        Log.e("TAG", "onViewCreated:${adapter.downloadList} ")
 
     }
 

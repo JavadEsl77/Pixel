@@ -29,3 +29,12 @@ fun Number?.toDecimal(): String {
     if (this == null) return ""
     return DecimalFormat.getInstance(Locale.US).format(this)
 }
+
+/**
+ * Round to
+ *
+ * @param numFractionDigits
+ */
+internal fun Number.roundTo(
+    numFractionDigits: Int = 2
+) = "%.${numFractionDigits}f".format(this, Locale.ENGLISH)

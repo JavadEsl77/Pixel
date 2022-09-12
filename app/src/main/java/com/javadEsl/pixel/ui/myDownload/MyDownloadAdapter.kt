@@ -1,5 +1,6 @@
 package com.javadEsl.pixel.ui.myDownload
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,6 +9,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.javadEsl.pixel.R
 import com.javadEsl.pixel.databinding.ItemListMyDownloadBinding
+import com.javadEsl.pixel.size
 import java.io.File
 
 class MyDownloadAdapter(
@@ -23,7 +25,7 @@ class MyDownloadAdapter(
     }
 
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
-        holder.bind()
+        holder.bind(downloadList[position])
     }
 
     override fun getItemCount(): Int {
@@ -39,9 +41,13 @@ class MyDownloadAdapter(
             }
         }
 
-        fun bind() {
-            val photo = downloadList[bindingAdapterPosition]
+        fun bind(photo: File) {
             binding.apply {
+                val quality = photo.name.replace(".jpg", "")
+
+                textViewQuality.text = quality
+                textViewFileSize.text = photo.size()
+
                 Glide.with(itemView)
                     .load(photo)
                     .centerCrop()
