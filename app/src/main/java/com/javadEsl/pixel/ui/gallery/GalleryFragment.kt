@@ -172,9 +172,7 @@ class GalleryFragment :
                 editor?.putString("search", binding.edtSearch.text.toString())
                 editor?.apply()
                 viewModel.searchPhotos(binding.edtSearch.text.toString())
-                Sentry.configureScope { scope ->
-                    scope.setTag("search_box", binding.edtSearch.text.toString())
-                }
+                binding.recyclerView.scrollToPosition(0)
             } else {
                 if (!sharedPreference?.getString("search", "")
                         .equals(binding.edtSearch.text.toString())
@@ -182,9 +180,7 @@ class GalleryFragment :
                     editor?.putString("search", binding.edtSearch.text.toString())
                     editor?.apply()
                     viewModel.searchPhotos(binding.edtSearch.text.toString())
-                    Sentry.configureScope { scope ->
-                        scope.setTag("search_box", binding.edtSearch.text.toString())
-                    }
+                    binding.recyclerView.scrollToPosition(0)
                 }
             }
 
@@ -206,7 +202,7 @@ class GalleryFragment :
         }
     }
 
-    fun checkIsConnection(): Boolean {
+    private fun checkIsConnection(): Boolean {
         val connectionManager =
             requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val wifiConnection = connectionManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
