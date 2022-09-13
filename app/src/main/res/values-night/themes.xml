@@ -16,4 +16,16 @@
         <item name="android:windowBackground">@drawable/shape_background_dialog</item>
     </style>
 
+    <style name="AppBottomSheetDialogTheme"
+        parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+        <item name="android:navigationBarColor">@color/black</item>
+    </style>
+
+    <style name="AppModalStyle"
+        parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/shape_bottom_sheet_preview</item>
+        <item name="android:navigationBarColor">@color/black</item>
+    </style>
+
 </resources>
