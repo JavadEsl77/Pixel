@@ -8,9 +8,10 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="52dp"
+        android:layout_height="?actionBarSize"
         android:orientation="horizontal"
         android:gravity="center"
+        android:background="@color/purple_500"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
 
@@ -21,7 +22,7 @@
             android:layout_marginRight="16dp"
             android:layout_weight="1"
             android:gravity="center|right"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="16dp"
             android:textStyle="bold"
             tools:text="عنوان صفحه" />
@@ -30,8 +31,8 @@
             android:id="@+id/card_view_back_toolbar_screens"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:elevation="0dp"
-            app:cardBackgroundColor="#EBEDFF"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="#80FFFFFF"
             app:cardCornerRadius="10dp"
             app:contentPadding="6dp">
 
@@ -43,10 +44,5 @@
         </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#EBEDFF"/>
 
 </LinearLayout>

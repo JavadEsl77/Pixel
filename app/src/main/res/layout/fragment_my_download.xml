@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_toolbar_screens" />
+    <include
+        android:id="@+id/layout_toolbar"
+        layout="@layout/layout_toolbar_screens" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_my_download"
@@ -17,5 +19,29 @@
         app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="2"
         tools:listitem="@layout/item_list_my_download" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/layout_my_download_error"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginBottom="16dp"
+            android:src="@drawable/ic_error_photos" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/string_empty_my_download_alert" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </LinearLayout>
