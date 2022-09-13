@@ -77,30 +77,34 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
     private var downloadStatus: Boolean = false
     private var isOnSaveClicked = false
     private var resolutionType = ""
+    private var permissionType = ""
     private var modelPhoto: ModelPhoto? = null
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) {
             if (it) {
                 modelPhoto?.let { model ->
-
                     if (checkIsConnection()) {
+                        when (permissionType) {
+                            "Download" -> {
+                                binding.cardDownload.performClick()
+                            }
+                            "Share"    -> {
+                                binding.imageView.invalidate()
+                                val drawable = binding.imageView.drawable
+                                val bitmap = drawable.toBitmap()
 
-                        val root = Environment.getExternalStorageDirectory()
-                        val myDir = File("${root}/${getString(R.string.app_name)}/${model.id}.jpg")
-
-                        if (!myDir.exists()) {
-                            downloadDialog(model)
-                        } else {
-                            Toast.makeText(
-                                requireContext(),
-                                "این تصویر در حافظه موجود می باشد",
-                                Toast.LENGTH_LONG
-                            ).show()
+                                saveImage(bitmap)?.let { it2 ->
+                                    shareImageUri(it2)
+                                }
+                            }
+                            else       -> {
+                                false
+                            }
                         }
+
                     } else {
                         alertNetworkDialog(requireContext(), model.color.toString())
                     }
-
                 }
             } else {
                 showPermissionInfoDialog()
@@ -301,6 +305,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             }
 
             cardShare.setOnClickListener {
+                permissionType = "Share"
                 if (ActivityCompat.checkSelfPermission(
                         requireContext(),
                         Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -344,6 +349,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             }
 
             cardDownload.setOnClickListener {
+                permissionType = "Download"
                 if (ActivityCompat.checkSelfPermission(
                         requireContext(),
                         Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -392,6 +398,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
             resolutionType = menuItem.toString()
             if (checkIsConnection()) {
+
                 isOnSaveClicked = true
                 var resolutionTypeSelected = ""
                 when (resolutionType) {
@@ -590,7 +597,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                         getString(R.string.string_alert_success_download),
                         activity!!.getDrawable(R.drawable.ic_cloud_download)!!,
                         modelPhoto.color.toString(),
-                        1500
+                        700
                     )
                     dialog.dismiss()
                     downloadStatus = false

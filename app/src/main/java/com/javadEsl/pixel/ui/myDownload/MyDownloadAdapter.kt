@@ -3,6 +3,7 @@ package com.javadEsl.pixel.ui.myDownload
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -26,6 +27,7 @@ class MyDownloadAdapter(
 
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
         holder.bind(downloadList[position])
+
     }
 
     override fun getItemCount(): Int {
@@ -35,6 +37,8 @@ class MyDownloadAdapter(
     inner class TodoViewHolder(private val binding: ItemListMyDownloadBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+
+
         init {
             binding.root.setOnClickListener {
                 downloadList[bindingAdapterPosition].let { listener.onItemClick(it) }
@@ -42,7 +46,11 @@ class MyDownloadAdapter(
         }
 
         fun bind(photo: File) {
+
             binding.apply {
+
+                cardViewItemMyDownload.animation = AnimationUtils.loadAnimation(itemView.context, R.anim.alpha)
+
                 val quality = photo.name.replace(".jpg", "")
                 textViewQuality.text = quality
                 textViewFileSize.text = photo.size()

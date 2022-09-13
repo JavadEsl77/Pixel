@@ -4,8 +4,7 @@ import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.core.view.isVisible
+import android.view.animation.AnimationUtils
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -45,7 +44,13 @@ class UnsplashPhotoAdapter(private val listener: OnItemClickListener) :
         }
 
         fun bind(photo: UnsplashPhoto) {
+
+
             binding.apply {
+
+                cardGalleryItem.animation =
+                    AnimationUtils.loadAnimation(itemView.context, R.anim.translate)
+
                 Glide.with(itemView)
                     .load(photo.urls?.regular?.convertedUrl)
                     .centerCrop()
