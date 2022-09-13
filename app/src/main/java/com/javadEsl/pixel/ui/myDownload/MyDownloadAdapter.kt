@@ -1,5 +1,6 @@
 package com.javadEsl.pixel.ui.myDownload
 
+import android.graphics.Color.alpha
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -48,9 +49,6 @@ class MyDownloadAdapter(
         fun bind(photo: File) {
 
             binding.apply {
-
-                cardViewItemMyDownload.animation = AnimationUtils.loadAnimation(itemView.context, R.anim.alpha)
-
                 val quality = photo.name.replace(".jpg", "")
                 textViewQuality.text = quality
                 textViewFileSize.text = photo.size()

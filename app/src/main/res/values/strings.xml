@@ -19,8 +19,17 @@
     <string name="string_alert_success_download">دانلود با موفقیت انجام شد</string>
     <string name="string_alert_network_error">خطای شبکه ، اتصال به اینترنت خود را برسی کنید</string>
     <string name="string_alert_permission">خطا در ساخت مسیر ذخیره فایل</string>
-    <string name="string_my_download_title">دانلود ها من</string>
+    <string name="string_title_alert_ok_permission">تایید دستی مجوز دسترسی به حافظه</string>
+    <string name="string_title_alert_detail_ok_permission">برای دانلود تصاویر و اشتراک گزاری آنها نیاز به مجور دسترسی به حافظه می باشد . \n لطفا در تنظیمات برنامه مجوز را فعال کنید</string>
+    <string name="string_my_download_title">دانلود های من</string>
+    <string name="string_my_download_bottom_sheet_title">دانلود های من / تصویر</string>
     <string name="string_empty_my_download_alert">تصویری موجود نمی باشد</string>
     <string name="string_delete_my_download">حذف تصویر از حافظه</string>
+    <string name="string_btn_cancel">انصراف</string>
+    <string name="string_btn_setting">تنظیمات</string>
+    <string name="string_btn_delete">حذف شود</string>
+    <string name="string_title_delete_alert">آیا از حذف این عکس اطمینان دارید؟</string>
+    <string name="string_title_delete_detail_alert">این عکس از حافظه دستگاه شما حذف خواهد شد</string>
+
 
 </resources>

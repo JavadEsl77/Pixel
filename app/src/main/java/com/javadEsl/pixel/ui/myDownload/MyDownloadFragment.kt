@@ -1,6 +1,8 @@
 package com.javadEsl.pixel.ui.myDownload
 
 import android.Manifest
+import android.R
+import android.animation.ObjectAnimator
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -11,41 +13,53 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
 import android.util.Log
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
+import androidx.core.animation.doOnEnd
+import androidx.core.animation.doOnStart
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.transition.Slide
+import androidx.transition.Transition
+import androidx.transition.TransitionManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.javadEsl.pixel.R
 import com.javadEsl.pixel.databinding.FragmentMyDownloadBinding
-import com.javadEsl.pixel.size
+import com.javadEsl.pixel.databinding.LayoutBottomSheetPhotoBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.NonCancellable.start
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
 
 @AndroidEntryPoint
-class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
+class MyDownloadFragment : Fragment(com.javadEsl.pixel.R.layout.fragment_my_download),
     MyDownloadAdapter.OnItemClickListener {
     private val viewModel by viewModels<MyDownloadViewModel>()
     private var _binding: FragmentMyDownloadBinding? = null
-    private var permissionType = "Start"
     private val binding get() = _binding!!
+
+    private var permissionType = "Start"
 
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) {
@@ -65,9 +79,17 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
             }
         }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _binding = FragmentMyDownloadBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentMyDownloadBinding.bind(view)
 
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
@@ -91,7 +113,7 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
         binding.apply {
 
             layoutToolbar.textViewTitleToolbarScreens.text =
-                resources.getString(R.string.string_my_download_title)
+                resources.getString(com.javadEsl.pixel.R.string.string_my_download_title)
 
             layoutToolbar.cardViewBackToolbarScreens.setOnClickListener {
                 findNavController().popBackStack()
@@ -128,67 +150,85 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
     }
 
     private fun showDialogOne(photo: File) {
-        val dialog = BottomSheetDialog(requireContext(), R.style.AppBottomSheetDialogTheme)
-        dialog.setContentView(R.layout.layout_bottom_sheet_photo)
+        val dialog = BottomSheetDialog(
+            requireContext(),
+            com.javadEsl.pixel.R.style.AppBottomSheetDialogTheme
+        )
+
+        val sheetDialog =
+            LayoutBottomSheetPhotoBinding.inflate(LayoutInflater.from(requireContext()))
+        dialog.setContentView(sheetDialog.root)
         dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
-        dialog.behavior.isDraggable = true
+        dialog.behavior.isDraggable = false
 
-        val imageView = dialog.findViewById<ImageView>(R.id.image_view)
-        val cardViewShare = dialog.findViewById<CardView>(R.id.card_view_share)
-        val cardViewDelete = dialog.findViewById<CardView>(R.id.card_view_delete)
-
-        if (imageView != null) {
+        sheetDialog.apply {
             Glide.with(requireContext())
                 .load(photo)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .into(imageView)
-        }
 
-        cardViewShare?.setOnClickListener {
-            permissionType = "Share"
-            if (ActivityCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                return@setOnClickListener
-            }
-            val drawable = imageView?.drawable
-            val bitmap = drawable?.toBitmap()
-            if (bitmap != null) {
-                saveImage(bitmap)?.let { Uri ->
-                    shareImageUri(Uri)
+            cardViewShare.setOnClickListener {
+                permissionType = "Share"
+                if (ActivityCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    return@setOnClickListener
+                }
+                val drawable = imageView.drawable
+                val bitmap = drawable?.toBitmap()
+                if (bitmap != null) {
+                    saveImage(bitmap)?.let { Uri ->
+                        shareImageUri(Uri)
+                    }
                 }
             }
-        }
 
-        cardViewDelete?.setOnClickListener {
-            permissionType = "Delete"
+            cardViewDelete.setOnClickListener {
+                permissionType = "Delete"
 
-            if (ActivityCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                return@setOnClickListener
+                if (ActivityCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    return@setOnClickListener
+                }
+
+                if (cardDeleteAlert.visibility == View.GONE) {
+//                    val anim = ObjectAnimator.ofFloat(lyOption, "translationY", 100F, 0F).setDuration(500)
+//                    anim.start()
+                    cardDeleteAlert.visibility = View.VISIBLE
+                }
+
             }
 
+            textCancel.setOnClickListener {
+                if (cardDeleteAlert.visibility == View.VISIBLE) {
+                    cardDeleteAlert.visibility = View.GONE
+                }
+            }
 
-
-            if (photo.exists()) {
-                photo.delete()
+            textDelete.setOnClickListener {
+                if (photo.exists()) {
+                    photo.delete()
+                    dialog.dismiss()
+                    getFileGallery()
+                }
+            }
+            cardViewBackToolbarBottomSheet.setOnClickListener {
                 dialog.dismiss()
-                getFileGallery()
             }
-
 
         }
 
         dialog.show()
     }
+
 
     private fun saveImage(image: Bitmap): Uri? {
         //TODO - Should be processed in another thread
