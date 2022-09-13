@@ -6,6 +6,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
+    <include layout="@layout/layout_toolbar_screens" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_my_download"
         android:layout_width="match_parent"
