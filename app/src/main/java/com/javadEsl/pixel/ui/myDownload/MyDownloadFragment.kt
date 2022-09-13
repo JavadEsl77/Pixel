@@ -58,24 +58,16 @@ class MyDownloadFragment : Fragment(com.javadEsl.pixel.R.layout.fragment_my_down
     private val viewModel by viewModels<MyDownloadViewModel>()
     private var _binding: FragmentMyDownloadBinding? = null
     private val binding get() = _binding!!
-
     private var permissionType = "Start"
 
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) {
             if (it) {
                 when (permissionType) {
-                    "Share"  -> {
-
-                    }
-                    "Delete" -> {
-
-                    }
-                    "Start"  -> {
+                    "Start" -> {
                         getFileGallery()
                     }
                 }
-
             }
         }
 
@@ -162,6 +154,7 @@ class MyDownloadFragment : Fragment(com.javadEsl.pixel.R.layout.fragment_my_down
         dialog.behavior.isDraggable = false
 
         sheetDialog.apply {
+
             Glide.with(requireContext())
                 .load(photo)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -190,15 +183,6 @@ class MyDownloadFragment : Fragment(com.javadEsl.pixel.R.layout.fragment_my_down
             cardViewDelete.setOnClickListener {
                 permissionType = "Delete"
 
-                if (ActivityCompat.checkSelfPermission(
-                        requireContext(),
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    ) != PackageManager.PERMISSION_GRANTED
-                ) {
-                    permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    return@setOnClickListener
-                }
-
                 if (cardDeleteAlert.visibility == View.GONE) {
 //                    val anim = ObjectAnimator.ofFloat(lyOption, "translationY", 100F, 0F).setDuration(500)
 //                    anim.start()
@@ -214,18 +198,28 @@ class MyDownloadFragment : Fragment(com.javadEsl.pixel.R.layout.fragment_my_down
             }
 
             textDelete.setOnClickListener {
+
+                if (ActivityCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    return@setOnClickListener
+                }
+
                 if (photo.exists()) {
                     photo.delete()
                     dialog.dismiss()
                     getFileGallery()
                 }
             }
+
             cardViewBackToolbarBottomSheet.setOnClickListener {
                 dialog.dismiss()
             }
 
         }
-
         dialog.show()
     }
 
