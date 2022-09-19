@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -49,9 +50,15 @@ class MyDownloadAdapter(
         fun bind(photo: File) {
 
             binding.apply {
+
                 val quality = photo.name.replace(".jpg", "")
+                when (quality) {
+                    "Full-HD" -> {
+                        cardFullHd.isVisible = true
+                    }
+                }
                 textViewQuality.text = quality
-                textViewFileSize.text = photo.size()
+                textViewFileSize.text = "( " + photo.size() + " )"
 
                 Glide.with(itemView)
                     .load(photo)

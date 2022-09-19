@@ -4,6 +4,7 @@ pluginManagement {
     }
     repositories {
         maven { url 'https://gradle.iranrepo.ir' }
+        maven { url 'https://jitpack.io' }
         maven { url 'https://maven.google.com' }
         gradlePluginPortal()
         google()
@@ -16,6 +17,7 @@ dependencyResolutionManagement {
     repositories {
         maven { url 'https://gradle.iranrepo.ir' }
         maven { url 'https://maven.google.com' }
+        maven { url 'https://jitpack.io' }
         gradlePluginPortal()
         google()
         mavenCentral()

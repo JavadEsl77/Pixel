@@ -1,43 +1,29 @@
 package com.javadEsl.pixel.ui.myDownload
 
 import android.Manifest
-import android.R
-import android.animation.ObjectAnimator
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
+import android.os.Build.VERSION_CODES.R
 import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
-import android.widget.ImageView
-import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.cardview.widget.CardView
-import androidx.core.animation.doOnEnd
-import androidx.core.animation.doOnStart
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.transition.Slide
-import androidx.transition.Transition
-import androidx.transition.TransitionManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -46,7 +32,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.javadEsl.pixel.databinding.FragmentMyDownloadBinding
 import com.javadEsl.pixel.databinding.LayoutBottomSheetPhotoBinding
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.NonCancellable.start
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -147,6 +132,9 @@ class MyDownloadFragment : Fragment(com.javadEsl.pixel.R.layout.fragment_my_down
             com.javadEsl.pixel.R.style.AppBottomSheetDialogTheme
         )
 
+
+
+
         val sheetDialog =
             LayoutBottomSheetPhotoBinding.inflate(LayoutInflater.from(requireContext()))
         dialog.setContentView(sheetDialog.root)
@@ -154,12 +142,17 @@ class MyDownloadFragment : Fragment(com.javadEsl.pixel.R.layout.fragment_my_down
         dialog.behavior.isDraggable = false
 
         sheetDialog.apply {
+            when (photo.name.replace(".jpg", "")) {
+                "Full-HD" -> {
+                    cardFullHd.isVisible = true
+                }
+            }
 
             Glide.with(requireContext())
                 .load(photo)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .transition(DrawableTransitionOptions.withCrossFade())
-                .into(imageView)
+                .into(photoView)
 
             cardViewShare.setOnClickListener {
                 permissionType = "Share"
@@ -171,7 +164,7 @@ class MyDownloadFragment : Fragment(com.javadEsl.pixel.R.layout.fragment_my_down
                     permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     return@setOnClickListener
                 }
-                val drawable = imageView.drawable
+                val drawable = photoView.drawable
                 val bitmap = drawable?.toBitmap()
                 if (bitmap != null) {
                     saveImage(bitmap)?.let { Uri ->
@@ -220,9 +213,9 @@ class MyDownloadFragment : Fragment(com.javadEsl.pixel.R.layout.fragment_my_down
             }
 
         }
+
         dialog.show()
     }
-
 
     private fun saveImage(image: Bitmap): Uri? {
         //TODO - Should be processed in another thread
