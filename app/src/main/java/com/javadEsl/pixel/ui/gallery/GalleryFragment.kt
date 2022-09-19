@@ -89,7 +89,7 @@ class GalleryFragment :
                 }
 
             }
-            recyclerView.setHasFixedSize(true)
+//            recyclerView.setHasFixedSize(true)
             recyclerView.itemAnimator = null
             recyclerView.adapter = adapter.withLoadStateHeaderAndFooter(
                 header = UnsplashPhotoLoadStateAdapter { adapter.retry() },
