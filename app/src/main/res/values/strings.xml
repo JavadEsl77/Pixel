@@ -30,6 +30,7 @@
     <string name="string_btn_delete">حذف شود</string>
     <string name="string_title_delete_alert">آیا از حذف این عکس اطمینان دارید؟</string>
     <string name="string_title_delete_detail_alert">این عکس از حافظه دستگاه شما حذف خواهد شد</string>
+    <string name="string_alert_delete_photo">عکس با موفقیت حذف شد</string>
 
 
 </resources>

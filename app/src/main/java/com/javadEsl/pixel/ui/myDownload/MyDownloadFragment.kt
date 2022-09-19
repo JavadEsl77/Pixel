@@ -1,22 +1,28 @@
 package com.javadEsl.pixel.ui.myDownload
 
 import android.Manifest
+import android.app.Dialog
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION_CODES.R
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
 import android.provider.Settings
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.toBitmap
@@ -31,6 +37,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.javadEsl.pixel.databinding.FragmentMyDownloadBinding
 import com.javadEsl.pixel.databinding.LayoutBottomSheetPhotoBinding
+import com.javadEsl.pixel.isBrightColor
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.FileOutputStream
@@ -132,9 +139,6 @@ class MyDownloadFragment : Fragment(com.javadEsl.pixel.R.layout.fragment_my_down
             com.javadEsl.pixel.R.style.AppBottomSheetDialogTheme
         )
 
-
-
-
         val sheetDialog =
             LayoutBottomSheetPhotoBinding.inflate(LayoutInflater.from(requireContext()))
         dialog.setContentView(sheetDialog.root)
@@ -205,6 +209,11 @@ class MyDownloadFragment : Fragment(com.javadEsl.pixel.R.layout.fragment_my_down
                     photo.delete()
                     dialog.dismiss()
                     getFileGallery()
+                    Toast.makeText(
+                        requireContext(),
+                        resources.getString(com.javadEsl.pixel.R.string.string_alert_delete_photo),
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
 
