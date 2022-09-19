@@ -63,7 +63,7 @@ class MyDownloadAdapter(
                 Glide.with(itemView)
                     .load(photo)
                     .centerCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .error(R.drawable.ic_error_photos)
                     .into(imageView)

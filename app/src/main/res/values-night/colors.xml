@@ -9,6 +9,7 @@
     <color name="white">#FFFFFF</color>
     <color name="color_menu_download">#E7EBFF</color>
     <color name="color_background_gallery_item">#1a2a37</color>
+    <color name="color_gallery_category_item">#1c2a35</color>
     <color name="color_background_preview_item">#1a2a37</color>
     <color name="color_background_fragments">#171e24</color>
     <color name="color_background_action_bar">#1c2a35</color>

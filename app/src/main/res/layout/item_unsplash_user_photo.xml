@@ -9,7 +9,7 @@
         android:id="@+id/image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="center"/>
+        android:scaleType="center" />
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -55,7 +55,7 @@
                         android:maxLines="1"
                         android:text="likes"
                         android:textColor="#B3FFFFFF"
-                        android:textSize="11sp"
+                        android:textSize="11dp"
                         android:visibility="gone"
                         tools:text="likes"
                         tools:visibility="visible" />
@@ -65,10 +65,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:textColor="@color/white"
-                        android:textSize="12sp"
-                        android:maxLines="1"
                         android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textColor="@color/white"
+                        android:textSize="12dp"
                         android:visibility="gone"
                         tools:text="156"
                         tools:visibility="visible" />
@@ -93,7 +93,7 @@
                         android:maxLines="1"
                         android:text="photographer"
                         android:textColor="#B3FFFFFF"
-                        android:textSize="11sp"
+                        android:textSize="11dp"
                         android:visibility="gone"
                         tools:text="photographer"
                         tools:visibility="visible" />
@@ -103,10 +103,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:textColor="@color/white"
-                        android:textSize="12sp"
-                        android:maxLines="1"
                         android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textColor="@color/white"
+                        android:textSize="12dp"
                         android:visibility="gone"
                         tools:text="156"
                         tools:visibility="visible" />

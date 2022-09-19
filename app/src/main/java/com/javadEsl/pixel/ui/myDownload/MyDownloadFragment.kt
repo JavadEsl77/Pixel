@@ -51,6 +51,7 @@ class MyDownloadFragment : Fragment(com.javadEsl.pixel.R.layout.fragment_my_down
     private var _binding: FragmentMyDownloadBinding? = null
     private val binding get() = _binding!!
     private var permissionType = "Start"
+    private var isOnOpeningPage = false
 
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) {
@@ -83,6 +84,7 @@ class MyDownloadFragment : Fragment(com.javadEsl.pixel.R.layout.fragment_my_down
             permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
         }
 
+        isOnOpeningPage = true
         getFileGallery()
     }
 
@@ -257,6 +259,16 @@ class MyDownloadFragment : Fragment(com.javadEsl.pixel.R.layout.fragment_my_down
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
         intent.type = "image/png"
         startActivity(intent)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (Build.VERSION.SDK_INT >= R &&
+            Environment.isExternalStorageManager() &&
+            isOnOpeningPage
+        ) {
+            getFileGallery()
+        }
     }
 
 }

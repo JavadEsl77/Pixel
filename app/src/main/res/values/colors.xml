@@ -11,6 +11,7 @@
     <color name="color_background_gallery_item">#FFFFFF</color>
     <color name="color_background_fragments">#EFEFEF</color>
     <color name="color_background_preview_item">#f1f1f1</color>
+    <color name="color_gallery_category_item">#AAAAAA</color>
     <color name="color_background_action_bar">@color/purple_500</color>
     <color name="color_background_preview_menu">#ffffff</color>
     <color name="color_action_bar_preview_menu">#F1F1F1</color>

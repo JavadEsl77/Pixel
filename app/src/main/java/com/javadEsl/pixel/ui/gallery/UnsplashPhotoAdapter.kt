@@ -53,7 +53,7 @@ class UnsplashPhotoAdapter(private val listener: OnItemClickListener) :
 
                 Glide.with(itemView)
                     .load(photo.urls?.regular?.convertedUrl)
-                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .error(R.drawable.ic_error_photos)
                     .listener(object : RequestListener<Drawable> {
