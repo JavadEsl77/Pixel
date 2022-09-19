@@ -19,9 +19,9 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginLeft="7dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginRight="7dp"
             app:cardCornerRadius="15dp"
             app:cardElevation="0dp"
             app:cardPreventCornerOverlap="false">
@@ -38,7 +38,7 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_margin="10dp"
+            android:layout_margin="7dp"
             app:cardBackgroundColor="@android:color/transparent"
             app:cardCornerRadius="15dp"
             app:cardElevation="0dp">
@@ -50,14 +50,14 @@
                 android:background="#99000000"
                 android:gravity="center|left"
                 android:orientation="horizontal"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp">
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp">
 
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     app:cardCornerRadius="25dp"
-                    app:cardElevation="2dp"
+                    app:cardElevation="0dp"
                     tools:background="#80FFFFFF">
 
                     <ImageView
@@ -67,7 +67,7 @@
                         android:scaleType="centerCrop"
                         tools:src="@drawable/ic_user" />
 
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="0dp"
