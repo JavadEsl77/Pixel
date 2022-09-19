@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_background_fragments"
     android:gravity="center|top"
     android:orientation="vertical">
 
@@ -11,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         android:gravity="center"
+        android:background="@color/color_background_action_bar"
         android:orientation="horizontal">
 
         <LinearLayout
@@ -18,7 +20,6 @@
             android:layout_height="?actionBarSize"
             android:orientation="horizontal"
             android:gravity="center"
-            android:background="#F1F1F1"
             android:paddingLeft="16dp"
             android:paddingRight="16dp">
 
@@ -46,7 +47,7 @@
                 android:layout_marginRight="16dp"
                 android:layout_weight="1"
                 android:gravity="center|right"
-                android:textColor="@color/purple_200"
+                android:textColor="@color/white"
                 android:textSize="16dp"
                 android:text="@string/string_my_download_bottom_sheet_title"
                 android:textStyle="bold"
@@ -113,7 +114,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:cardBackgroundColor="#F1F1F1"
+                    app:cardBackgroundColor="@color/color_background_preview_item"
                     app:cardCornerRadius="15dp"
                     app:cardElevation="0dp">
 
@@ -151,7 +152,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_weight=".6"
-                    app:cardBackgroundColor="#F1F1F1"
+                    app:cardBackgroundColor="@color/color_background_preview_item"
                     app:cardCornerRadius="15dp"
                     app:cardElevation="0dp">
 
@@ -191,7 +192,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:visibility="gone"
-                app:cardBackgroundColor="#F1F1F1"
+                app:cardBackgroundColor="@color/color_background_preview_item"
                 app:cardCornerRadius="15dp"
                 app:cardElevation="0dp"
                 tools:visibility="visible">

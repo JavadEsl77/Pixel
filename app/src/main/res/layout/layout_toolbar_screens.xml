@@ -11,7 +11,7 @@
         android:layout_height="?actionBarSize"
         android:orientation="horizontal"
         android:gravity="center"
-        android:background="@color/purple_500"
+        android:background="@color/color_background_action_bar"
         android:paddingLeft="16dp"
         android:paddingRight="16dp">
 

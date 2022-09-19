@@ -34,9 +34,10 @@ import com.javadEsl.pixel.data.convertedUrl
 import com.javadEsl.pixel.databinding.FragmentGalleryBinding
 import dagger.hilt.android.AndroidEntryPoint
 
+
 @AndroidEntryPoint
 class GalleryFragment :
-    Fragment(R.layout.fragment_gallery),
+    Fragment(com.javadEsl.pixel.R.layout.fragment_gallery),
     UnsplashPhotoAdapter.OnItemClickListener {
 
     private val viewModel by viewModels<GalleryViewModel>()
@@ -57,6 +58,7 @@ class GalleryFragment :
 
         binding.apply {
 
+
             viewModel.liveDataRandomPhoto.observe(viewLifecycleOwner) {
                 if (it != null) {
                     Glide.with(requireActivity())
@@ -64,7 +66,7 @@ class GalleryFragment :
                         .centerCrop()
                         .diskCacheStrategy(DiskCacheStrategy.DATA)
                         .transition(DrawableTransitionOptions.withCrossFade())
-                        .error(R.drawable.img)
+                        .error(com.javadEsl.pixel.R.drawable.img)
                         .listener(object : RequestListener<Drawable> {
                             override fun onLoadFailed(
                                 p0: GlideException?,
@@ -167,7 +169,8 @@ class GalleryFragment :
 
     private fun performSearch() {
         if (binding.edtSearch.text.toString().isEmpty()) {
-            binding.edtSearch.error = getString(R.string.string_error_edittext_search)
+            binding.edtSearch.error =
+                getString(com.javadEsl.pixel.R.string.string_error_edittext_search)
         } else {
             val editor = sharedPreference?.edit()
             if (sharedPreference?.getString("search", "").equals("")) {
