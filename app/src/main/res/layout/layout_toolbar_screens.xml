@@ -6,43 +6,56 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <LinearLayout
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:background="@color/color_background_action_bar"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        app:cardCornerRadius="15dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        app:cardElevation="0dp"
+        app:cardBackgroundColor="@color/purple_500">
 
-        <TextView
-            android:id="@+id/text_view_title_toolbar_screens"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginRight="16dp"
-            android:layout_weight="1"
-            android:gravity="center|right"
-            android:textColor="@color/white"
-            android:textSize="16dp"
-            android:textStyle="bold"
-            tools:text="عنوان صفحه" />
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="@color/color_background_action_bar"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card_view_back_toolbar_screens"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:cardElevation="0dp"
-            app:cardBackgroundColor="#80FFFFFF"
-            app:cardCornerRadius="10dp"
-            app:contentPadding="6dp">
+            <TextView
+                android:id="@+id/text_view_title_toolbar_screens"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="16dp"
+                android:layout_weight="1"
+                android:gravity="center|right"
+                android:textColor="@color/white"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                tools:text="عنوان صفحه" />
 
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_baseline_arrow_forward" />
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_view_back_toolbar_screens"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="#80FFFFFF"
+                app:cardCornerRadius="10dp"
+                app:contentPadding="6dp">
 
-        </com.google.android.material.card.MaterialCardView>
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_baseline_arrow_forward" />
 
-    </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
 
 </LinearLayout>
