@@ -10,7 +10,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="110dp">
+        android:layout_height="150dp">
 
         <ImageView
             android:id="@+id/image_view_banner"
@@ -27,6 +27,7 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingTop="30dp"
             android:gravity="center"
             android:orientation="vertical"
             android:paddingBottom="16dp">
@@ -174,14 +175,14 @@
             android:id="@+id/loading_anim_view"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            app:lottie_autoPlay="true"
             android:layout_centerInParent="true"
+            android:visibility="gone"
+            app:lottie_autoPlay="true"
             app:lottie_colorFilter="@color/purple_200"
             app:lottie_loop="true"
-            android:visibility="gone"
-            tools:visibility="visible"
             app:lottie_rawRes="@raw/loading"
-            app:tint="#fff" />
+            app:tint="#fff"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/text_view_error"

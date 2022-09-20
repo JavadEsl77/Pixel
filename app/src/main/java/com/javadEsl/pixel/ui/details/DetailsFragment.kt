@@ -1,6 +1,7 @@
 package com.javadEsl.pixel.ui.details
 
 import android.Manifest
+import android.app.Activity
 import android.app.Dialog
 import android.app.WallpaperManager
 import android.content.ActivityNotFoundException
@@ -33,6 +34,7 @@ import androidx.core.content.FileProvider
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.MenuCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -68,6 +70,7 @@ import java.io.IOException
 import java.net.URL
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class DetailsFragment : Fragment(R.layout.fragment_details),
@@ -218,6 +221,25 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .error(R.drawable.ic_user)
                 .into(imageViewProfile)
+
+            requireActivity().window.decorView.systemUiVisibility =
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            setWindowFlag(
+                requireActivity(),
+                WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
+                false
+            )
+            if (Color.parseColor(modelPhoto.color.toString()).isBrightColor) {
+                val wic = WindowInsetsControllerCompat(requireActivity().window, requireActivity().window.decorView)
+                wic.isAppearanceLightStatusBars = true;
+            }
+
+            requireActivity().window.statusBarColor = Color.parseColor(
+                "#E6" + modelPhoto.color?.replace(
+                    "#",
+                    ""
+                )
+            )
 
             lyDetailImage.setBackgroundColor(
                 Color.parseColor(
@@ -794,6 +816,10 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
     override fun onDestroy() {
         super.onDestroy()
+        requireActivity().window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        setWindowFlag(requireActivity(), WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
+        requireActivity().window.statusBarColor = resources.getColor(R.color.status_bar_color)
+
         if (downloadStatus) {
             Pump.shutdown()
         }
@@ -807,5 +833,16 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         ) {
             binding.cardDownload.performClick()
         }
+    }
+
+    private fun setWindowFlag(activity: Activity, bits: Int, on: Boolean) {
+        val win: Window = activity.window
+        val winParams: WindowManager.LayoutParams = win.attributes
+        if (on) {
+            winParams.flags = winParams.flags or bits
+        } else {
+            winParams.flags = winParams.flags and bits.inv()
+        }
+        win.attributes = winParams
     }
 }

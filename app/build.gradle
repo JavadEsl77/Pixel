@@ -122,5 +122,7 @@ dependencies {
     def alerterVersion = "7.2.4"
     implementation "com.github.tapadoo:alerter:$alerterVersion"
 
+    //ShowCaseView
+    implementation 'com.github.mreram:showcaseview:1.4.1'
 
 }

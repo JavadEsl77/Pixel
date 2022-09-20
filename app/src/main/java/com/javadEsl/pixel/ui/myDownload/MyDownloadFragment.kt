@@ -41,7 +41,7 @@ import java.io.IOException
 
 
 @AndroidEntryPoint
-class MyDownloadFragment : Fragment(com.javadEsl.pixel.R.layout.fragment_my_download),
+class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
     MyDownloadAdapter.OnItemClickListener {
     private val viewModel by viewModels<MyDownloadViewModel>()
     private var _binding: FragmentMyDownloadBinding? = null
@@ -133,8 +133,7 @@ class MyDownloadFragment : Fragment(com.javadEsl.pixel.R.layout.fragment_my_down
 
     private fun showDialogOne(photo: File) {
         val dialog = BottomSheetDialog(
-            requireContext(),
-            com.javadEsl.pixel.R.style.AppBottomSheetDialogTheme
+            requireContext(), R.style.AppBottomSheetDialogTheme
         )
 
         val sheetDialog =

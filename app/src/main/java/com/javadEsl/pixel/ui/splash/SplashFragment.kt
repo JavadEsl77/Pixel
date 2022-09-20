@@ -1,9 +1,14 @@
 package com.javadEsl.pixel.ui.splash
 
+import android.app.Activity
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import androidx.core.view.isVisible
@@ -15,6 +20,7 @@ import com.javadEsl.pixel.R
 import com.javadEsl.pixel.databinding.FragmentSplashBinding
 import dagger.hilt.android.AndroidEntryPoint
 
+
 @AndroidEntryPoint
 class SplashFragment : Fragment(R.layout.fragment_splash) {
     private var _binding: FragmentSplashBinding? = null
@@ -25,9 +31,14 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.getStartNavigate()
-    }
+            }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
+        requireActivity().window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        setWindowFlag(requireActivity(), WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
+        requireActivity().window.statusBarColor = resources.getColor(R.color.status_bar_color)
+
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSplashBinding.bind(view)
         binding.apply {
@@ -75,5 +86,16 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
 
             }
         }
+    }
+
+    private fun setWindowFlag(activity: Activity, bits: Int, on: Boolean) {
+        val win: Window = activity.window
+        val winParams: WindowManager.LayoutParams = win.attributes
+        if (on) {
+            winParams.flags = winParams.flags or bits
+        } else {
+            winParams.flags = winParams.flags and bits.inv()
+        }
+        win.attributes = winParams
     }
 }

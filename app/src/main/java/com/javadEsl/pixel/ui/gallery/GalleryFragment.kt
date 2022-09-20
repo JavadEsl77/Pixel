@@ -91,7 +91,6 @@ class GalleryFragment :
                 }
 
             }
-//            recyclerView.setHasFixedSize(true)
             recyclerView.itemAnimator = null
             recyclerView.adapter = adapter.withLoadStateHeaderAndFooter(
                 header = UnsplashPhotoLoadStateAdapter { adapter.retry() },
@@ -100,6 +99,18 @@ class GalleryFragment :
             viewModel.photos.observe(viewLifecycleOwner) { data ->
                 data?.let {
                     adapter.submitData(viewLifecycleOwner.lifecycle, data)
+
+//                    Handler(Looper.getMainLooper()).postDelayed({
+//                        GuideView.Builder(requireActivity())
+//                            .setTitle("دانلود های من")
+//                            .setContentText("در این بخش میتوانید \n تصاویری که دانلود کرده اید \n را مشاهده کنید")
+//                            .setTargetView(cardMyDownload)
+//                            .setContentTextSize(14)
+//                            .setTitleTextSize(16)
+//                            .setDismissType(DismissType.anywhere) //optional - default dismissible by TargetView
+//                            .build()
+//                            .show()
+//                    }, 1500)
                 }
             }
             adapter.addLoadStateListener { loadState ->
