@@ -47,12 +47,6 @@ class UnsplashUserPhotoAdapter(
             val photo = todos[bindingAdapterPosition]
             binding.apply {
 
-                if( bindingAdapterPosition == itemCount - 1 ){
-                    val param = cardUserPhotoItem.layoutParams as ViewGroup.MarginLayoutParams
-                    param.setMargins(25,25,0,25)
-                    cardUserPhotoItem.layoutParams = param
-                }
-
                 Glide.with(itemView)
                     .load(photo.urls?.regular?.convertedUrl)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -60,34 +54,11 @@ class UnsplashUserPhotoAdapter(
                     .error(R.drawable.ic_error_photos)
                     .into(imageView)
 
-                if (photo.likes.toString().isNotEmpty()) {
-                    textViewItemTitlePhotoLikes.isVisible = true
-                    textViewItemPhotoLikes.isVisible = true
-                    textViewItemPhotoLikes.text = photo.likes.toString()
-                }
-
-                if (photo.user?.name.toString().isNotEmpty()) {
-                    textViewItemTitlePhotoDownload.isVisible = true
-                    textViewItemPhotoDownload.isVisible = true
-                    textViewItemPhotoDownload.text = photo.user?.name.toString()
-                }
-
-                layoutItemUserPhoto.setBackgroundColor(
-                    Color.parseColor(
-                        "#cc" + photo.color?.replace("#", "")
-                    )
-                )
-                if (Color.parseColor(photo.color.toString()).isBrightColor) {
-                    textViewItemPhotoLikes.setTextColor(Color.parseColor("#000000"))
-                    textViewItemTitlePhotoLikes.setTextColor(Color.parseColor("#000000"))
-                    textViewItemTitlePhotoDownload.setTextColor(Color.parseColor("#000000"))
-                    textViewItemPhotoDownload.setTextColor(Color.parseColor("#000000"))
-                } else {
-                    textViewItemPhotoLikes.setTextColor(Color.parseColor("#ffffff"))
-                    textViewItemTitlePhotoLikes.setTextColor(Color.parseColor("#B3FFFFFF"))
-                    textViewItemTitlePhotoDownload.setTextColor(Color.parseColor("#B3FFFFFF"))
-                    textViewItemPhotoDownload.setTextColor(Color.parseColor("#ffffff"))
-                }
+//                if (photo.likes.toString().isNotEmpty()) {
+//                    textViewItemTitlePhotoLikes.isVisible = true
+//                    textViewItemPhotoLikes.isVisible = true
+//                    textViewItemPhotoLikes.text = photo.likes.toString()
+//                }
             }
         }
     }

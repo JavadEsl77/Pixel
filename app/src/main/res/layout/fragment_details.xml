@@ -25,102 +25,46 @@
                 app:cardCornerRadius="15dp"
                 app:cardElevation="5dp">
 
-                <RelativeLayout
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/image_view"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"
-                        tools:src="@drawable/ic_launcher_background" />
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
                     <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="15dp"
-                        android:gravity="center|bottom"
-                        android:orientation="horizontal">
+                        android:id="@+id/ly_toolbar_detail"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:gravity="center|right"
+                        android:orientation="horizontal"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="10dp">
 
-                        <androidx.appcompat.widget.AppCompatImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_logo" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:text="@string/app_name"
-                            android:textColor="@color/white"
-                            android:textSize="16dp"
-                            android:textStyle="bold" />
-
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/card_download"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_margin="15dp"
-                        app:cardBackgroundColor="#80FFFFFF"
-                        app:cardCornerRadius="15dp"
-                        app:cardElevation="0dp"
-                        tools:background="#80000000">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center"
-                            android:orientation="horizontal"
-                            android:paddingStart="15dp"
-                            android:paddingEnd="5dp">
+                            android:orientation="horizontal">
 
-                            <androidx.appcompat.widget.AppCompatTextView
-                                android:id="@+id/text_view_download"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:gravity="center"
-                                android:text="@string/string_download_images"
-                                android:textColor="@color/white"
-                                android:textSize="13dp"
-                                android:textStyle="bold" />
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/image_view_logo_detail"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/ic_logo" />
 
-                            <ImageView
-                                android:id="@+id/image_view_download"
-                                android:layout_width="25dp"
-                                android:layout_height="35dp"
-                                android:scaleType="center"
-                                android:src="@drawable/ic_expand_more" />
+                        </androidx.appcompat.widget.LinearLayoutCompat>
 
-
-                        </LinearLayout>
-
-
-                    </androidx.cardview.widget.CardView>
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:gravity="center"
-                        android:orientation="horizontal"
-                        android:paddingEnd="7dp"
-                        android:paddingBottom="7dp">
-
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1" />
 
                         <androidx.cardview.widget.CardView
-                            android:id="@+id/card_wallpaper"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="7dp"
-                            android:layout_weight="1"
-                            app:cardBackgroundColor="#80FFFFFF"
+                            android:id="@+id/card_download"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            app:cardBackgroundColor="@android:color/transparent"
                             app:cardCornerRadius="15dp"
-                            app:cardElevation="0dp"
-                            tools:background="#80000000">
+                            app:cardElevation="0dp">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -129,6 +73,63 @@
                                 android:orientation="horizontal"
                                 android:paddingStart="15dp"
                                 android:paddingEnd="5dp">
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/text_view_download"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="@string/string_download_images"
+                                    android:textColor="@color/white"
+                                    android:textSize="13dp"
+                                    android:textStyle="bold" />
+
+                                <ImageView
+                                    android:id="@+id/image_view_download"
+                                    android:layout_width="35dp"
+                                    android:layout_height="35dp"
+                                    android:src="@drawable/ic_download_detail" />
+
+
+                            </LinearLayout>
+
+                        </androidx.cardview.widget.CardView>
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/image_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:adjustViewBounds="true"
+                            tools:src="@drawable/ic_launcher_background" />
+
+                    </RelativeLayout>
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:id="@+id/ly_detail_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="45dp"
+                        android:gravity="center|right"
+                        android:orientation="horizontal">
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/card_wallpaper"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            app:cardBackgroundColor="@android:color/transparent"
+                            app:cardCornerRadius="15dp"
+                            app:cardElevation="0dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:gravity="center|right"
+                                android:orientation="horizontal">
 
                                 <ProgressBar
                                     android:id="@+id/progress_bar_wallpaper"
@@ -152,8 +153,7 @@
                                     android:id="@+id/image_view_wallpaper"
                                     android:layout_width="35dp"
                                     android:layout_height="35dp"
-                                    android:scaleType="center"
-                                    android:src="@drawable/ic_wallpaper" />
+                                    android:src="@drawable/ic_gallery_detail" />
 
 
                             </LinearLayout>
@@ -161,28 +161,34 @@
 
                         </androidx.cardview.widget.CardView>
 
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/card_line"
+                            android:layout_width="2dp"
+                            android:layout_height="match_parent"
+                            android:layout_margin="7dp"
+                            app:cardBackgroundColor="#ffffff"
+                            app:cardCornerRadius="5dp" />
+
                         <androidx.cardview.widget.CardView
                             android:id="@+id/card_share"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="7dp"
-                            app:cardBackgroundColor="#80FFFFFF"
+                            android:layout_height="match_parent"
+                            app:cardBackgroundColor="@android:color/transparent"
                             app:cardCornerRadius="15dp"
-                            app:cardElevation="0dp"
-                            tools:background="#80000000">
+                            app:cardElevation="0dp">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:gravity="center"
                                 android:orientation="horizontal"
-                                android:paddingStart="15dp"
                                 android:paddingEnd="5dp">
 
                                 <androidx.appcompat.widget.AppCompatTextView
                                     android:id="@+id/text_view_share"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginLeft="7dp"
                                     android:gravity="center"
                                     android:text="@string/string_download_share"
                                     android:textColor="@color/white"
@@ -193,8 +199,8 @@
                                     android:id="@+id/image_view_share"
                                     android:layout_width="35dp"
                                     android:layout_height="35dp"
-                                    android:scaleType="center"
-                                    android:src="@drawable/ic_share" />
+                                    android:scaleType="fitCenter"
+                                    android:src="@drawable/ic_share_detail" />
 
 
                             </LinearLayout>
@@ -205,8 +211,8 @@
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
+                </LinearLayout>
 
-                </RelativeLayout>
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -235,9 +241,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
+                        android:layout_marginRight="10dp"
                         android:gravity="center|right"
                         android:text="@string/string_photo_info"
-                        android:layout_marginRight="10dp"
                         android:textColor="@color/black"
                         android:textSize="18dp"
                         android:textStyle="bold"
@@ -460,8 +466,9 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:layout_marginBottom="7dp"
                 app:cardCornerRadius="15dp"
                 app:cardElevation="5dp">
 
@@ -587,11 +594,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingEnd="10dp"
+                android:paddingEnd="6dp"
                 app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-                app:spanCount="2"
+                app:spanCount="3"
                 tools:itemCount="10"
-                tools:listitem="@layout/item_unsplash_photo" />
+                tools:listitem="@layout/item_unsplash_user_photo" />
 
         </LinearLayout>
 

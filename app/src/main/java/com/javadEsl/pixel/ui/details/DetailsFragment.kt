@@ -218,7 +218,8 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .error(R.drawable.ic_user)
                 .into(imageViewProfile)
-            cardDownload.setCardBackgroundColor(
+
+            lyDetailImage.setBackgroundColor(
                 Color.parseColor(
                     "#E6" + modelPhoto.color?.replace(
                         "#",
@@ -226,17 +227,10 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     )
                 )
             )
-            cardShare.setCardBackgroundColor(
+
+            lyToolbarDetail.setBackgroundColor(
                 Color.parseColor(
-                    "#cc" + modelPhoto.color?.replace(
-                        "#",
-                        ""
-                    )
-                )
-            )
-            cardWallpaper.setCardBackgroundColor(
-                Color.parseColor(
-                    "#cc" + modelPhoto.color?.replace(
+                    "#E6" + modelPhoto.color?.replace(
                         "#",
                         ""
                     )
@@ -248,6 +242,8 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 imageViewDownload.setColorFilter(color)
                 imageViewShare.setColorFilter(color)
                 imageViewWallpaper.setColorFilter(color)
+                imageViewLogoDetail.setColorFilter(color)
+                cardLine.setBackgroundColor(color)
                 textViewDownload.setTextColor(color)
                 textViewWallpaper.setTextColor(color)
                 textViewShare.setTextColor(color)
@@ -257,7 +253,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 .load(modelPhoto.urls?.regular?.convertedUrl)
                 .error(R.drawable.ic_error_photos)
                 .transition(DrawableTransitionOptions.withCrossFade())
-                .diskCacheStrategy(DiskCacheStrategy.DATA)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(
                         e: GlideException?,
@@ -267,6 +263,8 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     ): Boolean {
                         layoutLoading.isVisible = false
                         cardDownload.isVisible = false
+                        lyDetailImage.isVisible = false
+                        lyToolbarDetail.isVisible = false
                         cardShare.isVisible = false
                         cardWallpaper.isVisible = false
                         imageView.scaleType = ImageView.ScaleType.CENTER

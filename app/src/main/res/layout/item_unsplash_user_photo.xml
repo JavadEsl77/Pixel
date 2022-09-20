@@ -6,146 +6,18 @@
     android:id="@+id/card_user_photo_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="10dp"
-    android:layout_marginTop="10dp"
+    android:layout_marginStart="6dp"
+    android:layout_marginTop="3dp"
+    android:layout_marginBottom="3dp"
     app:cardBackgroundColor="@color/color_background_gallery_item"
-    app:cardCornerRadius="15dp"
-    app:cardElevation="4dp">
+    app:cardCornerRadius="10dp"
+    app:cardElevation="12dp">
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <ImageView
+        android:id="@+id/image_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:cardCornerRadius="15dp"
-            android:layout_marginLeft="7dp"
-            android:layout_marginTop="7dp"
-            android:layout_marginRight="7dp"
-            app:cardElevation="0dp"
-            app:cardPreventCornerOverlap="false">
-
-            <ImageView
-                android:id="@+id/image_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:adjustViewBounds="true"
-                android:minHeight="180dp"  />
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/image_view"
-            android:layout_margin="7dp"
-            app:cardBackgroundColor="@android:color/transparent"
-            app:cardCornerRadius="15dp"
-            app:cardElevation="0dp">
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:id="@+id/layout_item_user_photo"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="#D9000000"
-                android:gravity="center|left"
-                android:orientation="horizontal"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp">
-
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center|left|top"
-                    android:orientation="horizontal">
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginEnd="7dp"
-                        android:gravity="center|left"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/text_view_item_title_photo_likes"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginEnd="8dp"
-                            android:ellipsize="end"
-                            android:gravity="center_vertical"
-                            android:maxLines="1"
-                            android:text="likes"
-                            android:textColor="#B3FFFFFF"
-                            android:textSize="11dp"
-                            android:visibility="gone"
-                            tools:text="likes"
-                            tools:visibility="visible" />
-
-                        <TextView
-                            android:id="@+id/text_view_item_photo_likes"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:textColor="@color/white"
-                            android:textSize="12dp"
-                            android:visibility="gone"
-                            tools:text="156"
-                            tools:visibility="visible" />
-
-
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                    <androidx.appcompat.widget.LinearLayoutCompat
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center|left"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/text_view_item_title_photo_download"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_marginEnd="8dp"
-                            android:ellipsize="end"
-                            android:gravity="center_vertical"
-                            android:maxLines="1"
-                            android:text="photographer"
-                            android:textColor="#B3FFFFFF"
-                            android:textSize="11dp"
-                            android:visibility="gone"
-                            tools:text="photographer"
-                            tools:visibility="visible" />
-
-                        <TextView
-                            android:id="@+id/text_view_item_photo_download"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:textColor="@color/white"
-                            android:textSize="12dp"
-                            android:visibility="gone"
-                            tools:text="156"
-                            tools:visibility="visible" />
-
-
-                    </androidx.appcompat.widget.LinearLayoutCompat>
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-        </androidx.cardview.widget.CardView>
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
+        android:adjustViewBounds="true"
+        android:minHeight="200dp"  />
 
 </com.google.android.material.card.MaterialCardView>
