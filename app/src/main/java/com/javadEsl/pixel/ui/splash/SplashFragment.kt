@@ -15,7 +15,6 @@ import com.javadEsl.pixel.R
 import com.javadEsl.pixel.databinding.FragmentSplashBinding
 import dagger.hilt.android.AndroidEntryPoint
 
-
 @AndroidEntryPoint
 class SplashFragment : Fragment(R.layout.fragment_splash) {
     private var _binding: FragmentSplashBinding? = null
