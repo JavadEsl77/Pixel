@@ -43,7 +43,7 @@
                 android:layout_height="45dp"
                 android:layout_alignParentBottom="true"
                 android:layout_margin="10dp"
-                app:cardBackgroundColor="#D9FFFFFF"
+                app:cardBackgroundColor="#F2FFFFFF"
                 app:cardCornerRadius="13dp"
                 app:cardElevation="0dp">
 

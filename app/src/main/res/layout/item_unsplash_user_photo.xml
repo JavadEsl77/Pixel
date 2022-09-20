@@ -20,8 +20,10 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             app:cardCornerRadius="15dp"
+            android:layout_marginLeft="7dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginRight="7dp"
             app:cardElevation="0dp"
             app:cardPreventCornerOverlap="false">
 

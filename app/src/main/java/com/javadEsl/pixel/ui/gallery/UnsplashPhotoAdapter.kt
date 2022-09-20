@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import androidx.core.view.marginBottom
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -48,9 +47,9 @@ class UnsplashPhotoAdapter(private val listener: OnItemClickListener) :
 
             binding.apply {
 
-                if( bindingAdapterPosition == itemCount - 1 ){
+                if (bindingAdapterPosition == itemCount - 1) {
                     val param = cardGalleryItem.layoutParams as ViewGroup.MarginLayoutParams
-                    param.setMargins(25,25,0,25)
+                    param.setMargins(25, 25, 0, 25)
                     cardGalleryItem.layoutParams = param
                 }
 
