@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/color_background_fragments"
     android:orientation="vertical"
     tools:context=".ui.details.DetailsFragment">
 
@@ -205,10 +206,10 @@
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/color_background_gallery_item"
                 android:gravity="center|right"
                 android:orientation="vertical"
                 android:paddingStart="16dp"
-                android:background="@color/color_background_gallery_item"
                 android:paddingTop="7dp"
                 android:paddingEnd="16dp"
                 android:paddingBottom="7dp">
@@ -232,14 +233,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:gravity="center|right"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:id="@+id/layout_view_info"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"
+                        android:layout_weight="1"
                         android:gravity="center|right"
                         android:orientation="vertical"
                         android:padding="7dp"
@@ -252,8 +254,10 @@
                             android:drawablePadding="4dp"
                             android:gravity="center|right"
                             android:text="@string/string_views_images"
+                            android:textColor="@color/purple_200"
                             android:textSize="12dp"
-                            app:drawableEndCompat="@drawable/ic_eye" />
+                            app:drawableEndCompat="@drawable/ic_eye"
+                            app:drawableTint="@color/purple_200" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/text_view_photo_views"
@@ -270,9 +274,10 @@
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:id="@+id/layout_download_info"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="16dp"
+                        android:layout_weight="1"
                         android:gravity="center|right"
                         android:orientation="vertical"
                         android:padding="7dp"
@@ -285,8 +290,10 @@
                             android:drawablePadding="4dp"
                             android:gravity="center|right"
                             android:text="@string/string_downloads_images"
+                            android:textColor="@color/purple_200"
                             android:textSize="12dp"
-                            app:drawableEndCompat="@drawable/ic_downward" />
+                            app:drawableEndCompat="@drawable/ic_downward"
+                            app:drawableTint="@color/purple_200" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/text_view_photo_download"
@@ -303,8 +310,9 @@
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:id="@+id/layout_like_info"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:gravity="center|right"
                         android:orientation="vertical"
                         android:padding="7dp"
@@ -317,9 +325,10 @@
                             android:drawablePadding="4dp"
                             android:gravity="center|right"
                             android:text="@string/string_likes_images"
+                            android:textColor="@color/purple_200"
                             android:textSize="12dp"
                             app:drawableEndCompat="@drawable/ic_like"
-                            app:drawableTint="@android:color/darker_gray" />
+                            app:drawableTint="@color/purple_200" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/text_view_photo_likes"
@@ -333,7 +342,6 @@
                             tools:text="689"
                             tools:visibility="visible" />
                     </androidx.appcompat.widget.LinearLayoutCompat>
-
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -370,8 +378,8 @@
                         android:id="@+id/text_view_location"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginTop="7dp"
+                        android:layout_marginEnd="25dp"
                         android:ellipsize="end"
                         android:gravity="right|top"
                         android:maxLines="2"
@@ -416,8 +424,9 @@
                         android:id="@+id/text_view_camera_model"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginTop="7dp"
+                        android:layout_marginEnd="25dp"
+
                         android:ellipsize="end"
                         android:gravity="right|top"
                         android:maxLines="2"
@@ -550,8 +559,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                android:paddingEnd="10dp"
+                app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
                 app:spanCount="2"
+                tools:itemCount="10"
                 tools:listitem="@layout/item_unsplash_photo" />
 
         </LinearLayout>

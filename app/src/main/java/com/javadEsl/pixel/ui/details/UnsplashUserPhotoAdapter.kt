@@ -46,10 +46,16 @@ class UnsplashUserPhotoAdapter(
         fun bind() {
             val photo = todos[bindingAdapterPosition]
             binding.apply {
+
+                if( bindingAdapterPosition == itemCount - 1 ){
+                    val param = cardUserPhotoItem.layoutParams as ViewGroup.MarginLayoutParams
+                    param.setMargins(25,25,0,25)
+                    cardUserPhotoItem.layoutParams = param
+                }
+
                 Glide.with(itemView)
                     .load(photo.urls?.regular?.convertedUrl)
-                    .centerCrop()
-                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .error(R.drawable.ic_error_photos)
                     .into(imageView)
