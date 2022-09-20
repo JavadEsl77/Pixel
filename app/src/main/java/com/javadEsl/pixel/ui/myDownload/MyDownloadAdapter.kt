@@ -51,6 +51,12 @@ class MyDownloadAdapter(
 
             binding.apply {
 
+                if (bindingAdapterPosition == itemCount - 1) {
+                    val param = cardViewItemMyDownload.layoutParams as ViewGroup.MarginLayoutParams
+                    param.setMargins(25, 25, 0, 25)
+                    cardViewItemMyDownload.layoutParams = param
+                }
+
                 val quality = photo.name.replace(".jpg", "")
                 when (quality) {
                     "Full-HD" -> {
@@ -62,7 +68,6 @@ class MyDownloadAdapter(
 
                 Glide.with(itemView)
                     .load(photo)
-                    .centerCrop()
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .error(R.drawable.ic_error_photos)

@@ -17,8 +17,10 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        android:paddingEnd="7dp"
+        app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
         app:spanCount="2"
+        tools:itemCount="10"
         tools:listitem="@layout/item_list_my_download" />
 
     <androidx.appcompat.widget.LinearLayoutCompat

@@ -4,112 +4,100 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view_item_my_download"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
-    android:layout_marginLeft="4dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="7dp"
     android:layout_marginTop="7dp"
-    android:layout_marginRight="4dp"
-    android:orientation="vertical"
     app:cardCornerRadius="15dp"
     app:cardElevation="5dp">
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_background_my_download" />
+
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:minHeight="200dp" />
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="55dp"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom">
 
-        <ImageView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="center"
-            android:src="@drawable/ic_error_photos" />
+            android:layout_height="35dp"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="7dp"
+            app:cardBackgroundColor="#F2FFFFFF"
+            app:cardCornerRadius="13dp"
+            app:cardElevation="0dp">
 
-        <ImageView
-            android:id="@+id/image_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="center" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/shape_background_my_download" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_alignParentBottom="true">
-
-            <com.google.android.material.card.MaterialCardView
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="match_parent"
                 android:layout_alignParentBottom="true"
-                android:layout_margin="10dp"
-                app:cardBackgroundColor="#F2FFFFFF"
-                app:cardCornerRadius="13dp"
-                app:cardElevation="0dp">
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
 
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/text_view_quality"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_alignParentBottom="true"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    android:paddingRight="10dp"
-                    android:paddingLeft="10dp">
+                    android:textColor="@color/purple_200"
+                    android:textSize="13dp"
+                    android:textStyle="bold"
+                    tools:text="Full-HD" />
 
-                    <TextView
-                        android:id="@+id/text_view_quality"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:textColor="@color/purple_200"
-                        android:textSize="13dp"
-                        android:textStyle="bold"
-                        tools:text="Full-HD" />
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
 
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"/>
-
-                    <TextView
-                        android:id="@+id/text_view_file_size"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginLeft="7dp"
-                        android:gravity="center"
-                        android:textColor="@color/purple_200"
-                        android:textSize="10dp"
-                        android:textStyle="bold"
-                        tools:text="9.33 MB" />
-
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
-
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/card_full_hd"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginRight="16dp"
-                android:visibility="gone"
-                tools:visibility="visible"
-                app:cardBackgroundColor="#FFFFFF"
-                app:cardCornerRadius="14dp"
-                app:cardElevation="2dp">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/text_view_file_size"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/ic_premium"/>
+                    android:layout_marginLeft="7dp"
+                    android:gravity="center"
+                    android:textColor="@color/purple_200"
+                    android:textSize="10dp"
+                    android:textStyle="bold"
+                    tools:text="9.33 MB" />
 
-            </com.google.android.material.card.MaterialCardView>
 
-        </RelativeLayout>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_full_hd"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginRight="16dp"
+            android:visibility="gone"
+            app:cardBackgroundColor="#FFFFFF"
+            app:cardCornerRadius="14dp"
+            app:cardElevation="2dp"
+            tools:visibility="visible">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_premium" />
+
+        </com.google.android.material.card.MaterialCardView>
 
     </RelativeLayout>
 

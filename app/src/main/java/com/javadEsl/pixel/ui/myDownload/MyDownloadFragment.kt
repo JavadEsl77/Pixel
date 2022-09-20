@@ -2,6 +2,7 @@ package com.javadEsl.pixel.ui.myDownload
 
 import android.Manifest
 import android.app.Dialog
+import android.app.ProgressDialog.show
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -17,6 +18,7 @@ import android.os.Handler
 import android.provider.Settings
 import android.util.Log
 import android.view.*
+import android.view.animation.Animation
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -35,8 +37,10 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.javadEsl.pixel.collapse
 import com.javadEsl.pixel.databinding.FragmentMyDownloadBinding
 import com.javadEsl.pixel.databinding.LayoutBottomSheetPhotoBinding
+import com.javadEsl.pixel.expand
 import com.javadEsl.pixel.isBrightColor
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
@@ -183,16 +187,14 @@ class MyDownloadFragment : Fragment(com.javadEsl.pixel.R.layout.fragment_my_down
                 permissionType = "Delete"
 
                 if (cardDeleteAlert.visibility == View.GONE) {
-//                    val anim = ObjectAnimator.ofFloat(lyOption, "translationY", 100F, 0F).setDuration(500)
-//                    anim.start()
-                    cardDeleteAlert.visibility = View.VISIBLE
+                    cardDeleteAlert.expand()
                 }
 
             }
 
             textCancel.setOnClickListener {
                 if (cardDeleteAlert.visibility == View.VISIBLE) {
-                    cardDeleteAlert.visibility = View.GONE
+                    cardDeleteAlert.collapse()
                 }
             }
 
@@ -221,6 +223,12 @@ class MyDownloadFragment : Fragment(com.javadEsl.pixel.R.layout.fragment_my_down
 
             cardViewBackToolbarBottomSheet.setOnClickListener {
                 dialog.dismiss()
+            }
+
+            photoView.setOnClickListener {
+                if (cardDeleteAlert.visibility == View.VISIBLE) {
+                    cardDeleteAlert.collapse()
+                }
             }
 
         }

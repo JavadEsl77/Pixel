@@ -22,7 +22,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:background="#66000000" />
+            android:background="#99000000" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -36,8 +36,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:gravity="center|right"
+                android:orientation="horizontal"
+                android:paddingRight="30dp">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
@@ -163,7 +164,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingEnd="10dp"
+            android:paddingEnd="7dp"
             app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
             app:spanCount="2"
             tools:itemCount="10"
