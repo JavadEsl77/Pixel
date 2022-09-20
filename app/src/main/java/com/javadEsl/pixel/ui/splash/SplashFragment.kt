@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import android.view.WindowManager
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import androidx.core.view.isVisible
@@ -46,7 +45,8 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
                     layoutLoading.isVisible = true
                     layoutError.isVisible = false
                     Handler(Looper.getMainLooper()).postDelayed({
-                        val action = SplashFragmentDirections.actionSplashFragmentToGalleryFragment()
+                        val action =
+                            SplashFragmentDirections.actionSplashFragmentToGalleryFragment()
                         findNavController().navigate(action)
 
 

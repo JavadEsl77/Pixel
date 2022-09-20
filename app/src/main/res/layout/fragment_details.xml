@@ -607,13 +607,15 @@
         android:visibility="visible"
         tools:visibility="gone">
 
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:indeterminate="true"
-            android:indeterminateTint="@color/purple_500" />
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/animationView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:lottie_autoPlay="true"
+            app:lottie_colorFilter="@color/purple_200"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/loading"
+            app:tint="#fff" />
 
         <TextView
             android:id="@+id/text_view_network_error"

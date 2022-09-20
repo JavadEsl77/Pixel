@@ -48,14 +48,13 @@
                     android:layout_height="80dp"
                     android:src="@drawable/ic_logo" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:text="Pixel"
-                    android:textColor="@color/white"
-                    android:textSize="23dp"
-                    android:textStyle="bold" />
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="25dp"
+                    android:layout_height="5dp"
+                    android:layout_marginLeft="9dp"
+                    android:layout_marginTop="7dp"
+                    app:cardBackgroundColor="@color/purple_200"
+                    app:cardCornerRadius="10dp" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -70,7 +69,7 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 app:lottie_autoPlay="true"
-                app:lottie_colorFilter="#00838F"
+                app:lottie_colorFilter="@color/purple_200"
                 app:lottie_loop="true"
                 app:lottie_rawRes="@raw/loading"
                 app:tint="#fff" />

@@ -2,14 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="8dp">
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/animation_loading"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:lottie_autoPlay="true"
+        app:lottie_colorFilter="@color/purple_200"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/loading"
+        app:tint="#fff" />
 
 
     <androidx.appcompat.widget.AppCompatTextView

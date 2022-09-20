@@ -104,7 +104,7 @@ class GalleryFragment :
             }
             adapter.addLoadStateListener { loadState ->
                 binding.apply {
-                    progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+                    loadingAnimView.isVisible = loadState.source.refresh is LoadState.Loading
                     recyclerView.isVisible =
                         loadState.source.refresh is LoadState.NotLoading
                     textViewError.isVisible = loadState.source.refresh is LoadState.Error
