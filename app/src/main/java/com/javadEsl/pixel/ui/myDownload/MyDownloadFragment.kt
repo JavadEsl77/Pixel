@@ -5,6 +5,7 @@ import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -17,6 +18,7 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.isVisible
@@ -72,6 +74,12 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        requireActivity().window.statusBarColor =
+            ContextCompat.getColor(
+                requireActivity(),
+                R.color.purple_500
+            )
+
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -96,7 +104,6 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
 
             layoutToolbar.textViewTitleToolbarScreens.text =
                 resources.getString(com.javadEsl.pixel.R.string.string_my_download_title)
-
             layoutToolbar.cardViewBackToolbarScreens.setOnClickListener {
                 findNavController().popBackStack()
             }

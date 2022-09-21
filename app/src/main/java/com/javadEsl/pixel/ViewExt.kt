@@ -1,5 +1,7 @@
 package com.javadEsl.pixel
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
@@ -7,6 +9,55 @@ import android.view.animation.Transformation
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+
+const val ANIMATION_DURATION = 350L
+
+/**
+ * Fade in view
+ *
+ * @param listener
+ * @param duration
+ */
+fun View.fadeIn(
+    listener: Animator.AnimatorListener? = null,
+    duration: Long = ANIMATION_DURATION
+) {
+    if (isVisible) return
+    isVisible = true
+    alpha = 0f
+    animate()
+        .setDuration(duration)
+        .alpha(1f)
+        .setListener(listener)
+        .start()
+}
+
+/**
+ * Fade out view
+ *
+ * @param listener
+ * @param invisibleView
+ * @param duration
+ */
+fun View.fadeOut(
+    listener: Animator.AnimatorListener? = null,
+    invisibleView: Boolean = false,
+    duration: Long = ANIMATION_DURATION
+) {
+    if (!isVisible) return
+    val mListener = object : AnimatorListenerAdapter() {
+        override fun onAnimationEnd(animation: Animator?) {
+            if (invisibleView) invisible() else hide()
+        }
+    }
+    alpha = 1f
+    animate()
+        .setDuration(duration)
+        .alpha(0f)
+        .setListener(listener ?: mListener)
+        .start()
+}
+
 
 /**
  * set view visibility visible

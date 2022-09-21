@@ -28,29 +28,32 @@ class DetailViewModel @Inject constructor(
     private val _liveDataUserPhotosList = MutableLiveData<List<UnsplashPhoto>?>()
     val liveDataUserPhotosList: LiveData<List<UnsplashPhoto>?> = _liveDataUserPhotosList
 
-    fun getPhotoDetail(id: String) {
+    private var photoResponse: ModelPhoto? = null
+
+    fun getPhotoDetail(photo: UnsplashPhoto) {
         viewModelScope.launch {
             if (!networkHelper.hasInternetConnection()) {
                 _liveDataList.postValue(null)
                 return@launch
             }
             try {
-                val response = pixelRepository.getPhotoDetail(id)
+                val response = pixelRepository.getPhotoDetail(photo.id)
                 if (response.isSuccessful) {
-                    _liveDataList.postValue(response.body())
+                    photoResponse = response.body()
+                    getUserPhotos(photo.user?.username ?: "")
                 }
             } catch (e: Exception) {
                 _liveDataList.postValue(null)
             }
-
         }
     }
 
-    fun getUserPhotos(userName: String) {
+    private fun getUserPhotos(userName: String) {
         viewModelScope.launch {
             try {
                 val response = pixelRepository.getUserPhotos(userName)
                 if (!response.isNullOrEmpty()) {
+                    _liveDataList.postValue(photoResponse)
                     _liveDataUserPhotosList.postValue(response)
                 }
             } catch (e: Exception) {

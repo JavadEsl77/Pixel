@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.os.Bundle
@@ -16,6 +17,7 @@ import android.view.Window
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView.OnEditorActionListener
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -32,6 +34,7 @@ import com.javadEsl.pixel.R
 import com.javadEsl.pixel.data.UnsplashPhoto
 import com.javadEsl.pixel.data.convertedUrl
 import com.javadEsl.pixel.databinding.FragmentGalleryBinding
+import com.javadEsl.pixel.isBrightColor
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -43,6 +46,7 @@ class GalleryFragment :
     private val viewModel by viewModels<GalleryViewModel>()
     private var _binding: FragmentGalleryBinding? = null
     private val binding get() = _binding!!
+    private var colorStatusBar = ""
     private var sharedPreference: SharedPreferences? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,8 +63,34 @@ class GalleryFragment :
         binding.apply {
 
 
+
+            if (Color.parseColor("#000000").isBrightColor) {
+                val wic = WindowInsetsControllerCompat(
+                    requireActivity().window,
+                    requireActivity().window.decorView
+                )
+                wic.isAppearanceLightStatusBars = true;
+            }else {
+                val wic = WindowInsetsControllerCompat(
+                    requireActivity().window,
+                    requireActivity().window.decorView
+                )
+                wic.isAppearanceLightStatusBars = false
+            }
+
+            if (colorStatusBar.isEmpty()) {
+                requireActivity().window.statusBarColor = Color.parseColor(
+                    "#99" + "000000".replace(
+                        "#",
+                        ""
+                    )
+                )
+            }
+
             viewModel.liveDataRandomPhoto.observe(viewLifecycleOwner) {
                 if (it != null) {
+                    colorStatusBar = it.color.toString()
+
                     Glide.with(requireActivity())
                         .load(it.urls?.regular?.convertedUrl)
                         .centerCrop()
@@ -84,13 +114,32 @@ class GalleryFragment :
                                 p3: DataSource?,
                                 p4: Boolean
                             ): Boolean {
+
+
+                                if (Color.parseColor(colorStatusBar).isBrightColor) {
+                                    val wic = WindowInsetsControllerCompat(
+                                        requireActivity().window,
+                                        requireActivity().window.decorView
+                                    )
+                                    wic.isAppearanceLightStatusBars = true;
+                                }
+
+                                if (colorStatusBar.isNotEmpty()) {
+                                    requireActivity().window.statusBarColor = Color.parseColor(
+                                        "#99" + colorStatusBar.replace(
+                                            "#",
+                                            ""
+                                        )
+                                    )
+                                }
                                 return false
                             }
                         })
                         .into(imageViewBanner)
                 }
-
             }
+
+
             recyclerView.itemAnimator = null
             recyclerView.adapter = adapter.withLoadStateHeaderAndFooter(
                 header = UnsplashPhotoLoadStateAdapter { adapter.retry() },

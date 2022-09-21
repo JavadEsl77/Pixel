@@ -53,12 +53,6 @@ class UnsplashUserPhotoAdapter(
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .error(R.drawable.ic_error_photos)
                     .into(imageView)
-
-//                if (photo.likes.toString().isNotEmpty()) {
-//                    textViewItemTitlePhotoLikes.isVisible = true
-//                    textViewItemPhotoLikes.isVisible = true
-//                    textViewItemPhotoLikes.text = photo.likes.toString()
-//                }
             }
         }
     }

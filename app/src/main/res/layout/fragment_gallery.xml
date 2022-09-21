@@ -22,7 +22,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:background="#99000000" />
+            android:background="#33000000" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"

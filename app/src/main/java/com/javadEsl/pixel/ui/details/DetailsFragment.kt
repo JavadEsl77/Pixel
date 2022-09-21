@@ -1,7 +1,6 @@
 package com.javadEsl.pixel.ui.details
 
 import android.Manifest
-import android.app.Activity
 import android.app.Dialog
 import android.app.WallpaperManager
 import android.content.ActivityNotFoundException
@@ -38,6 +37,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -124,10 +124,9 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         super.onCreate(savedInstanceState)
         hasInternetConnection {
             if (it) {
-                viewModel.getPhotoDetail(args.photo.id)
-                viewModel.getUserPhotos(args.photo.user?.username.toString())
+                viewModel.getPhotoDetail(args.photo)
+//                viewModel.getUserPhotos(args.photo.user?.username.toString())
             }
-
         }
     }
 
@@ -138,15 +137,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
     ): View {
         if (_binding == null) {
             _binding = FragmentDetailsBinding.inflate(inflater, container, false)
-
-            val radius = 20f
-            val decorView: View = requireActivity().window.decorView
-            val rootView = decorView.findViewById<View>(android.R.id.content) as ViewGroup
-
-            val windowBackground = decorView.background
-            binding.blurViewBackground.setupWith(rootView, RenderScriptBlur(requireContext()))
-                .setFrameClearDrawable(windowBackground)
-                .setBlurRadius(radius)
         }
         return binding.root
     }
@@ -159,31 +149,42 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
     private fun initViewModel() {
 
         viewModel.liveDataList.observe(viewLifecycleOwner) {
-
-            if (it == null)
-                return@observe
-
+            if (it == null) return@observe
             setDetail(it)
             modelPhoto = it
+        }
 
+        viewModel.liveDataUserPhotosList.observe(viewLifecycleOwner) {
+            if (it.isNullOrEmpty()) return@observe
+            val adapter = UnsplashUserPhotoAdapter(it, this)
+            binding.apply {
+                recViewUserPhotos.setHasFixedSize(true)
+                recViewUserPhotos.itemAnimator = null
+                recViewUserPhotos.adapter = adapter
+            }
         }
     }
 
     private fun setDetail(modelPhoto: ModelPhoto) {
         binding.apply {
-            getUserPhotos(binding)
-            textViewUserName.text = modelPhoto.user?.name
+
+            textViewUserName.text = modelPhoto.user?.name.toString()
 
             if (!modelPhoto.user?.bio.isNullOrEmpty()) {
                 textViewBio.isVisible = true
-                textViewTitleBio.isVisible = true
                 textViewBio.text = modelPhoto.user?.bio
             }
 
             if (!modelPhoto.user?.instagramUsername.isNullOrEmpty()) {
-                textViewInstagram.isVisible = true
-                textViewTitleInstagram.isVisible = true
-                textViewInstagram.text = modelPhoto.user?.instagramUsername
+                layoutOpenInstagram.show()
+            }
+
+            if (modelPhoto.user?.totalPhotos.toString().isNotEmpty()) {
+                if (modelPhoto.user?.totalPhotos!! >= 10) {
+                    textViewNumberOfPhoto.text = "10 مورد"
+                } else {
+                    textViewNumberOfPhoto.text = modelPhoto.user.totalPhotos.toString() + " مورد"
+                }
             }
 
             if (!modelPhoto.location?.name.isNullOrEmpty()) {
@@ -201,62 +202,61 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     modelPhoto.exif?.make + " , " + modelPhoto.exif?.model
             }
 
-            if (modelPhoto.views.toString().isNotEmpty()) {
-                textViewTitlePhotoInfo.isVisible = true
-                layoutViewInfo.isVisible = true
-                textViewPhotoViews.isVisible = true
-                textViewPhotoViews.text = modelPhoto.views.toDecimal()
-            }
-
-            if (modelPhoto.downloads.toString().isNotEmpty()) {
-                textViewTitlePhotoInfo.isVisible = true
-                layoutDownloadInfo.isVisible = true
-                textViewPhotoDownload.isVisible = true
-                textViewPhotoDownload.text = modelPhoto.downloads.toDecimal()
-            }
-
-            if (modelPhoto.likes.toString().isNotEmpty()) {
-                layoutLikeInfo.isVisible = true
-                textViewPhotoLikes.isVisible = true
-                textViewPhotoLikes.text = modelPhoto.likes.toDecimal()
-            }
-
             if (modelPhoto.location?.name.isNullOrEmpty() || modelPhoto.exif?.model.isNullOrEmpty()) {
                 viewLineCameraLocation.isVisible = false
             }
 
             Glide.with(this@DetailsFragment)
-                .load(modelPhoto.user?.profileImage?.medium?.convertedUrl)
+                .load(modelPhoto.user?.profileImage?.large?.convertedUrl)
                 .centerCrop()
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .error(R.drawable.ic_user)
                 .into(imageViewProfile)
 
-            requireActivity().window.decorView.systemUiVisibility =
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-            setWindowFlag(
-                requireActivity(),
-                WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS,
-                false
-            )
-            if (Color.parseColor(modelPhoto.color.toString()).isBrightColor) {
-                val wic = WindowInsetsControllerCompat(requireActivity().window, requireActivity().window.decorView)
-                wic.isAppearanceLightStatusBars = true;
-            }
 
             requireActivity().window.statusBarColor = Color.parseColor(
-                "#E6" + modelPhoto.color?.replace(
+                "#" + modelPhoto.color?.replace(
                     "#",
                     ""
                 )
             )
 
+            if (Color.parseColor(modelPhoto.color.toString()).isBrightColor) {
+                val wic = WindowInsetsControllerCompat(
+                    requireActivity().window,
+                    requireActivity().window.decorView
+                )
+                wic.isAppearanceLightStatusBars = true
+            } else {
+                val wic = WindowInsetsControllerCompat(
+                    requireActivity().window,
+                    requireActivity().window.decorView
+                )
+                wic.isAppearanceLightStatusBars = false
+            }
+
             lyToolbarDetail.setBackgroundColor(
                 Color.parseColor(
-                    "#E6" + modelPhoto.color?.replace(
+                    "#" + modelPhoto.color?.replace(
                         "#",
                         ""
                     )
+                )
+            )
+
+            viewLineCameraLocation.setBackgroundColor(
+                Color.parseColor(
+                    "#" + modelPhoto.color?.replace(
+                        "#",
+                        ""
+                    )
+                )
+            )
+
+            cardViewProfila.strokeColor = Color.parseColor(
+                "#" + modelPhoto.color?.replace(
+                    "#",
+                    ""
                 )
             )
 
@@ -267,11 +267,13 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 imageViewWallpaper.setColorFilter(color)
                 imageViewLogoDetail.setColorFilter(color)
                 cardLine.setBackgroundColor(color)
+                iconBackDetail.setColorFilter(color)
                 textViewDownload.setTextColor(color)
                 textViewWallpaper.setTextColor(color)
                 textViewShare.setTextColor(color)
             }
-
+            layoutDetail.invisible()
+            blurViewBackground.invisible()
             Glide.with(this@DetailsFragment)
                 .load(modelPhoto.urls?.regular?.convertedUrl)
                 .error(R.drawable.ic_error_photos)
@@ -284,13 +286,8 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                         target: Target<Drawable>?,
                         isFirstResource: Boolean
                     ): Boolean {
-                        layoutLoading.isVisible = false
-                        cardDownload.isVisible = false
-                        lyDetailImage.isVisible = false
-                        lyToolbarDetail.isVisible = false
-                        cardShare.isVisible = false
-                        cardWallpaper.isVisible = false
-                        imageView.scaleType = ImageView.ScaleType.CENTER
+                        showViews()
+                        hideViews()
                         return false
                     }
 
@@ -301,13 +298,14 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                         dataSource: com.bumptech.glide.load.DataSource?,
                         isFirstResource: Boolean
                     ): Boolean {
-                        layoutLoading.isVisible = false
+                        showViews()
+                        layoutLoading.fadeOut()
                         return false
                     }
                 })
                 .into(imageView)
 
-            textViewInstagram.setOnClickListener {
+            layoutOpenInstagram.setOnClickListener {
                 val uri: Uri =
                     Uri.parse("http://instagram.com/${modelPhoto.user?.instagramUsername}")
                 val likeIng = Intent(Intent.ACTION_VIEW, uri)
@@ -382,20 +380,10 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 showDownloadMenu(anchor = it)
             }
 
-        }
-    }
-
-    private fun getUserPhotos(binding: FragmentDetailsBinding) {
-
-        viewModel.liveDataUserPhotosList.observe(viewLifecycleOwner) {
-            if (it.isNullOrEmpty()) return@observe
-
-            val adapter = UnsplashUserPhotoAdapter(it, this)
-            binding.apply {
-                recViewUserPhotos.setHasFixedSize(true)
-                recViewUserPhotos.itemAnimator = null
-                recViewUserPhotos.adapter = adapter
+            cardViewBackToolbarDetail.setOnClickListener {
+                findNavController().popBackStack()
             }
+
         }
     }
 
@@ -773,7 +761,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         }
     }
 
-    fun hasInternetConnection(
+    private fun hasInternetConnection(
         url: String = "https://www.google.com/",
         callback: (Boolean) -> Unit
     ) {
@@ -805,8 +793,9 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
     override fun onItemClick(photo: UnsplashPhoto) {
         if (checkIsConnection()) {
-            binding.layoutLoading.isVisible = true
-            viewModel.getPhotoDetail(photo.id)
+            binding.layoutLoading.fadeIn()
+            binding.layoutDetail.fadeOut()
+            viewModel.getPhotoDetail(photo)
             binding.apply {
                 nestedView.smoothScrollTo(0, 0)
 
@@ -818,10 +807,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
     override fun onDestroy() {
         super.onDestroy()
-        requireActivity().window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-        setWindowFlag(requireActivity(), WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
-        requireActivity().window.statusBarColor = resources.getColor(R.color.status_bar_color)
-
         if (downloadStatus) {
             Pump.shutdown()
         }
@@ -837,14 +822,27 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         }
     }
 
-    private fun setWindowFlag(activity: Activity, bits: Int, on: Boolean) {
-        val win: Window = activity.window
-        val winParams: WindowManager.LayoutParams = win.attributes
-        if (on) {
-            winParams.flags = winParams.flags or bits
-        } else {
-            winParams.flags = winParams.flags and bits.inv()
-        }
-        win.attributes = winParams
+    private fun showViews() = binding.apply {
+        val radius = 20f
+        val decorView: View = requireActivity().window.decorView
+        val rootView = decorView.findViewById<View>(android.R.id.content) as ViewGroup
+
+        val windowBackground = decorView.background
+
+        blurViewBackground.setupWith(rootView, RenderScriptBlur(requireContext()))
+            .setFrameClearDrawable(windowBackground)
+            .setBlurRadius(radius)
+
+        blurViewBackground.expand(duration = 1000)
+        layoutDetail.fadeIn(duration = 1000)
+    }
+
+    private fun hideViews() = binding.apply {
+        layoutLoading.hide()
+        cardDownload.hide()
+        lyDetailImage.hide()
+        lyToolbarDetail.hide()
+        cardShare.hide()
+        cardWallpaper.hide()
     }
 }
