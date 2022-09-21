@@ -63,14 +63,13 @@ class GalleryFragment :
         binding.apply {
 
 
-
             if (Color.parseColor("#000000").isBrightColor) {
                 val wic = WindowInsetsControllerCompat(
                     requireActivity().window,
                     requireActivity().window.decorView
                 )
                 wic.isAppearanceLightStatusBars = true;
-            }else {
+            } else {
                 val wic = WindowInsetsControllerCompat(
                     requireActivity().window,
                     requireActivity().window.decorView
@@ -78,18 +77,15 @@ class GalleryFragment :
                 wic.isAppearanceLightStatusBars = false
             }
 
-            if (colorStatusBar.isEmpty()) {
-                requireActivity().window.statusBarColor = Color.parseColor(
-                    "#99" + "000000".replace(
-                        "#",
-                        ""
-                    )
+            requireActivity().window.statusBarColor = Color.parseColor(
+                "#" + "000000".replace(
+                    "#",
+                    ""
                 )
-            }
+            )
 
             viewModel.liveDataRandomPhoto.observe(viewLifecycleOwner) {
                 if (it != null) {
-                    colorStatusBar = it.color.toString()
 
                     Glide.with(requireActivity())
                         .load(it.urls?.regular?.convertedUrl)
@@ -115,23 +111,6 @@ class GalleryFragment :
                                 p4: Boolean
                             ): Boolean {
 
-
-                                if (Color.parseColor(colorStatusBar).isBrightColor) {
-                                    val wic = WindowInsetsControllerCompat(
-                                        requireActivity().window,
-                                        requireActivity().window.decorView
-                                    )
-                                    wic.isAppearanceLightStatusBars = true;
-                                }
-
-                                if (colorStatusBar.isNotEmpty()) {
-                                    requireActivity().window.statusBarColor = Color.parseColor(
-                                        "#99" + colorStatusBar.replace(
-                                            "#",
-                                            ""
-                                        )
-                                    )
-                                }
                                 return false
                             }
                         })

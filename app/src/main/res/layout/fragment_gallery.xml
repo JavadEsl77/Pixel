@@ -10,7 +10,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp">
+        android:layout_height="120dp">
 
         <ImageView
             android:id="@+id/image_view_banner"
@@ -22,12 +22,11 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:background="#33000000" />
+            android:background="#99000000" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="30dp"
             android:gravity="center"
             android:orientation="vertical"
             android:paddingBottom="16dp">
@@ -55,8 +54,8 @@
                     android:layout_height="wrap_content"
                     android:gravity="center|right"
                     android:text="  رایگان"
-                    android:textColor="@color/purple_200"
-                    android:textSize="20dp"
+                    android:textColor="@color/white"
+                    android:textSize="24dp"
                     android:textStyle="bold" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -68,8 +67,8 @@
                     android:textSize="16dp" />
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_marginLeft="7dp"
                     android:src="@drawable/ic_logo" />
 

@@ -286,38 +286,62 @@
                             android:id="@+id/layout_location"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:gravity="center|right"
-                            android:orientation="vertical"
+                            android:orientation="horizontal"
+                            android:layout_marginLeft="10dp"
                             android:visibility="gone"
                             tools:visibility="visible">
 
-                            <androidx.appcompat.widget.AppCompatTextView
-                                android:id="@+id/text_view_title_location"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:drawableEnd="@drawable/ic_location"
-                                android:drawablePadding="4dp"
-                                android:gravity="center|right"
-                                android:text="@string/string_photo_location"
-                                android:textColor="@color/black"
-                                android:textSize="16dp"
-                                android:textStyle="bold"
-                                android:visibility="gone"
-                                tools:visibility="visible" />
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="93dp"
+                                android:layout_height="59dp"
+                                app:cardCornerRadius="10dp">
 
-                            <androidx.appcompat.widget.AppCompatTextView
-                                android:id="@+id/text_view_location"
-                                android:layout_width="match_parent"
+                                <WebView
+                                    android:id="@+id/web_view_map"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:scrollbars="none"
+                                    tools:ignore="WebViewLayout" />
+
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="7dp"
-                                android:layout_marginEnd="25dp"
-                                android:ellipsize="end"
-                                android:gravity="right|top"
-                                android:maxLines="2"
-                                android:textSize="14dp"
-                                android:visibility="gone"
-                                tools:text="loacation"
-                                tools:visibility="visible" />
+                                android:layout_weight="1"
+                                android:gravity="center|right"
+                                android:orientation="vertical">
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/text_view_title_location"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:drawableEnd="@drawable/ic_location"
+                                    android:drawablePadding="4dp"
+                                    android:gravity="center|right"
+                                    android:text="@string/string_photo_location"
+                                    android:textColor="@color/black"
+                                    android:textSize="16dp"
+                                    android:textStyle="bold"
+                                    android:visibility="gone"
+                                    tools:visibility="visible" />
+
+                                <androidx.appcompat.widget.AppCompatTextView
+                                    android:id="@+id/text_view_location"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="7dp"
+                                    android:layout_marginEnd="25dp"
+                                    android:ellipsize="end"
+                                    android:gravity="right|top"
+                                    android:maxLines="2"
+                                    android:textSize="14dp"
+                                    android:visibility="gone"
+                                    tools:text="loacation"
+                                    tools:visibility="visible" />
+
+                            </LinearLayout>
+
 
                         </LinearLayout>
 
@@ -377,8 +401,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    app:cardBackgroundColor="@color/color_background_gallery_item"
                     android:layout_marginBottom="7dp"
+                    app:cardBackgroundColor="@color/color_background_gallery_item"
                     app:cardCornerRadius="15dp"
                     app:cardElevation="5dp">
 
@@ -388,84 +412,185 @@
                         android:gravity="center"
                         android:orientation="vertical"
                         android:paddingLeft="10dp"
+                        android:paddingTop="20dp"
                         android:paddingRight="10dp"
-                        android:paddingBottom="10dp"
-                        android:paddingTop="20dp">
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:id="@+id/card_view_profila"
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
-                            app:cardCornerRadius="16dp"
-                            app:cardElevation="0dp"
-                            app:strokeColor="@color/purple_200"
-                            app:strokeWidth="2dp">
-
-                            <ImageView
-                                android:id="@+id/image_view_profile"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:scaleType="centerCrop"
-                                tools:src="@drawable/ic_user" />
-
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <TextView
-                            android:id="@+id/text_view_user_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:ellipsize="end"
-                            android:gravity="center_vertical"
-                            android:maxLines="1"
-                            android:textColor="@color/black"
-                            android:textSize="14dp"
-                            android:textStyle="bold"
-                            tools:text="username" />
-
-                        <LinearLayout
-                            android:id="@+id/layout_open_instagram"
-                            android:layout_width="wrap_content"
-                            android:layout_height="30dp"
-                            android:layout_marginTop="5dp"
-                            android:background="@drawable/shape_isntagram_button"
-                            android:visibility="gone"
-                            tools:visibility="visible">
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_marginLeft="6dp"
-                                android:layout_marginRight="10dp"
-                                android:drawableLeft="@drawable/ic_baseline_arrow_back"
-                                android:drawablePadding="4dp"
-                                android:gravity="center"
-                                android:text="صفحه اینستاگرام"
-                                android:textColor="@color/white"
-
-                                android:textSize="13dp" />
-
-                        </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/text_view_bio"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:gravity="center"
-                            android:textSize="12dp"
-                            android:visibility="gone"
-                            tools:text="Bio data"
-                            tools:visibility="visible" />
+                        android:paddingBottom="10dp">
 
                         <androidx.appcompat.widget.LinearLayoutCompat
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:gravity="center"
                             android:orientation="horizontal"
-                            android:gravity="center|end"
+                            android:paddingLeft="10dp">
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:id="@+id/card_view_profila"
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                app:cardCornerRadius="50dp"
+                                app:cardElevation="0dp"
+                                app:strokeColor="@color/purple_200"
+                                app:strokeWidth="2dp">
+
+                                <ImageView
+                                    android:id="@+id/image_view_profile"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:scaleType="centerCrop"
+                                    tools:src="@drawable/ic_user" />
+
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <androidx.appcompat.widget.LinearLayoutCompat
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="horizontal">
+
+                                <androidx.appcompat.widget.LinearLayoutCompat
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/text_view_profile_views"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="150"
+                                        android:textColor="@color/black"
+                                        android:textSize="16dp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="بازدید ها"
+                                        android:textSize="13dp" />
+
+                                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                                <androidx.appcompat.widget.LinearLayoutCompat
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/text_view_profile_likes"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="265"
+                                        android:textColor="@color/black"
+                                        android:textSize="16dp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="لایک ها"
+                                        android:textSize="13dp" />
+
+                                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                                <androidx.appcompat.widget.LinearLayoutCompat
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/text_view_profile_images"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="745"
+                                        android:textColor="@color/black"
+                                        android:textSize="16dp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="تصاویر"
+                                        android:textSize="13dp" />
+
+                                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                            </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center|left"
+                            android:orientation="vertical"
+                            android:paddingLeft="15dp">
+
+                            <TextView
+                                android:id="@+id/text_view_user_name"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:ellipsize="end"
+                                android:gravity="center_vertical"
+                                android:maxLines="1"
+                                android:textColor="@color/black"
+                                android:textSize="14dp"
+                                android:textStyle="bold"
+                                tools:text="username" />
+
+                            <TextView
+                                android:id="@+id/text_view_bio"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:gravity="center|left"
+                                android:textSize="12dp"
+                                android:visibility="gone"
+                                tools:text="Bio data"
+                                tools:visibility="visible" />
+
+                            <LinearLayout
+                                android:id="@+id/layout_open_instagram"
+                                android:layout_width="wrap_content"
+                                android:layout_height="30dp"
+                                android:layout_marginTop="5dp"
+                                android:background="@drawable/shape_isntagram_button"
+                                android:visibility="gone"
+                                tools:visibility="visible">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginLeft="6dp"
+                                    android:layout_marginRight="10dp"
+                                    android:drawableLeft="@drawable/ic_baseline_arrow_back"
+                                    android:drawablePadding="4dp"
+                                    android:gravity="center"
+                                    android:text="صفحه اینستاگرام"
+                                    android:textColor="@color/white"
+
+                                    android:textSize="13dp" />
+
+                            </LinearLayout>
+
+                        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+                        <androidx.appcompat.widget.LinearLayoutCompat
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
+                            android:layout_marginRight="10dp"
                             android:layout_marginBottom="10dp"
-                            android:layout_marginRight="10dp">
+                            android:gravity="center|end"
+                            android:orientation="horizontal">
 
                             <TextView
                                 android:id="@+id/text_view_number_of_photo"
@@ -474,15 +599,15 @@
                                 android:layout_gravity="center"
                                 android:layout_marginRight="7dp"
                                 android:gravity="center"
-                                tools:text="10 مورد"
-                                android:textSize="12dp" />
+                                android:textSize="12dp"
+                                tools:text="10 مورد" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center|right"
-                                android:drawablePadding="7dp"
                                 android:drawableRight="@drawable/ic_wallpaper"
+                                android:drawablePadding="7dp"
                                 android:gravity="center"
                                 android:text="تصاویر"
                                 android:textColor="@color/black"
@@ -491,8 +616,6 @@
 
 
                         </androidx.appcompat.widget.LinearLayoutCompat>
-
-
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rec_view_user_photos"
@@ -509,7 +632,6 @@
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
                 </com.google.android.material.card.MaterialCardView>
-
 
             </LinearLayout>
 

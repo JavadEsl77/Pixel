@@ -202,6 +202,16 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     modelPhoto.exif?.make + " , " + modelPhoto.exif?.model
             }
 
+            if (modelPhoto.user?.totalPhotos.toString().isNotEmpty()) {
+                textViewProfileImages.text = modelPhoto.user?.totalPhotos.toString()
+            }
+            if (modelPhoto.user?.totalLikes.toString().isNotEmpty()) {
+                textViewProfileLikes.text = modelPhoto.user?.totalLikes.toString()
+            }
+            if (modelPhoto.views.toString().isNotEmpty()) {
+                textViewProfileLikes.text = modelPhoto.views.toString()
+            }
+
             if (modelPhoto.location?.name.isNullOrEmpty() || modelPhoto.exif?.model.isNullOrEmpty()) {
                 viewLineCameraLocation.isVisible = false
             }
@@ -213,6 +223,15 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 .error(R.drawable.ic_user)
                 .into(imageViewProfile)
 
+
+            val mapUrl = "https://tile.openstreetmap.org/" + getImage(
+                modelPhoto.location?.position?.latitude!!,
+                modelPhoto.location.position.longitude!!,
+                16
+            ) + ".png"
+
+            webViewMap.loadUrl(mapUrl)
+            webViewMap.setInitialScale(100)
 
             requireActivity().window.statusBarColor = Color.parseColor(
                 "#" + modelPhoto.color?.replace(
@@ -845,4 +864,18 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         cardShare.hide()
         cardWallpaper.hide()
     }
+
+    private fun getImage(lat: Double, lon: Double, zoom: Int): String {
+        var xtile = Math.floor((lon + 180) / 360 * (1 shl zoom)).toInt()
+        var ytile =
+            Math.floor((1 - Math.log(Math.tan(Math.toRadians(lat)) + 1 / Math.cos(Math.toRadians(lat))) / Math.PI) / 2 * (1 shl zoom))
+                .toInt()
+        if (xtile < 0) xtile = 0
+        if (xtile >= 1 shl zoom) xtile = (1 shl zoom) - 1
+        if (ytile < 0) ytile = 0
+        if (ytile >= 1 shl zoom) ytile = (1 shl zoom) - 1
+        return "" + zoom.toString() + "/" + xtile.toString() + "/" + ytile
+    }
+
+
 }
