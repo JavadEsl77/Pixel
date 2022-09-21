@@ -125,4 +125,6 @@ dependencies {
     //ShowCaseView
     implementation 'com.github.mreram:showcaseview:1.4.1'
 
+    implementation 'com.github.Dimezis:BlurView:version-2.0.2'
+
 }

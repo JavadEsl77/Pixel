@@ -58,6 +58,7 @@ import com.javadEsl.pixel.data.convertedUrl
 import com.javadEsl.pixel.databinding.FragmentDetailsBinding
 import com.javadEsl.pixel.ui.gallery.UnsplashPhotoAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import eightbitlab.com.blurview.RenderScriptBlur
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -137,6 +138,15 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
     ): View {
         if (_binding == null) {
             _binding = FragmentDetailsBinding.inflate(inflater, container, false)
+
+            val radius = 20f
+            val decorView: View = requireActivity().window.decorView
+            val rootView = decorView.findViewById<View>(android.R.id.content) as ViewGroup
+
+            val windowBackground = decorView.background
+            binding.blurViewBackground.setupWith(rootView, RenderScriptBlur(requireContext()))
+                .setFrameClearDrawable(windowBackground)
+                .setBlurRadius(radius)
         }
         return binding.root
     }
@@ -238,15 +248,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 "#E6" + modelPhoto.color?.replace(
                     "#",
                     ""
-                )
-            )
-
-            lyDetailImage.setBackgroundColor(
-                Color.parseColor(
-                    "#E6" + modelPhoto.color?.replace(
-                        "#",
-                        ""
-                    )
                 )
             )
 
@@ -380,6 +381,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 }
                 showDownloadMenu(anchor = it)
             }
+
         }
     }
 
