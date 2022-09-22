@@ -268,40 +268,95 @@
                         android:orientation="vertical"
                         android:padding="10dp">
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_width="wrap_content"
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:gravity="center|right"
                             android:layout_marginTop="4dp"
                             android:layout_marginRight="10dp"
                             android:layout_marginBottom="10dp"
-                            android:gravity="center|right"
-                            android:text="@string/string_photo_info"
-                            android:textColor="@color/black"
-                            android:textSize="18dp"
-                            android:textStyle="bold"
-                            android:visibility="visible"
-                            tools:visibility="visible" />
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content">
+
+
+                            </com.google.android.material.card.MaterialCardView>
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="@string/string_photo_info"
+                                android:textColor="@color/black"
+                                android:textSize="18dp"
+                                android:textStyle="bold"
+                                android:visibility="visible"
+                                tools:visibility="visible" />
+
+
+                        </LinearLayout>
+
 
                         <LinearLayout
                             android:id="@+id/layout_location"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="7dp"
                             android:orientation="horizontal"
-                            android:layout_marginLeft="10dp"
                             android:visibility="gone"
                             tools:visibility="visible">
 
                             <com.google.android.material.card.MaterialCardView
-                                android:layout_width="93dp"
-                                android:layout_height="59dp"
-                                app:cardCornerRadius="10dp">
+                                android:id="@+id/card_view_map"
+                                android:layout_width="142dp"
+                                android:layout_height="90dp"
+                                android:layout_marginRight="10dp"
+                                android:visibility="invisible"
+                                app:cardCornerRadius="10dp"
+                                tools:visibility="visible">
 
-                                <WebView
-                                    android:id="@+id/web_view_map"
+                                <RelativeLayout
                                     android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:scrollbars="none"
-                                    tools:ignore="WebViewLayout" />
+                                    android:layout_height="match_parent">
+
+                                    <WebView
+                                        android:id="@+id/web_view_map"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:scrollbars="none"
+                                        tools:ignore="WebViewLayout" />
+
+                                    <eightbitlab.com.blurview.BlurView
+                                        android:id="@+id/blur_view_map"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="25dp"
+                                        android:layout_alignParentBottom="true"
+                                        app:blurOverlayColor="#33FFFFFF">
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:orientation="vertical">
+
+                                            <androidx.appcompat.widget.AppCompatTextView
+                                                android:id="@+id/text_view_"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:gravity="center"
+                                                android:text="بزرگنمایی نقشه"
+                                                android:textColor="@color/black"
+                                                android:textSize="13dp"
+                                                android:visibility="visible"
+                                                tools:text="loacation" />
+
+                                        </LinearLayout>
+
+
+                                    </eightbitlab.com.blurview.BlurView>
+
+                                </RelativeLayout>
 
                             </com.google.android.material.card.MaterialCardView>
 
@@ -341,7 +396,6 @@
                                     tools:visibility="visible" />
 
                             </LinearLayout>
-
 
                         </LinearLayout>
 
@@ -560,6 +614,7 @@
                                 android:id="@+id/layout_open_instagram"
                                 android:layout_width="wrap_content"
                                 android:layout_height="30dp"
+                                android:layout_gravity="center|left"
                                 android:layout_marginTop="5dp"
                                 android:background="@drawable/shape_isntagram_button"
                                 android:visibility="gone"
@@ -568,14 +623,12 @@
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:layout_marginLeft="6dp"
-                                    android:layout_marginRight="10dp"
-                                    android:drawableLeft="@drawable/ic_baseline_arrow_back"
+                                    android:layout_marginLeft="10dp"
+                                    android:drawableRight="@drawable/ic_baseline_keyboard_arrow_right"
                                     android:drawablePadding="4dp"
                                     android:gravity="center"
                                     android:text="صفحه اینستاگرام"
                                     android:textColor="@color/white"
-
                                     android:textSize="13dp" />
 
                             </LinearLayout>

@@ -92,7 +92,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                             "Download" -> {
                                 binding.cardDownload.performClick()
                             }
-                            "Share"    -> {
+                            "Share" -> {
                                 binding.imageView.invalidate()
                                 val drawable = binding.imageView.drawable
                                 val bitmap = drawable.toBitmap()
@@ -101,7 +101,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                                     shareImageUri(it2)
                                 }
                             }
-                            else       -> {
+                            else -> {
                                 false
                             }
                         }
@@ -224,14 +224,18 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 .into(imageViewProfile)
 
 
-            val mapUrl = "https://tile.openstreetmap.org/" + getImage(
-                modelPhoto.location?.position?.latitude!!,
+            if (modelPhoto.location?.position?.latitude != null){
+                cardViewMap.show()
+                cardViewMap.isEnabled = false
+                val mapUrl = "https://tile.openstreetmap.org/" + getImage(
+                modelPhoto.location.position.latitude,
                 modelPhoto.location.position.longitude!!,
-                16
+                15
             ) + ".png"
 
             webViewMap.loadUrl(mapUrl)
-            webViewMap.setInitialScale(100)
+            webViewMap.setInitialScale(160)
+            }
 
             requireActivity().window.statusBarColor = Color.parseColor(
                 "#" + modelPhoto.color?.replace(
@@ -434,10 +438,10 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     IMAGE_REGULAR -> {
                         resolutionTypeSelected = "HD"
                     }
-                    IMAGE_RAW     -> {
+                    IMAGE_RAW -> {
                         resolutionTypeSelected = "Full-HD"
                     }
-                    IMAGE_SMALL   -> {
+                    IMAGE_SMALL -> {
                         resolutionTypeSelected = "SD"
                     }
                 }
@@ -842,7 +846,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
     }
 
     private fun showViews() = binding.apply {
-        val radius = 20f
+        val radius = 10f
         val decorView: View = requireActivity().window.decorView
         val rootView = decorView.findViewById<View>(android.R.id.content) as ViewGroup
 
@@ -851,6 +855,10 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         blurViewBackground.setupWith(rootView, RenderScriptBlur(requireContext()))
             .setFrameClearDrawable(windowBackground)
             .setBlurRadius(radius)
+
+        blurViewMap.setupWith(rootView, RenderScriptBlur(requireContext()))
+            .setFrameClearDrawable(windowBackground)
+            .setBlurRadius(5f)
 
         blurViewBackground.expand(duration = 1000)
         layoutDetail.fadeIn(duration = 1000)
