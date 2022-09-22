@@ -18,5 +18,7 @@
     <color name="color_background_action_bar">@color/purple_500</color>
     <color name="color_background_preview_menu">#ffffff</color>
     <color name="color_action_bar_preview_menu">#F1F1F1</color>
+    <color name="color_download_button">#405aa5</color>
+    <color name="color_download_popup">#E4F5FF</color>
 
 </resources>

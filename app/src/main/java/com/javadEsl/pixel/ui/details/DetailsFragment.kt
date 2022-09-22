@@ -285,15 +285,14 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
             if (Color.parseColor(modelPhoto.color.toString()).isBrightColor) {
                 val color = Color.parseColor("#2E2E2E") //The color u want
-                imageViewDownload.setColorFilter(color)
                 imageViewShare.setColorFilter(color)
                 imageViewWallpaper.setColorFilter(color)
                 imageViewLogoDetail.setColorFilter(color)
                 cardLine.setBackgroundColor(color)
                 iconBackDetail.setColorFilter(color)
-                textViewDownload.setTextColor(color)
                 textViewWallpaper.setTextColor(color)
                 textViewShare.setTextColor(color)
+                textViewDetailTitle.setTextColor(color)
             }
             layoutDetail.invisible()
             blurViewBackground.invisible()
@@ -413,8 +412,8 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
     private fun showDownloadMenu(anchor: View) {
         val popupMenu = CascadePopupMenu(requireContext(), anchor, styler = cascadeMenuStyler())
         popupMenu.menu.apply {
-            MenuCompat.setGroupDividerEnabled(this, true)
-
+            MenuCompat.setGroupDividerEnabled(this, false)
+           // setHeaderTitle("Are you sure?")
             modelPhoto?.urls?.small?.let {
                 add(IMAGE_SMALL)
             }
@@ -472,7 +471,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
     private fun cascadeMenuStyler(): CascadePopupMenu.Styler {
         val rippleDrawable = {
             RippleDrawable(
-                ColorStateList.valueOf(Color.parseColor("#b1cadd")),
+                ColorStateList.valueOf(Color.parseColor(resources.getString(R.color.color_download_popup))),
                 null,
                 ColorDrawable(WHITE)
             )
@@ -481,17 +480,18 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         return CascadePopupMenu.Styler(
             background = {
                 RoundedRectDrawable(
-                    ResourcesCompat.getColor(resources, R.color.color_menu_download, null),
-                    radius = 10f.dip
+                    ResourcesCompat.getColor(resources, R.color.color_download_popup, null),
+                    radius = 15f.dip
                 )
             },
             menuTitle = {
                 it.setBackground(rippleDrawable())
             },
             menuItem = {
+                it.titleView.textSize=14f
 //                it.titleView.typeface = ResourcesCompat.getFont(requireContext(), R.font.work_sans_medium)
                 it.setBackground(rippleDrawable())
-                it.setGroupDividerColor(Color.parseColor("#becfd9"))
+                it.setGroupDividerColor(Color.parseColor(resources.getString(R.color.color_download_popup)))
             }
         )
     }
@@ -856,9 +856,9 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             .setFrameClearDrawable(windowBackground)
             .setBlurRadius(radius)
 
-        blurViewMap.setupWith(rootView, RenderScriptBlur(requireContext()))
-            .setFrameClearDrawable(windowBackground)
-            .setBlurRadius(5f)
+//        blurViewMap.setupWith(rootView, RenderScriptBlur(requireContext()))
+//            .setFrameClearDrawable(windowBackground)
+//            .setBlurRadius(5f)
 
         blurViewBackground.expand(duration = 1000)
         layoutDetail.fadeIn(duration = 1000)
