@@ -203,13 +203,13 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             }
 
             if (modelPhoto.user?.totalPhotos.toString().isNotEmpty()) {
-                textViewProfileImages.text = modelPhoto.user?.totalPhotos.toString()
+                textViewProfileImages.text = modelPhoto.user?.totalPhotos.toDecimal()
             }
             if (modelPhoto.user?.totalLikes.toString().isNotEmpty()) {
-                textViewProfileLikes.text = modelPhoto.user?.totalLikes.toString()
+                textViewProfileLikes.text = modelPhoto.user?.totalLikes.toDecimal()
             }
             if (modelPhoto.views.toString().isNotEmpty()) {
-                textViewProfileLikes.text = modelPhoto.views.toString()
+                textViewProfileLikes.text = modelPhoto.views.toDecimal()
             }
 
             if (modelPhoto.location?.name.isNullOrEmpty() || modelPhoto.exif?.model.isNullOrEmpty()) {
