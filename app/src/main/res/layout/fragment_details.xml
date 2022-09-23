@@ -249,7 +249,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:layout_marginRight="10dp"
-                            android:layout_marginBottom="10dp"
+                            android:layout_marginBottom="16dp"
                             android:paddingLeft="7dp"
                             android:gravity="center|right"
                             android:orientation="horizontal">
@@ -340,33 +340,33 @@
                                         android:scrollbars="none"
                                         tools:ignore="WebViewLayout" />
 
-<!--                                    <eightbitlab.com.blurview.BlurView-->
-<!--                                        android:id="@+id/blur_view_map"-->
-<!--                                        android:layout_width="match_parent"-->
-<!--                                        android:layout_height="25dp"-->
-<!--                                        android:layout_alignParentBottom="true"-->
-<!--                                        app:blurOverlayColor="#33FFFFFF">-->
+                                    <eightbitlab.com.blurview.BlurView
+                                        android:id="@+id/blur_view_map"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="25dp"
+                                        android:layout_alignParentBottom="true"
+                                        app:blurOverlayColor="#33FFFFFF">
 
-<!--                                        <LinearLayout-->
-<!--                                            android:layout_width="match_parent"-->
-<!--                                            android:layout_height="match_parent"-->
-<!--                                            android:orientation="vertical">-->
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:orientation="vertical">
 
-<!--                                            <androidx.appcompat.widget.AppCompatTextView-->
-<!--                                                android:id="@+id/text_view_"-->
-<!--                                                android:layout_width="match_parent"-->
-<!--                                                android:layout_height="match_parent"-->
-<!--                                                android:gravity="center"-->
-<!--                                                android:text="بزرگنمایی نقشه"-->
-<!--                                                android:textColor="@color/black"-->
-<!--                                                android:textSize="13dp"-->
-<!--                                                android:visibility="visible"-->
-<!--                                                tools:text="loacation" />-->
+                                            <androidx.appcompat.widget.AppCompatTextView
+                                                android:id="@+id/text_view_"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="match_parent"
+                                                android:gravity="center"
+                                                android:text="مشاهده نقشه کامل"
+                                                android:textColor="@color/black"
+                                                android:textSize="13dp"
+                                                android:visibility="visible"
+                                                tools:text="loacation" />
 
-<!--                                        </LinearLayout>-->
+                                        </LinearLayout>
 
 
-<!--                                    </eightbitlab.com.blurview.BlurView>-->
+                                    </eightbitlab.com.blurview.BlurView>
 
                                 </RelativeLayout>
 
@@ -388,7 +388,7 @@
                                     android:gravity="center|right"
                                     android:text="@string/string_photo_location"
                                     android:textColor="@color/black"
-                                    android:textSize="16dp"
+                                    android:textSize="14dp"
                                     android:textStyle="bold"
                                     android:visibility="gone"
                                     tools:visibility="visible" />
@@ -436,7 +436,7 @@
                                 android:gravity="center|right"
                                 android:text="@string/string_camera_info"
                                 android:textColor="@color/black"
-                                android:textSize="16dp"
+                                android:textSize="14dp"
                                 android:textStyle="bold"
                                 android:visibility="gone"
                                 tools:visibility="visible" />

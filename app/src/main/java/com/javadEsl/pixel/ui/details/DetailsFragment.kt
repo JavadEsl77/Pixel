@@ -47,6 +47,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.huxq17.download.DownloadProvider
 import com.huxq17.download.Pump
 import com.huxq17.download.config.DownloadConfig
 import com.javadEsl.pixel.*
@@ -58,7 +59,6 @@ import com.javadEsl.pixel.data.PixelRepository
 import com.javadEsl.pixel.data.UnsplashPhoto
 import com.javadEsl.pixel.data.convertedUrl
 import com.javadEsl.pixel.databinding.FragmentDetailsBinding
-import com.javadEsl.pixel.databinding.LayoutBottomSheetPhotoBinding
 import com.javadEsl.pixel.databinding.LayoutBottomSheetPhotoDetailBinding
 import com.javadEsl.pixel.ui.gallery.UnsplashPhotoAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -73,6 +73,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.net.URL
+import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -228,17 +229,17 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 .into(imageViewProfile)
 
 
-            if (modelPhoto.location?.position?.latitude != null){
+            if (modelPhoto.location?.position?.latitude != null) {
                 cardViewMap.show()
                 cardViewMap.isEnabled = false
                 val mapUrl = "https://tile.openstreetmap.org/" + getImage(
-                modelPhoto.location.position.latitude,
-                modelPhoto.location.position.longitude!!,
-                15
-            ) + ".png"
+                    modelPhoto.location.position.latitude,
+                    modelPhoto.location.position.longitude!!,
+                    15
+                ) + ".png"
 
-            webViewMap.loadUrl(mapUrl)
-            webViewMap.setInitialScale(160)
+                webViewMap.loadUrl(mapUrl)
+                webViewMap.setInitialScale(160)
             }
 
             requireActivity().window.statusBarColor = Color.parseColor(
@@ -411,7 +412,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             }
 
             imageView.setOnClickListener {
-
                 val drawable = imageView.drawable
                 val bitmap = drawable?.toBitmap()
                 if (bitmap != null) {
@@ -419,6 +419,16 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 }
             }
 
+            blurViewMap.setOnClickListener {
+                val latitude = modelPhoto.location?.position?.latitude
+                val longitude = modelPhoto.location?.position?.longitude
+                val gmmIntentUri = Uri.parse("geo:$latitude,$longitude")
+                val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+                mapIntent.setPackage("com.google.android.apps.maps")
+                mapIntent.resolveActivity(requireContext().packageManager)?.let {
+                    startActivity(mapIntent)
+                }
+            }
         }
     }
 
@@ -426,7 +436,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         val popupMenu = CascadePopupMenu(requireContext(), anchor, styler = cascadeMenuStyler())
         popupMenu.menu.apply {
             MenuCompat.setGroupDividerEnabled(this, false)
-           // setHeaderTitle("Are you sure?")
+            // setHeaderTitle("Are you sure?")
             modelPhoto?.urls?.small?.let {
                 add(IMAGE_SMALL)
             }
@@ -501,7 +511,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 it.setBackground(rippleDrawable())
             },
             menuItem = {
-                it.titleView.textSize=14f
+                it.titleView.textSize = 14f
 //                it.titleView.typeface = ResourcesCompat.getFont(requireContext(), R.font.work_sans_medium)
                 it.setBackground(rippleDrawable())
                 it.setGroupDividerColor(Color.parseColor(resources.getString(R.color.color_download_popup)))
@@ -869,9 +879,9 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             .setFrameClearDrawable(windowBackground)
             .setBlurRadius(radius)
 
-//        blurViewMap.setupWith(rootView, RenderScriptBlur(requireContext()))
-//            .setFrameClearDrawable(windowBackground)
-//            .setBlurRadius(5f)
+        blurViewMap.setupWith(rootView, RenderScriptBlur(requireContext()))
+            .setFrameClearDrawable(windowBackground)
+            .setBlurRadius(5f)
 
         blurViewBackground.expand(duration = 1000)
         layoutDetail.fadeIn(duration = 1000)
