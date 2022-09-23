@@ -11,15 +11,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
-        android:gravity="center"
         android:background="@color/color_background_action_bar"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
-            android:orientation="horizontal"
             android:gravity="center"
+            android:orientation="horizontal"
             android:paddingLeft="16dp"
             android:paddingRight="16dp">
 
@@ -28,17 +28,17 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:visibility="gone"
-                tools:visibility="visible"
                 app:cardBackgroundColor="#FFFFFF"
                 app:cardCornerRadius="14dp"
-                app:cardElevation="0dp">
+                app:cardElevation="0dp"
+                tools:visibility="visible">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/img_premium"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerInside"
-                    android:src="@drawable/ic_premium"/>
+                    android:src="@drawable/ic_premium" />
 
             </com.google.android.material.card.MaterialCardView>
 
@@ -48,9 +48,9 @@
                 android:layout_marginRight="16dp"
                 android:layout_weight="1"
                 android:gravity="center|right"
+                android:text="@string/string_my_download_bottom_sheet_title"
                 android:textColor="@color/white"
                 android:textSize="16dp"
-                android:text="@string/string_my_download_bottom_sheet_title"
                 android:textStyle="bold"
                 tools:text="عنوان صفحه" />
 
@@ -58,9 +58,9 @@
                 android:id="@+id/card_view_back_toolbar_bottom_sheet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:cardElevation="0dp"
                 app:cardBackgroundColor="#80FFFFFF"
                 app:cardCornerRadius="10dp"
+                app:cardElevation="0dp"
                 app:contentPadding="6dp">
 
                 <ImageView
@@ -82,16 +82,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_above="@id/ly_empty"
             android:layout_centerInParent="true"
             android:gravity="center"
-            android:layout_above="@id/ly_empty"
             android:orientation="horizontal">
 
             <com.github.chrisbanes.photoview.PhotoView
                 android:id="@+id/photo_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="fitCenter"/>
+                android:scaleType="fitCenter" />
 
         </LinearLayout>
 
@@ -101,7 +101,7 @@
             android:layout_height="45dp"
             android:layout_alignParentBottom="true"
             android:background="@drawable/shape_bottom_sheet_preview"
-            android:orientation="vertical"/>
+            android:orientation="vertical" />
 
         <LinearLayout
             android:id="@+id/ly_option"
@@ -148,10 +148,22 @@
                             android:textSize="14dp"
                             android:textStyle="bold" />
 
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:src="@drawable/ic_delete_logo" />
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            app:cardBackgroundColor="#80FFFFFF"
+                            app:cardCornerRadius="10dp"
+                            app:cardElevation="0dp">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_delete_photo"
+                                app:tint="@color/purple_200" />
+
+                        </com.google.android.material.card.MaterialCardView>
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -186,10 +198,21 @@
                             android:textSize="14dp"
                             android:textStyle="bold" />
 
-                        <ImageView
-                            android:layout_width="25dp"
-                            android:layout_height="25dp"
-                            android:src="@drawable/ic_share_logo" />
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            app:cardBackgroundColor="#80FFFFFF"
+                            app:cardCornerRadius="10dp"
+                            app:cardElevation="0dp">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="30dp"
+                                android:layout_height="30dp"
+                                android:src="@drawable/ic_share_detail"
+                                app:tint="@color/purple_200" />
+
+                        </com.google.android.material.card.MaterialCardView>
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
 

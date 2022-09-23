@@ -5,7 +5,6 @@ import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -123,7 +122,7 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
     }
 
     override fun onItemClick(photo: File) {
-        showDialogOne(photo)
+        showImageSheetDialog(photo)
     }
 
     private fun isRequireExternalStorageManager() =
@@ -138,7 +137,7 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
         }
     }
 
-    private fun showDialogOne(photo: File) {
+    private fun showImageSheetDialog(photo: File) {
         val dialog = BottomSheetDialog(
             requireContext(), R.style.AppBottomSheetDialogTheme
         )

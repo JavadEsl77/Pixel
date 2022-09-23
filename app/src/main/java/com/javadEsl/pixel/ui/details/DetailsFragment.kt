@@ -45,6 +45,8 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.huxq17.download.Pump
 import com.huxq17.download.config.DownloadConfig
 import com.javadEsl.pixel.*
@@ -56,6 +58,8 @@ import com.javadEsl.pixel.data.PixelRepository
 import com.javadEsl.pixel.data.UnsplashPhoto
 import com.javadEsl.pixel.data.convertedUrl
 import com.javadEsl.pixel.databinding.FragmentDetailsBinding
+import com.javadEsl.pixel.databinding.LayoutBottomSheetPhotoBinding
+import com.javadEsl.pixel.databinding.LayoutBottomSheetPhotoDetailBinding
 import com.javadEsl.pixel.ui.gallery.UnsplashPhotoAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import eightbitlab.com.blurview.RenderScriptBlur
@@ -404,6 +408,15 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
             cardViewBackToolbarDetail.setOnClickListener {
                 findNavController().popBackStack()
+            }
+
+            imageView.setOnClickListener {
+
+                val drawable = imageView.drawable
+                val bitmap = drawable?.toBitmap()
+                if (bitmap != null) {
+                    showImageSheetDialog(bitmap)
+                }
             }
 
         }
@@ -885,5 +898,44 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         return "" + zoom.toString() + "/" + xtile.toString() + "/" + ytile
     }
 
+    private fun showImageSheetDialog(photo: Bitmap) {
+        val dialog = BottomSheetDialog(
+            requireContext(), R.style.AppBottomSheetDialogTheme
+        )
 
+        val sheetDialog =
+            LayoutBottomSheetPhotoDetailBinding.inflate(LayoutInflater.from(requireContext()))
+        dialog.setContentView(sheetDialog.root)
+        dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        dialog.behavior.isDraggable = false
+
+        sheetDialog.apply {
+
+            Glide.with(requireContext())
+                .load(photo)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .into(photoView)
+
+            cardViewShare.setOnClickListener {
+                permissionType = "Share"
+                if (ActivityCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    ) != PackageManager.PERMISSION_GRANTED
+                ) {
+                    permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    return@setOnClickListener
+                }
+
+                saveImage(photo)?.let { Uri ->
+                    shareImageUri(Uri)
+                }
+            }
+            cardViewBackToolbarBottomSheet.setOnClickListener {
+                dialog.dismiss()
+            }
+        }
+        dialog.show()
+    }
 }
