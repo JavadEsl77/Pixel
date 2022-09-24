@@ -12,6 +12,25 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/tapsell_nativead_sponsored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:contentPadding="6dp"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/color_ad_indicator_admob">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="تبلیغات"
+                android:textSize="11dp"
+                android:textColor="@color/white"/>
+
+        </com.google.android.material.card.MaterialCardView>
+
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -51,6 +70,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:textStyle="bold"
                     android:textColor="@color/white"
                     android:textSize="12dp" />
 
@@ -76,24 +96,24 @@
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-<!--    <com.google.android.material.card.MaterialCardView-->
-<!--        android:id="@+id/tapsell_nativead_cta_view"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="center"-->
-<!--        android:layout_marginTop="10dp"-->
-<!--        android:layout_marginRight="7dp"-->
-<!--        android:layout_marginLeft="7dp"-->
-<!--        android:layout_marginBottom="7dp"-->
-<!--        app:cardCornerRadius="10dp"-->
-<!--        app:cardElevation="0dp">-->
+    <!--    <com.google.android.material.card.MaterialCardView-->
+    <!--        android:id="@+id/tapsell_nativead_cta_view"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_gravity="center"-->
+    <!--        android:layout_marginTop="10dp"-->
+    <!--        android:layout_marginRight="7dp"-->
+    <!--        android:layout_marginLeft="7dp"-->
+    <!--        android:layout_marginBottom="7dp"-->
+    <!--        app:cardCornerRadius="10dp"-->
+    <!--        app:cardElevation="0dp">-->
 
-<!--        <ir.tapsell.sdk.nativeads.views.RatioImageView-->
-<!--            android:id="@+id/tapsell_nativead_banner"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content" />-->
+    <!--        <ir.tapsell.sdk.nativeads.views.RatioImageView-->
+    <!--            android:id="@+id/tapsell_nativead_banner"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content" />-->
 
-<!--    </com.google.android.material.card.MaterialCardView>-->
+    <!--    </com.google.android.material.card.MaterialCardView>-->
 
 
 </androidx.appcompat.widget.LinearLayoutCompat>

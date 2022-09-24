@@ -6,6 +6,7 @@
     <color name="alert_color">#CD5E5C</color>
     <color name="status_bar_color">#B3000000</color>
     <color name="color_btn_admob">#AA722B</color>
+    <color name="color_ad_indicator_admob">#171e24</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FFFFFF</color>
