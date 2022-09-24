@@ -124,19 +124,12 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             }
         }
 
-    @Inject
-    lateinit var photo: PixelRepository
     private val viewModel by viewModels<DetailViewModel>()
     private val args by navArgs<DetailsFragmentArgs>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        hasInternetConnection {
-            if (it) {
-                viewModel.getPhotoDetail(args.photo)
-//                viewModel.getUserPhotos(args.photo.user?.username.toString())
-            }
-        }
+        viewModel.getPhotoDetail(args.photo)
     }
 
     override fun onCreateView(
