@@ -463,11 +463,15 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tapsell_nativead_cta_view"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:cardCornerRadius="15dp"
+                    app:cardBackgroundColor="@color/color_background_gallery_item"
                     android:animateLayoutChanges="true"
                     android:layout_marginBottom="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"
                     android:layout_gravity="center">
 
                     <FrameLayout

@@ -5,6 +5,7 @@
     <color name="purple_700">#405aa5</color>
     <color name="alert_color">#CD5E5C</color>
     <color name="status_bar_color">#B3000000</color>
+    <color name="color_btn_admob">#F6A640</color>
 
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
