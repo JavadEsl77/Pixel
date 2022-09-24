@@ -6,6 +6,7 @@ pluginManagement {
         maven { url 'https://gradle.iranrepo.ir' }
         maven { url 'https://jitpack.io' }
         maven { url 'https://maven.google.com' }
+        maven { url 'https://dl.bintray.com/tapsellorg/maven' }
         gradlePluginPortal()
         google()
         mavenCentral()
@@ -18,6 +19,7 @@ dependencyResolutionManagement {
         maven { url 'https://gradle.iranrepo.ir' }
         maven { url 'https://maven.google.com' }
         maven { url 'https://jitpack.io' }
+        maven { url 'https://dl.bintray.com/tapsellorg/maven' }
         gradlePluginPortal()
         google()
         mavenCentral()

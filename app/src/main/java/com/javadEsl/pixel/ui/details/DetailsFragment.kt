@@ -47,10 +47,11 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.huxq17.download.DownloadProvider
 import com.huxq17.download.Pump
 import com.huxq17.download.config.DownloadConfig
 import com.javadEsl.pixel.*
+import com.javadEsl.pixel.BuildConfig.TAPSELL_STANDARD_BANNER
+import com.javadEsl.pixel.R
 import com.javadEsl.pixel.api.IMAGE_RAW
 import com.javadEsl.pixel.api.IMAGE_REGULAR
 import com.javadEsl.pixel.api.IMAGE_SMALL
@@ -63,6 +64,9 @@ import com.javadEsl.pixel.databinding.LayoutBottomSheetPhotoDetailBinding
 import com.javadEsl.pixel.ui.gallery.UnsplashPhotoAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import eightbitlab.com.blurview.RenderScriptBlur
+import ir.tapsell.plus.*
+import ir.tapsell.plus.model.TapsellPlusAdModel
+import ir.tapsell.plus.model.TapsellPlusErrorModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -73,7 +77,6 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.net.URL
-import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -87,6 +90,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
     private var isOnSaveClicked = false
     private var resolutionType = ""
     private var permissionType = ""
+    private var responseId = ""
     private var modelPhoto: ModelPhoto? = null
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) {
@@ -97,7 +101,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                             "Download" -> {
                                 binding.cardDownload.performClick()
                             }
-                            "Share" -> {
+                            "Share"    -> {
                                 binding.imageView.invalidate()
                                 val drawable = binding.imageView.drawable
                                 val bitmap = drawable.toBitmap()
@@ -106,7 +110,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                                     shareImageUri(it2)
                                 }
                             }
-                            else -> {
+                            else       -> {
                                 false
                             }
                         }
@@ -208,13 +212,22 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             }
 
             if (modelPhoto.user?.totalPhotos.toString().isNotEmpty()) {
-                textViewProfileImages.text = modelPhoto.user?.totalPhotos.toDecimal()
+                textViewProfileImages.text =
+                    separationCountNumber(modelPhoto.user?.totalPhotos!!.toInt())
             }
-            if (modelPhoto.user?.totalLikes.toString().isNotEmpty()) {
-                textViewProfileLikes.text = modelPhoto.user?.totalLikes.toDecimal()
+            if (modelPhoto.user?.totalLikes.toString()
+                    .isNotEmpty()
+            ) {
+                if (modelPhoto.user?.totalLikes != 0) {
+                    layoutProfileLike.show()
+                    textViewProfileLikes.text = separationCountNumber(
+                        modelPhoto.user?.totalLikes!!.toInt()
+                    )
+                }
             }
             if (modelPhoto.views.toString().isNotEmpty()) {
-                textViewProfileLikes.text = modelPhoto.views.toDecimal()
+                textViewProfileViews.text =
+                    separationCountNumber(modelPhoto.views!!.toInt())
             }
 
             if (modelPhoto.location?.name.isNullOrEmpty() || modelPhoto.exif?.model.isNullOrEmpty()) {
@@ -299,10 +312,11 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 textViewShare.setTextColor(color)
                 textViewDetailTitle.setTextColor(color)
             }
+
             layoutDetail.invisible()
             blurViewBackground.invisible()
             Glide.with(this@DetailsFragment)
-                .load(modelPhoto.urls?.regular?.convertedUrl)
+                .load(modelPhoto.urls?.raw?.convertedUrl)
                 .error(R.drawable.ic_error_photos)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -429,8 +443,75 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     startActivity(mapIntent)
                 }
             }
+
+
+            var adHolder: AdHolder = TapsellPlus.createAdHolder(requireActivity(), binding.adContainer, R.layout.native_banner_detail)!!
+
+            TapsellPlus.requestNativeAd(
+                requireActivity(),
+                BuildConfig.TAPSELL_NATIVE_BANNER,
+                object : AdRequestCallback() {
+                    override fun response(tapsellPlusAdModel: TapsellPlusAdModel) {
+                        super.response(tapsellPlusAdModel)
+
+                        responseId = tapsellPlusAdModel.responseId
+                        showAd(adHolder)
+                    }
+
+                    override fun error(message: String) {
+                        Log.e(TAG, "error: $message")
+                    }
+                })
+
+//            TapsellPlus.requestStandardBannerAd(
+//                requireActivity(),
+//                TAPSELL_STANDARD_BANNER,
+//                TapsellPlusBannerType.BANNER_320x100,
+//                object : AdRequestCallback() {
+//                    override fun response(p0: TapsellPlusAdModel?) {
+//                        super.response(p0)
+//                        val responseId = p0?.responseId
+//                    }
+//                })
+
         }
     }
+
+    private fun showAd(adHolder:AdHolder) {
+        TapsellPlus.showNativeAd(requireActivity(), responseId, adHolder,
+            object : AdShowListener() {
+                override fun onOpened(tapsellPlusAdModel: TapsellPlusAdModel) {
+                    super.onOpened(tapsellPlusAdModel)
+                    Log.d(TAG, "Ad Open")
+                }
+
+                override fun onError(tapsellPlusErrorModel: TapsellPlusErrorModel) {
+                    super.onError(tapsellPlusErrorModel)
+                    Log.e("onError", tapsellPlusErrorModel.toString())
+                }
+            })
+    }
+
+//    private fun showAd(responseId: String) {
+//        TapsellPlus.showStandardBannerAd(requireActivity(), responseId,
+//            binding.standardBanner,
+//            object : AdShowListener() {
+//                override fun onOpened(tapsellPlusAdModel: TapsellPlusAdModel) {
+//                    super.onOpened(tapsellPlusAdModel)
+//                    Log.d(TAG, "Ad Opened")
+//                }
+//
+//                override fun onError(tapsellPlusErrorModel: TapsellPlusErrorModel) {
+//                    super.onError(tapsellPlusErrorModel)
+//                    Log.e(TAG, tapsellPlusErrorModel.toString())
+//                }
+//            })
+//    }
+
+    private fun destroyAd() {
+        TapsellPlus.destroyStandardBanner(requireActivity(), responseId, binding.standardBanner)
+    }
+
 
     private fun showDownloadMenu(anchor: View) {
         val popupMenu = CascadePopupMenu(requireContext(), anchor, styler = cascadeMenuStyler())
@@ -460,10 +541,10 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     IMAGE_REGULAR -> {
                         resolutionTypeSelected = "HD"
                     }
-                    IMAGE_RAW -> {
+                    IMAGE_RAW     -> {
                         resolutionTypeSelected = "Full-HD"
                     }
-                    IMAGE_SMALL -> {
+                    IMAGE_SMALL   -> {
                         resolutionTypeSelected = "SD"
                     }
                 }
@@ -608,7 +689,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             .build()
 
         when (resolutionType) {
-            IMAGE_SMALL -> {
+            IMAGE_SMALL   -> {
                 downloadLink = modelPhoto.urls?.small?.convertedUrl.toString()
                 typeFile = "SD"
             }
@@ -616,11 +697,11 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 downloadLink = modelPhoto.urls?.regular?.convertedUrl.toString()
                 typeFile = "HD"
             }
-            IMAGE_RAW -> {
+            IMAGE_RAW     -> {
                 downloadLink = modelPhoto.urls?.raw?.convertedUrl.toString()
                 typeFile = "Full-HD"
             }
-            "" -> {
+            ""            -> {
                 downloadLink = modelPhoto.urls?.regular?.convertedUrl.toString()
                 typeFile = "HD"
             }
@@ -948,4 +1029,26 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         }
         dialog.show()
     }
+
+    private fun separationCountNumber(number: Int): String {
+        var value = ""
+        when (number) {
+            in 1_000_000..9_999_999     -> {
+                value = number.toString().substring(0, 1) + "+" + " میلیون"
+            }
+            in 10_000_000..99_999_999   -> {
+                value = number.toString().substring(0, 2) + "+" + " میلیون"
+            }
+            in 100_000_000..999_999_999 -> {
+                value = number.toString().substring(0, 3) + "+" + " میلیون"
+            }
+            in 1..999_999               -> {
+                value = number.toDecimal()
+            }
+            else                        -> ""
+        }
+
+        return value
+    }
+
 }

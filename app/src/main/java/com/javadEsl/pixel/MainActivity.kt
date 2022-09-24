@@ -3,11 +3,15 @@ package com.javadEsl.pixel
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import dagger.hilt.android.AndroidEntryPoint
-
+import ir.tapsell.plus.TapsellPlus
+import ir.tapsell.plus.TapsellPlusInitListener
+import ir.tapsell.plus.model.AdNetworkError
+import ir.tapsell.plus.model.AdNetworks
 
 
 @AndroidEntryPoint
@@ -16,6 +20,22 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        TapsellPlus.initialize(this, BuildConfig.TAPSELL_KEY,
+            object : TapsellPlusInitListener {
+                override fun onInitializeSuccess(adNetworks: AdNetworks) {
+                    Log.d("onInitializeSuccess", adNetworks.name)
+                }
+
+                override fun onInitializeFailed(
+                    adNetworks: AdNetworks,
+                    adNetworkError: AdNetworkError
+                ) {
+                    Log.e(
+                        "onInitializeFailed",
+                        "ad network: " + adNetworks.name + ", error: " + adNetworkError.errorMessage
+                    )
+                }
+            })
 
         if (ContextCompat.checkSelfPermission(
                 this,

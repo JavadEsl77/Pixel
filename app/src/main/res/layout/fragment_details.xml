@@ -48,12 +48,12 @@
                 android:id="@+id/text_view_detail_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16dp"
-                android:textColor="@color/white"
+                android:gravity="center"
                 android:text="جزئیات عکس"
+                android:textColor="@color/white"
+                android:textSize="16dp"
                 android:textStyle="bold"
-                tools:text="جزئیات عکس"
-                android:gravity="center"/>
+                tools:text="جزئیات عکس" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -250,9 +250,9 @@
                             android:layout_marginTop="4dp"
                             android:layout_marginRight="10dp"
                             android:layout_marginBottom="16dp"
-                            android:paddingLeft="7dp"
                             android:gravity="center|right"
-                            android:orientation="horizontal">
+                            android:orientation="horizontal"
+                            android:paddingLeft="7dp">
 
                             <com.google.android.material.card.MaterialCardView
                                 android:id="@+id/card_download"
@@ -273,9 +273,9 @@
                                     <androidx.appcompat.widget.AppCompatTextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:layout_marginRight="7dp"
                                         android:gravity="center"
                                         android:text="@string/string_download_images"
-                                        android:layout_marginRight="7dp"
                                         android:textColor="@color/white"
                                         android:textSize="14sp" />
 
@@ -463,6 +463,30 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="15dp"
+                    android:animateLayoutChanges="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_gravity="center">
+
+                    <FrameLayout
+                        android:id="@+id/adContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                    </FrameLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/standardBanner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -487,17 +511,18 @@
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:orientation="horizontal"
-                            android:paddingLeft="10dp"
-                            >
+                            android:paddingLeft="10dp">
+
                             <RelativeLayout
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="10dp">
 
                                 <View
                                     android:layout_width="74dp"
                                     android:layout_height="74dp"
                                     android:layout_centerInParent="true"
-                                    android:background="@drawable/shape_isntagram_profile"/>
+                                    android:background="@drawable/shape_isntagram_profile" />
 
                                 <com.google.android.material.card.MaterialCardView
                                     android:id="@+id/card_view_profila"
@@ -558,30 +583,6 @@
                                     android:orientation="vertical">
 
                                     <TextView
-                                        android:id="@+id/text_view_profile_likes"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="265"
-                                        android:textColor="@color/black"
-                                        android:textSize="16dp"
-                                        android:textStyle="bold" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="لایک ها"
-                                        android:textSize="13dp" />
-
-                                </androidx.appcompat.widget.LinearLayoutCompat>
-
-                                <androidx.appcompat.widget.LinearLayoutCompat
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:orientation="vertical">
-
-                                    <TextView
                                         android:id="@+id/text_view_profile_images"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
@@ -598,11 +599,36 @@
 
                                 </androidx.appcompat.widget.LinearLayoutCompat>
 
+                                <androidx.appcompat.widget.LinearLayoutCompat
+                                    android:id="@+id/layout_profile_like"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:orientation="vertical"
+                                    android:visibility="invisible">
+
+                                    <TextView
+                                        android:id="@+id/text_view_profile_likes"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="0"
+                                        android:textColor="@color/black"
+                                        android:textSize="16dp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="لایک ها"
+                                        android:textSize="13dp" />
+
+                                </androidx.appcompat.widget.LinearLayoutCompat>
+
                             </androidx.appcompat.widget.LinearLayoutCompat>
 
 
                         </androidx.appcompat.widget.LinearLayoutCompat>
-
 
                         <androidx.appcompat.widget.LinearLayoutCompat
                             android:layout_width="match_parent"
@@ -660,7 +686,6 @@
 
                         </androidx.appcompat.widget.LinearLayoutCompat>
 
-
                         <androidx.appcompat.widget.LinearLayoutCompat
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -700,12 +725,12 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
+                            android:overScrollMode="never"
                             android:paddingEnd="6dp"
                             app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
                             app:spanCount="3"
                             tools:itemCount="10"
                             tools:listitem="@layout/item_unsplash_user_photo" />
-
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
 
