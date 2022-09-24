@@ -445,7 +445,11 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             }
 
 
-            var adHolder: AdHolder = TapsellPlus.createAdHolder(requireActivity(), binding.adContainer, R.layout.native_banner_detail)!!
+            var adHolder: AdHolder = TapsellPlus.createAdHolder(
+                requireActivity(),
+                binding.adContainer,
+                R.layout.native_banner_detail
+            )!!
 
             TapsellPlus.requestNativeAd(
                 requireActivity(),
@@ -453,7 +457,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 object : AdRequestCallback() {
                     override fun response(tapsellPlusAdModel: TapsellPlusAdModel) {
                         super.response(tapsellPlusAdModel)
-
                         responseId = tapsellPlusAdModel.responseId
                         showAd(adHolder)
                     }
@@ -462,22 +465,10 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                         Log.e(TAG, "error: $message")
                     }
                 })
-
-//            TapsellPlus.requestStandardBannerAd(
-//                requireActivity(),
-//                TAPSELL_STANDARD_BANNER,
-//                TapsellPlusBannerType.BANNER_320x100,
-//                object : AdRequestCallback() {
-//                    override fun response(p0: TapsellPlusAdModel?) {
-//                        super.response(p0)
-//                        val responseId = p0?.responseId
-//                    }
-//                })
-
         }
     }
 
-    private fun showAd(adHolder:AdHolder) {
+    private fun showAd(adHolder: AdHolder) {
         TapsellPlus.showNativeAd(requireActivity(), responseId, adHolder,
             object : AdShowListener() {
                 override fun onOpened(tapsellPlusAdModel: TapsellPlusAdModel) {
@@ -492,26 +483,9 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             })
     }
 
-//    private fun showAd(responseId: String) {
-//        TapsellPlus.showStandardBannerAd(requireActivity(), responseId,
-//            binding.standardBanner,
-//            object : AdShowListener() {
-//                override fun onOpened(tapsellPlusAdModel: TapsellPlusAdModel) {
-//                    super.onOpened(tapsellPlusAdModel)
-//                    Log.d(TAG, "Ad Opened")
-//                }
-//
-//                override fun onError(tapsellPlusErrorModel: TapsellPlusErrorModel) {
-//                    super.onError(tapsellPlusErrorModel)
-//                    Log.e(TAG, tapsellPlusErrorModel.toString())
-//                }
-//            })
-//    }
-
     private fun destroyAd() {
-        TapsellPlus.destroyStandardBanner(requireActivity(), responseId, binding.standardBanner)
+        TapsellPlus.destroyNativeBanner(requireActivity(), responseId)
     }
-
 
     private fun showDownloadMenu(anchor: View) {
         val popupMenu = CascadePopupMenu(requireContext(), anchor, styler = cascadeMenuStyler())
@@ -934,6 +908,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
     override fun onDestroy() {
         super.onDestroy()
+        destroyAd()
         if (downloadStatus) {
             Pump.shutdown()
         }
