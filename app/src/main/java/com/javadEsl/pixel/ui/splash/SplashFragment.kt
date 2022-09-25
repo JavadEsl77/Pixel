@@ -34,10 +34,12 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
             }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-
-//        requireActivity().window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-//        setWindowFlag(requireActivity(), WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, false)
-//        requireActivity().window.statusBarColor = resources.getColor(R.color.status_bar_color)
+        requireActivity().window.statusBarColor = Color.parseColor(
+            "#" + "000000".replace(
+                "#",
+                ""
+            )
+        )
 
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSplashBinding.bind(view)
