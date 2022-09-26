@@ -3,6 +3,7 @@ package com.javadEsl.pixel.ui.gallery
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.paging.PagingDataAdapter
@@ -14,6 +15,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.huxq17.download.DownloadProvider.context
 import com.javadEsl.pixel.R
 import com.javadEsl.pixel.data.UnsplashPhoto
 import com.javadEsl.pixel.data.convertedUrl
@@ -23,6 +25,8 @@ import com.javadEsl.pixel.isBrightColor
 
 class UnsplashPhotoAdapter(private val listener: OnItemClickListener) :
     PagingDataAdapter<UnsplashPhoto, UnsplashPhotoAdapter.PhotoViewHolder>(PHOTO_COMPARATOR) {
+
+    private var lastPosition = 0
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
         val binding =
@@ -53,34 +57,13 @@ class UnsplashPhotoAdapter(private val listener: OnItemClickListener) :
                     cardGalleryItem.layoutParams = param
                 }
 
-                cardGalleryItem.animation =
-                    AnimationUtils.loadAnimation(itemView.context, R.anim.translate)
+                setAnimation(cardGalleryItem, bindingAdapterPosition)
 
                 Glide.with(itemView)
                     .load(photo.urls?.regular?.convertedUrl)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .diskCacheStrategy(DiskCacheStrategy.DATA)
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .error(R.drawable.ic_error_photos)
-                    .listener(object : RequestListener<Drawable> {
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return false
-                        }
-
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: com.bumptech.glide.load.DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return false
-                        }
-                    })
                     .into(imageView)
 
 
@@ -130,6 +113,15 @@ class UnsplashPhotoAdapter(private val listener: OnItemClickListener) :
         }
     }
 
+    private fun setAnimation(viewToAnimate: View, position: Int) {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        if (position > lastPosition) {
+            viewToAnimate.animation =
+                AnimationUtils.loadAnimation(viewToAnimate.context, R.anim.translate)
+
+            lastPosition = position
+        }
+    }
 
 }
 
