@@ -38,8 +38,10 @@ class GalleryViewModel @Inject constructor(
         }
     }
 
-    private val currentQuery = state.getLiveData(CURRENT_QUERY, DEFAULT_QUERY)
 
+    val listPhotos = pixelRepository.getSeaPhotos()
+
+    private val currentQuery = state.getLiveData(CURRENT_QUERY, DEFAULT_QUERY)
     val photos = currentQuery.switchMap { queryString ->
         pixelRepository.getSearchResults(queryString).cachedIn(viewModelScope)
     }
@@ -50,7 +52,7 @@ class GalleryViewModel @Inject constructor(
 
     companion object {
         private const val CURRENT_QUERY = "current_query"
-        private const val DEFAULT_QUERY = "iran"
+        private const val DEFAULT_QUERY = "China"
     }
 
 }

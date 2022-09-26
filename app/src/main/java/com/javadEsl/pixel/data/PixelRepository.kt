@@ -10,8 +10,7 @@ import javax.inject.Singleton
 
 @Singleton
 class PixelRepository @Inject constructor(
-    private val pixelApi: PixelApi,
-    private val networkHelper: NetworkHelper,
+    private val pixelApi: PixelApi
 ) {
     fun getSearchResults(query: String) =
         Pager(
@@ -28,6 +27,18 @@ class PixelRepository @Inject constructor(
     suspend fun getRandomPhoto() = pixelApi.getRandomPhotos()
 
     suspend fun getPhotoDetail(id: String) = pixelApi.getPhoto(id = id)
+
+    fun getSeaPhotos() =
+        Pager(
+            config = PagingConfig(
+                pageSize = 20,
+                maxSize = 100,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = {
+                UnsplashPhotosPagingSource(pixelApi)
+            }
+        ).liveData
 
     suspend fun getUserPhotos(userName: String) = pixelApi.getUserPhotos(userName = userName)
 

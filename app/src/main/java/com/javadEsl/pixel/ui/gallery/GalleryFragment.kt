@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
@@ -36,6 +37,7 @@ import com.javadEsl.pixel.data.convertedUrl
 import com.javadEsl.pixel.databinding.FragmentGalleryBinding
 import com.javadEsl.pixel.isBrightColor
 import dagger.hilt.android.AndroidEntryPoint
+import smartdevelop.ir.eram.showcaseviewlib.GuideView
 
 
 @AndroidEntryPoint
@@ -141,6 +143,25 @@ class GalleryFragment :
 //                    }, 1500)
                 }
             }
+
+            //در آپدیت بعدی انجام شود
+//            viewModel.listPhotos.observe(viewLifecycleOwner) { data ->
+//                data?.let {
+//                    adapter.submitData(viewLifecycleOwner.lifecycle, data)
+//
+////                    Handler(Looper.getMainLooper()).postDelayed({
+////                        GuideView.Builder(requireActivity())
+////                            .setTitle("دانلود های من")
+////                            .setContentText("در این بخش میتوانید \n تصاویری که دانلود کرده اید \n را مشاهده کنید")
+////                            .setTargetView(cardMyDownload)
+////                            .setContentTextSize(14)
+////                            .setTitleTextSize(16)
+////                            .setDismissType(DismissType.anywhere) //optional - default dismissible by TargetView
+////                            .build()
+////                            .show()
+////                    }, 1500)
+//                }
+//            }
             adapter.addLoadStateListener { loadState ->
                 binding.apply {
                     loadingAnimView.isVisible = loadState.source.refresh is LoadState.Loading

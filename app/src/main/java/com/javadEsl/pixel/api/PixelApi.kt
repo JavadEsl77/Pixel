@@ -27,6 +27,13 @@ interface PixelApi {
     ): PixelResponse
 
 
+    @GET("napi/photos")
+    suspend fun getPhotos(
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int
+    ): PixelResponse
+
+
     @GET("napi/photos/random")
     suspend fun getRandomPhotos(): ModelPhoto
 
