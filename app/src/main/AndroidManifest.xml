@@ -29,13 +29,15 @@
         tools:targetApi="31">
         <activity
             android:name="com.javadEsl.pixel.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
@@ -45,7 +47,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
 
         <meta-data android:name="io.sentry.dsn" android:value="https://bc0ca84c55524a53a63269270fa93faa@o1396923.ingest.sentry.io/6721739" />
         <!-- Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
