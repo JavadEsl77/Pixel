@@ -151,3 +151,114 @@
 ################################## START Pump ####################################
 -keep class com.huxq17.download.** { *; }
 ################################## END Pump ######################################
+
+
+
+##---------------Begin: proguard configuration for okio  ----------
+# Animal Sniffer compileOnly dependency to ensure APIs are compatible with older versions of Java.
+-dontwarn org.codehaus.mojo.animal_sniffer.*
+##---------------End: proguard configuration for okio  ----------
+
+
+
+##---------------Begin: proguard configuration for admob  ----------
+# If your project uses WebView with JS, uncomment the following
+# and specify the fully qualified class name to the JavaScript interface
+# class:
+-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+   public *;
+}
+
+# The following rules are used to strip any non essential Google Play Services classes and method.
+
+# For Google Play Services
+-keep public class com.google.android.gms.ads.**{
+   public *;
+}
+
+# For old ads classes
+-keep public class com.google.ads.**{
+   public *;
+}
+
+# For mediation
+-keepattributes *Annotation*
+
+# Other required classes for Google Play Services
+# Read more at http://developer.android.com/google/play-services/setup.html
+-keep class * extends java.util.ListResourceBundle {
+   protected Object[][] getContents();
+}
+
+-keep public class com.google.android.gms.common.internal.safeparcel.SafeParcelable {
+   public static final *** NULL;
+}
+
+-keepnames @com.google.android.gms.common.annotation.KeepName class *
+-keepclassmembernames class * {
+   @com.google.android.gms.common.annotation.KeepName *;
+}
+
+-keepnames class * implements android.os.Parcelable {
+   public static final ** CREATOR;
+}
+##---------------End: proguard configuration for admob  ----------
+
+
+
+##---------------Begin: proguard configuration for tapsell  ----------
+-keepclassmembers enum * { *; }
+-keep class **.R$* { *; }
+-keep interface ir.tapsell.sdk.NoProguard
+-keep interface ir.tapsell.sdk.NoNameProguard
+-keep class * implements ir.tapsell.sdk.NoProguard { *; }
+-keep interface * extends ir.tapsell.sdk.NoProguard { *; }
+-keep enum * implements ir.tapsell.sdk.NoProguard { *; }
+-keepnames class * implements ir.tapsell.sdk.NoNameProguard { *; }
+-keepnames class * extends android.app.Activity
+-keep class ir.tapsell.plus.model.** { *; }
+-keep class ir.tapsell.sdk.models.** { *; }
+
+-keep class ir.tapsell.sdk.nativeads.TapsellNativeVideoAdLoader$Builder {*;}
+-keep class ir.tapsell.sdk.nativeads.TapsellNativeBannerAdLoader$Builder {*;}
+
+-keepclasseswithmembers class * {
+    native <methods>;
+}
+
+-keepclasseswithmembers class * {
+    public <init>(android.content.Context, android.util.AttributeSet);
+}
+
+-keep interface ir.tapsell.plus.NoProguard
+-keep interface * extends ir.tapsell.plus.NoProguard { *; }
+-keep class * implements ir.tapsell.plus.NoProguard { *; }
+
+##---------------End: proguard configuration for tapsell  ----------
+
+
+
+##---------------Begin: proguard configuration for AppLovin  ----------
+
+-dontwarn com.applovin.**
+-keep class com.applovin.** { *; }
+-keep class com.google.android.gms.ads.identifier.** { *; }
+
+##---------------End: proguard configuration for AppLovin  ----------
+
+
+
+-keep public class com.bumptech.glide.**
+
+# For communication with AdColony's WebView
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
+}
+
+# TapsellPlus needs their formal names
+-keepnames public class com.google.android.gms.ads.MobileAds
+-keepnames public class com.unity3d.services.monetization.IUnityMonetizationListener
+-keepnames public class com.adcolony.sdk.AdColony
+-keepnames public class com.google.android.gms.ads.identifier.AdvertisingIdClient
+-keepnames public class com.chartboost.sdk.Chartboost
+-keepnames public class com.applovin.sdk.AppLovinSdkSettings
