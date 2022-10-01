@@ -423,7 +423,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 }
             }
 
-            blurViewMap.setOnClickListener {
+            viewOnMapClick.setOnClickListener {
                 val latitude = modelPhoto.location?.position?.latitude
                 val longitude = modelPhoto.location?.position?.longitude
                 val gmmIntentUri = Uri.parse("geo:$latitude,$longitude")

@@ -28,7 +28,7 @@
             android:id="@+id/view_back_item"
             android:layout_width="match_parent"
             android:layout_height="45dp"
-            android:background="#99405aa5"
+            android:background="@color/color_btn_admob"
             android:gravity="center|left"
             android:orientation="horizontal"
             android:paddingLeft="7dp"

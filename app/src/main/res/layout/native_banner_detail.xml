@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat
+    android:id="@+id/standardBanner"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -46,21 +48,23 @@
                 android:layout_height="wrap_content"
                 android:gravity="center|right"
                 android:textColor="@color/black"
-                android:textSize="16dp"
+                android:textSize="14dp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tapsell_nativead_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:gravity="center|right"
-                android:textSize="14dp" />
+                android:textSize="12dp" />
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="6dp"
+                app:cardElevation="0dp"
                 app:cardBackgroundColor="@color/color_btn_admob"
                 app:cardCornerRadius="10dp"
                 app:contentPadding="7dp">
@@ -71,8 +75,10 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textStyle="bold"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginRight="4dp"
                     android:textColor="@color/white"
-                    android:textSize="12dp" />
+                    android:textSize="11dp" />
 
             </com.google.android.material.card.MaterialCardView>
 
