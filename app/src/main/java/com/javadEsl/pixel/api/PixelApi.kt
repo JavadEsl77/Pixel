@@ -1,5 +1,6 @@
 package com.javadEsl.pixel.api
 
+import com.javadEsl.pixel.data.autocomplete.AutocompleteModel
 import com.javadEsl.pixel.data.ModelPhoto
 import com.javadEsl.pixel.data.UnsplashPhoto
 import retrofit2.Response
@@ -43,6 +44,12 @@ interface PixelApi {
     suspend fun getPhoto(
         @Path("id") id: String
     ): Response<ModelPhoto>
+
+
+    @GET("nautocomplete/{query}")
+    suspend fun getAutocomplete(
+        @Path("query") query: String
+    ): AutocompleteModel
 
     @GET("napi/users/{username}/photos")
     suspend fun getUserPhotos(

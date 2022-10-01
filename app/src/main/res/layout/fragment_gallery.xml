@@ -122,12 +122,13 @@
                         android:visibility="invisible"
                         tools:visibility="visible" />
 
-                    <com.google.android.material.textfield.TextInputEditText
+                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                         android:id="@+id/edt_search"
                         android:layout_width="0dp"
                         android:layout_height="45dp"
                         android:layout_weight="1"
                         android:background="@android:color/transparent"
+                        android:completionThreshold="2"
                         android:ellipsize="end"
                         android:gravity="center|right"
                         android:hint="@string/string_hint_edittext_search"

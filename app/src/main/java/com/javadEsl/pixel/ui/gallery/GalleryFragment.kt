@@ -9,17 +9,21 @@ import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.Window
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.TextView.OnEditorActionListener
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -37,7 +41,6 @@ import com.javadEsl.pixel.data.convertedUrl
 import com.javadEsl.pixel.databinding.FragmentGalleryBinding
 import com.javadEsl.pixel.isBrightColor
 import dagger.hilt.android.AndroidEntryPoint
-import smartdevelop.ir.eram.showcaseviewlib.GuideView
 
 
 @AndroidEntryPoint
@@ -59,7 +62,7 @@ class GalleryFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = UnsplashPhotoAdapter(this,requireActivity())
+        val adapter = UnsplashPhotoAdapter(this, requireActivity())
         _binding = FragmentGalleryBinding.bind(view)
 
         binding.apply {
@@ -94,7 +97,7 @@ class GalleryFragment :
                         .centerCrop()
                         .diskCacheStrategy(DiskCacheStrategy.DATA)
                         .transition(DrawableTransitionOptions.withCrossFade())
-                        .error(R.drawable.img)
+                        .error(com.javadEsl.pixel.R.drawable.img)
                         .listener(object : RequestListener<Drawable> {
                             override fun onLoadFailed(
                                 p0: GlideException?,
@@ -118,6 +121,19 @@ class GalleryFragment :
                         })
                         .into(imageViewBanner)
                 }
+            }
+
+            viewModel.liveDataAutocomplete.observe(viewLifecycleOwner) {
+                val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
+                    requireActivity(),
+                    R.layout.select_autocomplete_item,
+                    R.id.text_title,
+                    it?.map { it.query } ?: emptyList()
+                )
+                edtSearch.threshold = 1 //will start working from first character
+                edtSearch.setAdapter(adapter) //setting the adapter data into the AutoCompleteTextView
+
+
             }
 
 
@@ -178,6 +194,10 @@ class GalleryFragment :
                 }
             }
 
+            edtSearch.addTextChangedListener {
+                viewModel.getAutocomplete(it.toString())
+            }
+
             buttonRetry.setOnClickListener {
                 adapter.retry()
             }
@@ -230,7 +250,7 @@ class GalleryFragment :
     private fun performSearch() {
         if (binding.edtSearch.text.toString().isEmpty()) {
             binding.edtSearch.error =
-                getString(R.string.string_error_edittext_search)
+                getString(com.javadEsl.pixel.R.string.string_error_edittext_search)
         } else {
             val editor = sharedPreference?.edit()
             if (sharedPreference?.getString("search", "").equals("")) {
@@ -280,10 +300,10 @@ class GalleryFragment :
     }
 
     private fun alertNetworkDialog(context: Context) {
-        val dialog = Dialog(context, R.style.AlertDialog)
+        val dialog = Dialog(context, com.javadEsl.pixel.R.style.AlertDialog)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
-        dialog.setContentView(R.layout.layout_dialog_network_alert)
+        dialog.setContentView(com.javadEsl.pixel.R.layout.layout_dialog_network_alert)
         Handler().postDelayed({
             dialog.dismiss()
         }, 2000)

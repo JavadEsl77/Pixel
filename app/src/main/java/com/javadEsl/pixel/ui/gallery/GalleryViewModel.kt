@@ -1,11 +1,13 @@
 package com.javadEsl.pixel.ui.gallery
 
+import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
-import com.bumptech.glide.load.engine.Resource
 import com.javadEsl.pixel.NetworkHelper
+import com.javadEsl.pixel.data.autocomplete.AutocompleteModel
 import com.javadEsl.pixel.data.ModelPhoto
 import com.javadEsl.pixel.data.PixelRepository
+import com.javadEsl.pixel.data.autocomplete.Suggestion
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -48,6 +50,28 @@ class GalleryViewModel @Inject constructor(
 
     fun searchPhotos(query: String) {
         currentQuery.value = query
+    }
+
+
+    private val _liveDataAutocomplete = MutableLiveData<List<Suggestion>?>()
+    val liveDataAutocomplete: LiveData<List<Suggestion>?> = _liveDataAutocomplete
+    fun getAutocomplete(query: String) {
+        viewModelScope.launch {
+            if (!networkHelper.hasInternetConnection()) {
+                _liveDataAutocomplete.postValue(emptyList())
+                return@launch
+            }
+
+            try {
+                val response = pixelRepository.getAutocomplete(query)
+                if (!response.autocomplete.isNullOrEmpty()) {
+                    _liveDataAutocomplete.postValue(response.autocomplete)
+                }
+            } catch (e: Exception) {
+                Log.e("TAG", "getAutocomplete: $e", )
+            }
+
+        }
     }
 
     companion object {
