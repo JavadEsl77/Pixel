@@ -59,7 +59,7 @@ class GalleryFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = UnsplashPhotoAdapter(this)
+        val adapter = UnsplashPhotoAdapter(this,requireActivity())
         _binding = FragmentGalleryBinding.bind(view)
 
         binding.apply {
@@ -260,6 +260,7 @@ class GalleryFragment :
 
     override fun onItemClick(photo: UnsplashPhoto) {
         if (checkIsConnection()) {
+            if (photo.isAdvertisement) return
             val action = GalleryFragmentDirections.actionGalleryFragmentToDetailsFragment(photo)
             findNavController().navigate(action)
         } else {

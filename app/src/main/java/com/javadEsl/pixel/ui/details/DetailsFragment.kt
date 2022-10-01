@@ -50,13 +50,11 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.huxq17.download.Pump
 import com.huxq17.download.config.DownloadConfig
 import com.javadEsl.pixel.*
-import com.javadEsl.pixel.BuildConfig.TAPSELL_STANDARD_BANNER
 import com.javadEsl.pixel.R
 import com.javadEsl.pixel.api.IMAGE_RAW
 import com.javadEsl.pixel.api.IMAGE_REGULAR
 import com.javadEsl.pixel.api.IMAGE_SMALL
 import com.javadEsl.pixel.data.ModelPhoto
-import com.javadEsl.pixel.data.PixelRepository
 import com.javadEsl.pixel.data.UnsplashPhoto
 import com.javadEsl.pixel.data.convertedUrl
 import com.javadEsl.pixel.databinding.FragmentDetailsBinding
@@ -78,7 +76,6 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.net.URL
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
 
 
 @AndroidEntryPoint
@@ -384,7 +381,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     val drawable = imageView.drawable
                     val subBitmap = drawable.toBitmap()
                     val wallpaperManager =
-                        WallpaperManager.getInstance(activity!!.applicationContext)
+                        WallpaperManager.getInstance(requireActivity().applicationContext)
                     wallpaperManager.setWallpaperOffsetSteps(1f, 1f);
                     wallpaperManager.setBitmap(subBitmap)
                 }
@@ -394,7 +391,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     progressBarWallpaper.isVisible = false
                     successDialog(
                         getString(R.string.string_alert_success_wallpaper),
-                        activity!!.getDrawable(R.drawable.ic_wallpaper)!!,
+                        requireActivity().getDrawable(R.drawable.ic_wallpaper)!!,
                         modelPhoto.color.toString(),
                         1500
                     )
@@ -542,7 +539,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
     private fun cascadeMenuStyler(): CascadePopupMenu.Styler {
         val rippleDrawable = {
             RippleDrawable(
-                ColorStateList.valueOf(Color.parseColor(resources.getString(R.color.color_download_popup))),
+                ColorStateList.valueOf(Color.parseColor(getString(R.color.color_download_popup))),
                 null,
                 ColorDrawable(WHITE)
             )
@@ -562,7 +559,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 it.titleView.textSize = 14f
 //                it.titleView.typeface = ResourcesCompat.getFont(requireContext(), R.font.work_sans_medium)
                 it.setBackground(rippleDrawable())
-                it.setGroupDividerColor(Color.parseColor(resources.getString(R.color.color_download_popup)))
+                it.setGroupDividerColor(Color.parseColor(getString(R.color.color_download_popup)))
             }
         )
     }

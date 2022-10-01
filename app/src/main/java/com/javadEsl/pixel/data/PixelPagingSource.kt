@@ -17,7 +17,8 @@ class UnsplashPagingSource @Inject constructor(
         val position = params.key ?: UNSPLASH_STARTING_PAGE_INDEX
         return try {
             val response = pixelApi.searchPhotos(query, position, params.loadSize)
-            val photos = response.results
+            val photos = response.results.toMutableList()
+            photos.add(UnsplashPhoto(id = "ad_item", isAdvertisement = true))
             LoadResult.Page(
                 data = photos,
                 prevKey = if (position == UNSPLASH_STARTING_PAGE_INDEX) null else position - 1,
@@ -28,7 +29,5 @@ class UnsplashPagingSource @Inject constructor(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, UnsplashPhoto>): Int? {
-        TODO("Not yet implemented")
-    }
+    override fun getRefreshKey(state: PagingState<Int, UnsplashPhoto>): Int? = state.anchorPosition
 }

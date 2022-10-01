@@ -6,12 +6,13 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class UnsplashPhoto(
     val id: String,
-    val likes: Int?,
-    val created_at: String?,
-    val color: String?,
-    val description: String?,
-    val urls: UnsplashPhotoUrls?,
-    val user: UnsplashUser?
+    val likes: Int? = null,
+    val created_at: String? = null,
+    val color: String? = null,
+    val user: UnsplashUser? = null,
+    val description: String? = null,
+    val urls: UnsplashPhotoUrls? = null,
+    val isAdvertisement: Boolean = false
 ) : Parcelable {
 
     @Parcelize
