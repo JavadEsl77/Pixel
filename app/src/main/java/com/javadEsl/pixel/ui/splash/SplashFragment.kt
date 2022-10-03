@@ -1,20 +1,23 @@
 package com.javadEsl.pixel.ui.splash
 
-import android.app.Activity
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.IBinder
 import android.os.Looper
+import android.util.Log
 import android.view.View
-import android.view.Window
-import android.view.WindowManager
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.farsitel.bazaar.IUpdateCheckService
 import com.javadEsl.pixel.BuildConfig
 import com.javadEsl.pixel.R
 import com.javadEsl.pixel.databinding.FragmentSplashBinding
@@ -28,10 +31,40 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
     private var stateNetwork = false
     private val viewModel by viewModels<SplashViewModel>()
 
+
+    var service: IUpdateCheckService? = null
+    var connection: UpdateServiceConnection? = null
+    private val TAG = "UpdateCheck"
+
+    inner class UpdateServiceConnection : ServiceConnection {
+        override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
+            service = IUpdateCheckService.Stub.asInterface(p1)
+            try {
+                val vCode = service?.getVersionCode("com.javadEsl.pixel")
+                Log.d(TAG, "initService() bound value vCode: $vCode")
+                if (vCode?.toInt() == -1) {
+                    viewModel.getStartNavigate()
+                }else{
+                    Log.d(TAG, "showDialogUpdate")
+                    //showUpdateDialog
+                }
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        override fun onServiceDisconnected(p0: ComponentName?) {
+            service = null
+            Log.d(TAG, "onServiceDisconnected(): Disconnected");
+        }
+
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.getStartNavigate()
-            }
+        initService()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         requireActivity().window.statusBarColor = Color.parseColor(
@@ -90,14 +123,23 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
         }
     }
 
-    private fun setWindowFlag(activity: Activity, bits: Int, on: Boolean) {
-        val win: Window = activity.window
-        val winParams: WindowManager.LayoutParams = win.attributes
-        if (on) {
-            winParams.flags = winParams.flags or bits
-        } else {
-            winParams.flags = winParams.flags and bits.inv()
-        }
-        win.attributes = winParams
+    private fun initService() {
+        Log.i(TAG, "initService()")
+        connection = UpdateServiceConnection()
+        val i = Intent("com.farsitel.bazaar.service.UpdateCheckService.BIND")
+        i.setPackage("com.farsitel.bazaar")
+        val ret: Boolean = requireActivity().bindService(i, connection!!, Context.BIND_AUTO_CREATE)
+        Log.d(TAG, "initService() bound value ret: $ret")
+    }
+
+    private fun releaseService() {
+        connection?.let { requireActivity().unbindService(it) }
+        connection = null
+        Log.d(TAG, "releaseService(): unbound.")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        releaseService();
     }
 }
