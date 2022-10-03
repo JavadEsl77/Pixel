@@ -19,6 +19,7 @@ import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.*
 import android.provider.Settings
+import android.system.Os
 import android.util.Log
 import android.util.TypedValue
 import android.view.*
@@ -863,6 +864,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         if (checkIsConnection()) {
             binding.layoutLoading.fadeIn()
             binding.layoutDetail.fadeOut()
+            binding.lyClassifications.fadeOut()
             viewModel.getPhotoDetail(photo)
             binding.apply {
                 nestedView.smoothScrollTo(0, 0)
@@ -929,7 +931,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         lyToolbarDetail.hide()
         cardShare.hide()
         cardWallpaper.hide()
-        cardViewClassification.hide()
+        lyClassifications.hide()
     }
 
     private fun getImage(lat: Double, lon: Double, zoom: Int): String {
@@ -1011,7 +1013,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         labeler?.process(inputImage)?.addOnSuccessListener { labels ->
             if (labels.size > 0) {
                 val list = labels.map { it.text }
-
                 val count = if (labels.size in 6..9) 2 else 1
 
                 val layoutManager = StaggeredGridLayoutManager(count, RecyclerView.HORIZONTAL)
@@ -1020,8 +1021,9 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     this.adapter = adapter
                     this.layoutManager = layoutManager
                 }
+                binding.lyClassifications.fadeIn()
             } else {
-                binding.cardViewClassification.hide()
+                binding.lyClassifications.fadeOut()
             }
         }?.addOnFailureListener { e ->
             e.printStackTrace()
