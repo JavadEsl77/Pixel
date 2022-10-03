@@ -11,6 +11,7 @@
     <string name="string_downloads_images">دانلود ها</string>
     <string name="string_likes_images">تعداد لایک ها</string>
     <string name="string_photo_info">اطلاعات عکس</string>
+    <string name="string_photo_category">دسته بندی عکس</string>
     <string name="string_photo_location">موقعیت مکانی عکس</string>
     <string name="string_camera_info">اطلاعات دوربین</string>
     <string name="string_title_download_dialog">در حال دانلود ...</string>

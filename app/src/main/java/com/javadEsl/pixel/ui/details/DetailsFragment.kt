@@ -1,6 +1,7 @@
 package com.javadEsl.pixel.ui.details
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.app.WallpaperManager
 import android.content.ActivityNotFoundException
@@ -16,10 +17,7 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.RippleDrawable
 import android.net.ConnectivityManager
 import android.net.Uri
-import android.os.Build
-import android.os.Bundle
-import android.os.Environment
-import android.os.Handler
+import android.os.*
 import android.provider.Settings
 import android.util.Log
 import android.util.TypedValue
@@ -39,6 +37,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
@@ -47,10 +47,13 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.label.ImageLabeler
+import com.google.mlkit.vision.label.ImageLabeling
+import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 import com.huxq17.download.Pump
 import com.huxq17.download.config.DownloadConfig
 import com.javadEsl.pixel.*
-import com.javadEsl.pixel.R
 import com.javadEsl.pixel.api.IMAGE_RAW
 import com.javadEsl.pixel.api.IMAGE_REGULAR
 import com.javadEsl.pixel.api.IMAGE_SMALL
@@ -62,7 +65,10 @@ import com.javadEsl.pixel.databinding.LayoutBottomSheetPhotoDetailBinding
 import com.javadEsl.pixel.ui.gallery.UnsplashPhotoAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import eightbitlab.com.blurview.RenderScriptBlur
-import ir.tapsell.plus.*
+import ir.tapsell.plus.AdHolder
+import ir.tapsell.plus.AdRequestCallback
+import ir.tapsell.plus.AdShowListener
+import ir.tapsell.plus.TapsellPlus
 import ir.tapsell.plus.model.TapsellPlusAdModel
 import ir.tapsell.plus.model.TapsellPlusErrorModel
 import kotlinx.coroutines.CoroutineScope
@@ -77,7 +83,6 @@ import java.io.IOException
 import java.net.URL
 import java.util.concurrent.TimeUnit
 
-
 @AndroidEntryPoint
 class DetailsFragment : Fragment(R.layout.fragment_details),
     UnsplashPhotoAdapter.OnItemClickListener, UnsplashUserPhotoAdapter.OnItemClickListener {
@@ -85,6 +90,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
     private val binding get() = _binding!!
     private var downloadStatus: Boolean = false
     private var isOnSaveClicked = false
+    var labeler: ImageLabeler? = null
     private var resolutionType = ""
     private var permissionType = ""
     private var responseId = ""
@@ -455,6 +461,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                         Log.e(TAG, "error: $message")
                     }
                 })
+
         }
     }
 
@@ -765,7 +772,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         color: String,
         duration: Long
     ) {
-        val dialog = Dialog(activity!!, R.style.AlertDialog)
+        val dialog = Dialog(requireActivity(), R.style.AlertDialog)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
         dialog.setContentView(R.layout.layout_dialog_success)
@@ -802,7 +809,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
     }
 
     private fun showPermissionInfoDialog() {
-        val dialog = Dialog(activity!!, R.style.AlertDialog)
+        val dialog = Dialog(requireActivity(), R.style.AlertDialog)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(true)
         dialog.setContentView(R.layout.layout_dialog_permissiont_info)
@@ -849,36 +856,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
             data = Uri.fromParts("package", requireContext().packageName, null)
             startActivity(this)
-        }
-    }
-
-    private fun hasInternetConnection(
-        url: String = "https://www.google.com/",
-        callback: (Boolean) -> Unit
-    ) {
-        CoroutineScope(context = Dispatchers.IO).launch {
-            try {
-                val client = OkHttpClient.Builder()
-                    .connectTimeout(15, TimeUnit.SECONDS)
-                    .writeTimeout(15, TimeUnit.SECONDS)
-                    .readTimeout(15, TimeUnit.SECONDS)
-                    .build()
-                val request = Request.Builder()
-                    .url(URL(url))
-                    .get()
-                    .build()
-                client.newCall(request).execute()
-
-                callback.invoke(true)
-                requireContext().sendBroadcast(Intent().apply {
-                    action = NetworkHelper.CONNECTED_ACTION
-                })
-            } catch (e: IOException) {
-                callback.invoke(false)
-                requireContext().sendBroadcast(Intent().apply {
-                    action = NetworkHelper.DISCONNECTED_ACTION
-                })
-            }
         }
     }
 
@@ -931,6 +908,18 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
         blurViewBackground.expand(duration = 1000)
         layoutDetail.fadeIn(duration = 1000)
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            val options = ImageLabelerOptions.Builder()
+                .setConfidenceThreshold(0.7f)
+                .build()
+            labeler = ImageLabeling.getClient(options)
+
+            val drawable = imageView.drawable
+            val bitmap = drawable.toBitmap()
+            runClassification(bitmap)
+        }, 1000)
+
     }
 
     private fun hideViews() = binding.apply {
@@ -940,6 +929,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         lyToolbarDetail.hide()
         cardShare.hide()
         cardWallpaper.hide()
+        cardViewClassification.hide()
     }
 
     private fun getImage(lat: Double, lon: Double, zoom: Int): String {
@@ -1014,6 +1004,28 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         }
 
         return value
+    }
+
+    private fun runClassification(bitmap: Bitmap) {
+        val inputImage: InputImage = InputImage.fromBitmap(bitmap, 0)
+        labeler?.process(inputImage)?.addOnSuccessListener { labels ->
+            if (labels.size > 0) {
+                val list = labels.map { it.text }
+
+                val count = if (labels.size in 6..9) 2 else 1
+
+                val layoutManager = StaggeredGridLayoutManager(count, RecyclerView.HORIZONTAL)
+                val adapter = ClassificationAdapter(list)
+                binding.recClassification.apply {
+                    this.adapter = adapter
+                    this.layoutManager = layoutManager
+                }
+            } else {
+                binding.cardViewClassification.hide()
+            }
+        }?.addOnFailureListener { e ->
+            e.printStackTrace()
+        }
     }
 
 }

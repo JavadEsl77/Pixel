@@ -131,4 +131,7 @@ dependencies {
 
     implementation("ir.tapsell.plus:tapsell-plus-sdk-android:2.1.7")
 
+    //image classification
+    implementation 'com.google.mlkit:image-labeling:17.0.7'
+
 }
