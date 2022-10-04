@@ -14,7 +14,7 @@ class PixelRepository @Inject constructor(
 
     fun getAllPhotos() = Pager(
         config = PagingConfig(
-            pageSize = 10,
+            pageSize = 20,
             maxSize = 100,
             enablePlaceholders = false
         ),

@@ -59,6 +59,7 @@ class GalleryFragment :
 
         binding.apply {
 
+
             if (Color.parseColor("#ffffff").isBrightColor) {
                 val wic = WindowInsetsControllerCompat(
                     requireActivity().window,

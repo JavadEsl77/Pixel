@@ -65,5 +65,9 @@
     <fragment
         android:id="@+id/searchingFragment"
         android:name="com.javadEsl.pixel.ui.searching.SearchingFragment"
-        android:label="SearchingFragment" />
+        android:label="SearchingFragment" >
+        <action
+            android:id="@+id/action_searchingFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
 </navigation>

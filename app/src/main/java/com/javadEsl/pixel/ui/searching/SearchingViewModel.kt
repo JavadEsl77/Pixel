@@ -38,10 +38,7 @@ class SearchingViewModel @Inject constructor(
         }
     }
 
-    private val currentQuery = state.getLiveData(
-        SearchingViewModel.CURRENT_QUERY,
-        SearchingViewModel.DEFAULT_QUERY
-    )
+    private val currentQuery = state.getLiveData(CURRENT_QUERY, DEFAULT_QUERY)
     val photos = currentQuery.switchMap { queryString ->
         pixelRepository.getSearchResults(queryString).cachedIn(viewModelScope)
     }

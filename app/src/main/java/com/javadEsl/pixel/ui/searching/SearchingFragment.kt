@@ -34,7 +34,6 @@ import com.bumptech.glide.request.target.Target
 import com.javadEsl.pixel.R
 import com.javadEsl.pixel.data.search.PixelPhoto
 import com.javadEsl.pixel.data.search.convertedUrl
-import com.javadEsl.pixel.databinding.FragmentGalleryBinding
 import com.javadEsl.pixel.databinding.FragmentSearchBinding
 import com.javadEsl.pixel.isBrightColor
 import com.javadEsl.pixel.ui.gallery.GalleryFragmentDirections
@@ -213,7 +212,7 @@ class SearchingFragment : Fragment(R.layout.fragment_search), UnsplashPhotoAdapt
     override fun onItemClick(photo: PixelPhoto) {
         if (checkIsConnection()) {
             if (photo.isAdvertisement) return
-            val action = GalleryFragmentDirections.actionGalleryFragmentToDetailsFragment(photo.id, userName = photo.user?.username.toString())
+            val action = SearchingFragmentDirections.actionSearchingFragmentToDetailsFragment(photo.id, userName = photo.user?.username.toString())
             findNavController().navigate(action)
         } else {
             alertNetworkDialog(requireContext())
