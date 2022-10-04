@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.Window
@@ -18,6 +19,7 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.TextView.OnEditorActionListener
+import android.widget.Toast
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
@@ -33,37 +35,29 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.javadEsl.pixel.R
+import com.javadEsl.pixel.data.allPhotos.AllPhotosItem
 import com.javadEsl.pixel.data.search.PixelPhoto
 import com.javadEsl.pixel.data.search.convertedUrl
 import com.javadEsl.pixel.databinding.FragmentGalleryBinding
 import com.javadEsl.pixel.isBrightColor
+import com.javadEsl.pixel.ui.searching.SearchingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
 class GalleryFragment :
     Fragment(R.layout.fragment_gallery),
-    UnsplashPhotoAdapter.OnItemClickListener {
-
+    AllPhotoAdapter.OnItemClickListener {
     private val viewModel by viewModels<GalleryViewModel>()
     private var _binding: FragmentGalleryBinding? = null
     private val binding get() = _binding!!
-    private var colorStatusBar = ""
-    private var sharedPreference: SharedPreferences? = null
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.getRandomPhoto()
-        sharedPreference =
-            requireContext().getSharedPreferences("Search_value", Context.MODE_PRIVATE)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = UnsplashPhotoAdapter(this, requireActivity())
+        val allPhotoAdapter = AllPhotoAdapter(this, requireActivity())
         _binding = FragmentGalleryBinding.bind(view)
 
         binding.apply {
-
 
             if (Color.parseColor("#000000").isBrightColor) {
                 val wic = WindowInsetsControllerCompat(
@@ -86,103 +80,27 @@ class GalleryFragment :
                 )
             )
 
-            viewModel.liveDataRandomPhoto.observe(viewLifecycleOwner) {
-                if (it != null) {
-
-                    Glide.with(requireActivity())
-                        .load(it.urls?.regular?.convertedUrl)
-                        .centerCrop()
-                        .diskCacheStrategy(DiskCacheStrategy.DATA)
-                        .transition(DrawableTransitionOptions.withCrossFade())
-                        .error(com.javadEsl.pixel.R.drawable.img)
-                        .listener(object : RequestListener<Drawable> {
-                            override fun onLoadFailed(
-                                p0: GlideException?,
-                                p1: Any?,
-                                p2: Target<Drawable>?,
-                                p3: Boolean
-                            ): Boolean {
-                                return false
-                            }
-
-                            override fun onResourceReady(
-                                p0: Drawable?,
-                                p1: Any?,
-                                p2: Target<Drawable>?,
-                                p3: DataSource?,
-                                p4: Boolean
-                            ): Boolean {
-
-                                return false
-                            }
-                        })
-                        .into(imageViewBanner)
-                }
-            }
-
-            viewModel.liveDataAutocomplete.observe(viewLifecycleOwner) {
-                val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
-                    requireActivity(),
-                    R.layout.select_autocomplete_item,
-                    R.id.text_title,
-                    it?.map { it.query } ?: emptyList()
-                )
-                edtSearch.threshold = 1 //will start working from first character
-                edtSearch.setAdapter(adapter) //setting the adapter data into the AutoCompleteTextView
-
-
-            }
-
-
             recyclerView.itemAnimator = null
-            recyclerView.adapter = adapter.withLoadStateHeaderAndFooter(
-                header = UnsplashPhotoLoadStateAdapter { adapter.retry() },
-                footer = UnsplashPhotoLoadStateAdapter { adapter.retry() },
+            recyclerView.adapter = allPhotoAdapter.withLoadStateHeaderAndFooter(
+                header = AllPhotoLoadStateAdapter { allPhotoAdapter.retry() },
+                footer = AllPhotoLoadStateAdapter { allPhotoAdapter.retry() },
             )
-            viewModel.photos.observe(viewLifecycleOwner) { data ->
-                data?.let {
-                    adapter.submitData(viewLifecycleOwner.lifecycle, data)
 
-//                    Handler(Looper.getMainLooper()).postDelayed({
-//                        GuideView.Builder(requireActivity())
-//                            .setTitle("دانلود های من")
-//                            .setContentText("در این بخش میتوانید \n تصاویری که دانلود کرده اید \n را مشاهده کنید")
-//                            .setTargetView(cardMyDownload)
-//                            .setContentTextSize(14)
-//                            .setTitleTextSize(16)
-//                            .setDismissType(DismissType.anywhere) //optional - default dismissible by TargetView
-//                            .build()
-//                            .show()
-//                    }, 1500)
+
+            viewModel.allPhotos.observe(viewLifecycleOwner) {
+                it.let {
+                    allPhotoAdapter.submitData(viewLifecycleOwner.lifecycle, it)
                 }
-            }
 
-            //در آپدیت بعدی انجام شود
-//            viewModel.listPhotos.observe(viewLifecycleOwner) { data ->
-//                data?.let {
-//                    adapter.submitData(viewLifecycleOwner.lifecycle, data)
-//
-////                    Handler(Looper.getMainLooper()).postDelayed({
-////                        GuideView.Builder(requireActivity())
-////                            .setTitle("دانلود های من")
-////                            .setContentText("در این بخش میتوانید \n تصاویری که دانلود کرده اید \n را مشاهده کنید")
-////                            .setTargetView(cardMyDownload)
-////                            .setContentTextSize(14)
-////                            .setTitleTextSize(16)
-////                            .setDismissType(DismissType.anywhere) //optional - default dismissible by TargetView
-////                            .build()
-////                            .show()
-////                    }, 1500)
-//                }
-//            }
-            adapter.addLoadStateListener { loadState ->
+            }
+            allPhotoAdapter.addLoadStateListener { loadState ->
                 binding.apply {
                     loadingAnimView.isVisible = loadState.source.refresh is LoadState.Loading
                     recyclerView.isVisible =
                         loadState.source.refresh is LoadState.NotLoading
                     textViewError.isVisible = loadState.source.refresh is LoadState.Error
                     buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
-                    if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && adapter.itemCount < 1) {
+                    if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && allPhotoAdapter.itemCount < 1) {
                         recyclerView.isVisible = false
                         textViewEmpty.isVisible = true
                     } else {
@@ -191,83 +109,18 @@ class GalleryFragment :
                 }
             }
 
-            edtSearch.addTextChangedListener {
-                viewModel.getAutocomplete(it.toString())
-            }
-
             buttonRetry.setOnClickListener {
-                adapter.retry()
+                allPhotoAdapter.retry()
             }
-            imgClean.setOnClickListener {
-                edtSearch.setText("")
-                imgClean.isVisible = false
-            }
-            edtSearch.addTextChangedListener(object : TextWatcher {
-                override fun afterTextChanged(s: Editable?) {
-                    imgClean.isVisible = edtSearch.text.toString() != ""
-                }
 
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                }
 
-                override fun onTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    before: Int,
-                    count: Int
-                ) {
-
-                }
-            })
-            edtSearch.setOnEditorActionListener(OnEditorActionListener { v, actionId, event ->
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    val inputMethodManager =
-                        requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-                    inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
-                    performSearch()
-                    recyclerView.verticalScrollbarPosition = 0
-                    return@OnEditorActionListener true
-                }
-                false
-            })
-            cardMyDownload.setOnClickListener {
-                val action = GalleryFragmentDirections.actionGalleryFragmentToMyDownloadFragment()
-                findNavController().navigate(action)
-            }
+//            cardMyDownload.setOnClickListener {
+//                val action = GalleryFragmentDirections.actionGalleryFragmentToMyDownloadFragment()
+//                findNavController().navigate(action)
+//            }
 
         }
 
-    }
-
-    private fun performSearch() {
-        if (binding.edtSearch.text.toString().isEmpty()) {
-            binding.edtSearch.error =
-                getString(com.javadEsl.pixel.R.string.string_error_edittext_search)
-        } else {
-            val editor = sharedPreference?.edit()
-            if (sharedPreference?.getString("search", "").equals("")) {
-                editor?.putString("search", binding.edtSearch.text.toString())
-                editor?.apply()
-                viewModel.searchPhotos(binding.edtSearch.text.toString())
-                binding.recyclerView.scrollToPosition(0)
-            } else {
-                if (!sharedPreference?.getString("search", "")
-                        .equals(binding.edtSearch.text.toString())
-                ) {
-                    editor?.putString("search", binding.edtSearch.text.toString())
-                    editor?.apply()
-                    viewModel.searchPhotos(binding.edtSearch.text.toString())
-                    binding.recyclerView.scrollToPosition(0)
-                }
-            }
-
-
-        }
     }
 
     override fun onDestroyView() {
@@ -275,10 +128,10 @@ class GalleryFragment :
         _binding = null
     }
 
-    override fun onItemClick(photo: PixelPhoto) {
+    override fun onItemClick(photo : AllPhotosItem) {
         if (checkIsConnection()) {
             if (photo.isAdvertisement) return
-            val action = GalleryFragmentDirections.actionGalleryFragmentToDetailsFragment(photo)
+            val action = GalleryFragmentDirections.actionGalleryFragmentToDetailsFragment(photo.id.toString(), userName = photo.user?.username.toString())
             findNavController().navigate(action)
         } else {
             alertNetworkDialog(requireContext())
@@ -293,9 +146,7 @@ class GalleryFragment :
 
         if (return wifiConnection?.isConnectedOrConnecting == true || (mobileDataConnection?.isConnectedOrConnecting == true)) true
 
-
     }
-
     private fun alertNetworkDialog(context: Context) {
         val dialog = Dialog(context, com.javadEsl.pixel.R.style.AlertDialog)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -308,5 +159,6 @@ class GalleryFragment :
         dialog.window?.setGravity(Gravity.BOTTOM)
         dialog.show()
     }
+
 
 }

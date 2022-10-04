@@ -31,8 +31,11 @@
         android:label="Photo"
         tools:layout="@layout/fragment_details">
         <argument
-            android:name="photo"
-            app:argType="com.javadEsl.pixel.data.search.PixelPhoto" />
+            android:name="photoId"
+            app:argType="string" />
+        <argument
+            android:name="userName"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/splashFragment"

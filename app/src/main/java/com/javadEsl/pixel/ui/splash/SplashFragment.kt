@@ -68,6 +68,7 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initService()
+        viewModel.getStartNavigate()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

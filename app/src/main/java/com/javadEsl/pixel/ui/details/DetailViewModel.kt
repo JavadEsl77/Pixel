@@ -20,8 +20,6 @@ class DetailViewModel @Inject constructor(
     private val pixelRepository: PixelRepository,
     private val networkHelper: NetworkHelper
 ) : ViewModel() {
-    private val scope = CoroutineScope(Dispatchers.Main + Job())
-
     private val _liveDataList = MutableLiveData<ModelPhoto?>()
     val liveDataList: LiveData<ModelPhoto?> = _liveDataList
 
@@ -30,17 +28,17 @@ class DetailViewModel @Inject constructor(
 
     private var photoResponse: ModelPhoto? = null
 
-    fun getPhotoDetail(photo: PixelPhoto) {
+    fun getPhotoDetail(photoId:String , userName: String) {
         viewModelScope.launch {
             if (!networkHelper.hasInternetConnection()) {
                 _liveDataList.postValue(null)
                 return@launch
             }
             try {
-                val response = pixelRepository.getPhotoDetail(photo.id)
+                val response = pixelRepository.getPhotoDetail(photoId.toString())
                 if (response.isSuccessful) {
                     photoResponse = response.body()
-                    getUserPhotos(photo.user?.username ?: "")
+                    getUserPhotos(userName)
                 }
             } catch (e: Exception) {
                 _liveDataList.postValue(null)

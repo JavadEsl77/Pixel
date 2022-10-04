@@ -124,7 +124,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.getPhotoDetail(args.photo)
+        viewModel.getPhotoDetail(args.photoId,args.userName)
     }
 
     override fun onCreateView(
@@ -856,7 +856,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             binding.layoutLoading.fadeIn()
             binding.layoutDetail.fadeOut()
             binding.lyClassifications.fadeOut()
-            viewModel.getPhotoDetail(photo)
+            viewModel.getPhotoDetail(photo.id, photo.user?.username.toString())
             binding.apply {
                 nestedView.smoothScrollTo(0, 0)
 

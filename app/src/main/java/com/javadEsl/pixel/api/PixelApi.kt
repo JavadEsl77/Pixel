@@ -1,11 +1,11 @@
 package com.javadEsl.pixel.api
 
+import com.javadEsl.pixel.data.allPhotos.AllPhotosItem
 import com.javadEsl.pixel.data.autocomplete.AutocompleteModel
 import com.javadEsl.pixel.data.detail.ModelPhoto
 import com.javadEsl.pixel.data.search.PixelPhoto
 import retrofit2.Response
 import retrofit2.http.GET
-import retrofit2.http.Headers
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -19,7 +19,7 @@ interface PixelApi {
         const val CLIENT_ID = "KbhV9-G3KY1l7EtsmS0wI3BgeOVBhjWodZ9Ix9n1Btw"
     }
 
-    @Headers("Accept-Version: v1", "Authorization: Client-ID $CLIENT_ID")
+
     @GET("napi/search/photos")
     suspend fun searchPhotos(
         @Query("query") query: String,
@@ -32,14 +32,13 @@ interface PixelApi {
     suspend fun getPhotos(
         @Query("page") page: Int,
         @Query("per_page") perPage: Int
-    ): PixelResponse
+    ): List<AllPhotosItem>
 
 
     @GET("napi/photos/random")
     suspend fun getRandomPhotos(): ModelPhoto
 
 
-    @Headers("Accept-Version: v1", "Authorization: Client-ID $CLIENT_ID")
     @GET("napi/photos/{id}")
     suspend fun getPhoto(
         @Path("id") id: String

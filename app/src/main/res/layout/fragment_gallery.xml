@@ -8,153 +8,21 @@
     android:orientation="vertical"
     tools:context=".ui.gallery.GalleryFragment">
 
-    <RelativeLayout
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/toolbar_home"
         android:layout_width="match_parent"
-        android:layout_height="120dp">
+        android:layout_height="?actionBarSize"
+        android:orientation="horizontal"
+        android:background="@color/purple_500">
 
-        <ImageView
-            android:id="@+id/image_view_banner"
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/img" />
+            android:layout_weight="1"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:background="#66000000" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingBottom="16dp">
-
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:gravity="center|right"
-                android:orientation="horizontal"
-                android:paddingRight="30dp">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center|right"
-                    android:text="  عکس با وضوح بالا"
-                    android:textColor="@color/white"
-                    android:textSize="16dp" />
-
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center|right"
-                    android:text="  رایگان"
-                    android:textColor="@color/white"
-                    android:textSize="24dp"
-                    android:textStyle="bold" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center|right"
-                    android:text="جستجو"
-                    android:textColor="@color/white"
-                    android:textSize="16dp" />
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="7dp"
-                    android:src="@drawable/ic_logo" />
-
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="20dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/card_my_download"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"
-                    android:layout_marginEnd="10dp"
-                    app:cardBackgroundColor="#F2FFFFFF"
-                    app:cardCornerRadius="15dp"
-                    app:cardElevation="0dp">
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/ic_gallery" />
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:layout_width="0dp"
-                    android:layout_height="45dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_weight="1"
-                    android:background="@drawable/shape_edt_search"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:paddingLeft="7dp"
-                    android:paddingRight="7dp">
-
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/img_clean"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginStart="7dp"
-                        android:padding="4dp"
-                        android:src="@drawable/ic_close"
-                        android:visibility="invisible"
-                        tools:visibility="visible" />
-
-                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                        android:id="@+id/edt_search"
-                        android:layout_width="0dp"
-                        android:layout_height="45dp"
-                        android:layout_weight="1"
-                        android:background="@android:color/transparent"
-                        android:completionThreshold="2"
-                        android:ellipsize="end"
-                        android:gravity="center|right"
-                        android:hint="@string/string_hint_edittext_search"
-                        android:imeOptions="actionSearch"
-                        android:inputType="text"
-                        android:maxLines="1"
-                        android:paddingRight="10dp"
-                        android:textColor="@color/black"
-                        android:textColorHint="#8C8C8C"
-                        android:textSize="14dp" />
-
-                    <ImageButton
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_marginEnd="7dp"
-                        android:background="@android:color/transparent"
-                        android:src="@drawable/ic_search" />
-
-
-                </androidx.appcompat.widget.LinearLayoutCompat>
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
