@@ -4,8 +4,7 @@ import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import com.javadEsl.pixel.NetworkHelper
-import com.javadEsl.pixel.data.autocomplete.AutocompleteModel
-import com.javadEsl.pixel.data.ModelPhoto
+import com.javadEsl.pixel.data.detail.ModelPhoto
 import com.javadEsl.pixel.data.PixelRepository
 import com.javadEsl.pixel.data.autocomplete.Suggestion
 import dagger.hilt.android.lifecycle.HiltViewModel

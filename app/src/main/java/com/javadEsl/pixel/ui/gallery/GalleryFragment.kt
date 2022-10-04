@@ -11,19 +11,16 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.Window
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import android.widget.TextView.OnEditorActionListener
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
-import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -36,8 +33,8 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.javadEsl.pixel.R
-import com.javadEsl.pixel.data.UnsplashPhoto
-import com.javadEsl.pixel.data.convertedUrl
+import com.javadEsl.pixel.data.search.PixelPhoto
+import com.javadEsl.pixel.data.search.convertedUrl
 import com.javadEsl.pixel.databinding.FragmentGalleryBinding
 import com.javadEsl.pixel.isBrightColor
 import dagger.hilt.android.AndroidEntryPoint
@@ -278,7 +275,7 @@ class GalleryFragment :
         _binding = null
     }
 
-    override fun onItemClick(photo: UnsplashPhoto) {
+    override fun onItemClick(photo: PixelPhoto) {
         if (checkIsConnection()) {
             if (photo.isAdvertisement) return
             val action = GalleryFragmentDirections.actionGalleryFragmentToDetailsFragment(photo)

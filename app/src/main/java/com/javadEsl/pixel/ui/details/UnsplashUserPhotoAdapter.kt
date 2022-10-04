@@ -1,21 +1,18 @@
 package com.javadEsl.pixel.ui.details
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.javadEsl.pixel.R
-import com.javadEsl.pixel.data.UnsplashPhoto
-import com.javadEsl.pixel.data.convertedUrl
+import com.javadEsl.pixel.data.search.PixelPhoto
+import com.javadEsl.pixel.data.search.convertedUrl
 import com.javadEsl.pixel.databinding.ItemUnsplashUserPhotoBinding
-import com.javadEsl.pixel.isBrightColor
 
 class UnsplashUserPhotoAdapter(
-    var todos: List<UnsplashPhoto>,
+    var todos: List<PixelPhoto>,
     private val listener: OnItemClickListener
 ) : RecyclerView.Adapter<UnsplashUserPhotoAdapter.TodoViewHolder>() {
 
@@ -58,7 +55,7 @@ class UnsplashUserPhotoAdapter(
     }
 
     interface OnItemClickListener {
-        fun onItemClick(photo: UnsplashPhoto)
+        fun onItemClick(photo: PixelPhoto)
     }
 }
 

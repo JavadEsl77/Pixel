@@ -3,6 +3,7 @@ package com.javadEsl.pixel.data
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.javadEsl.pixel.api.PixelApi
+import com.javadEsl.pixel.data.search.PixelPhoto
 import javax.inject.Inject
 
 private const val UNSPLASH_STARTING_PAGE_INDEX = 1
@@ -11,15 +12,15 @@ class UnsplashPagingSource @Inject constructor(
     private val pixelApi: PixelApi,
     private val query: String
 ) :
-    PagingSource<Int, UnsplashPhoto>() {
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, UnsplashPhoto> {
+    PagingSource<Int, PixelPhoto>() {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PixelPhoto> {
 
         val position = params.key ?: UNSPLASH_STARTING_PAGE_INDEX
         return try {
             val response = pixelApi.searchPhotos(query, position, params.loadSize)
             val photos = response.results.toMutableList()
             if (photos.isNotEmpty()) {
-                photos.add(UnsplashPhoto(id = "ad_item", isAdvertisement = true))
+                photos.add(PixelPhoto(id = "ad_item", isAdvertisement = true))
             }
             LoadResult.Page(
                 data = photos,
@@ -31,5 +32,5 @@ class UnsplashPagingSource @Inject constructor(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, UnsplashPhoto>): Int? = state.anchorPosition
+    override fun getRefreshKey(state: PagingState<Int, PixelPhoto>): Int? = state.anchorPosition
 }

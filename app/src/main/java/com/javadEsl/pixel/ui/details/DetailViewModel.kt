@@ -5,9 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.javadEsl.pixel.NetworkHelper
-import com.javadEsl.pixel.data.ModelPhoto
-import com.javadEsl.pixel.data.UnsplashPhoto
 import com.javadEsl.pixel.data.PixelRepository
+import com.javadEsl.pixel.data.detail.ModelPhoto
+import com.javadEsl.pixel.data.search.PixelPhoto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,12 +25,12 @@ class DetailViewModel @Inject constructor(
     private val _liveDataList = MutableLiveData<ModelPhoto?>()
     val liveDataList: LiveData<ModelPhoto?> = _liveDataList
 
-    private val _liveDataUserPhotosList = MutableLiveData<List<UnsplashPhoto>?>()
-    val liveDataUserPhotosList: LiveData<List<UnsplashPhoto>?> = _liveDataUserPhotosList
+    private val _liveDataUserPhotosList = MutableLiveData<List<PixelPhoto>?>()
+    val liveDataUserPhotosList: LiveData<List<PixelPhoto>?> = _liveDataUserPhotosList
 
     private var photoResponse: ModelPhoto? = null
 
-    fun getPhotoDetail(photo: UnsplashPhoto) {
+    fun getPhotoDetail(photo: PixelPhoto) {
         viewModelScope.launch {
             if (!networkHelper.hasInternetConnection()) {
                 _liveDataList.postValue(null)

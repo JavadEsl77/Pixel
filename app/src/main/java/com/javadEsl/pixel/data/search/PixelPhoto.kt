@@ -1,22 +1,22 @@
-package com.javadEsl.pixel.data
+package com.javadEsl.pixel.data.search
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class UnsplashPhoto(
+data class PixelPhoto(
     val id: String,
     val likes: Int? = null,
     val created_at: String? = null,
     val color: String? = null,
-    val user: UnsplashUser? = null,
+    val user: PixelUser? = null,
     val description: String? = null,
-    val urls: UnsplashPhotoUrls? = null,
+    val urls: PixelPhotoUrls? = null,
     val isAdvertisement: Boolean = false
 ) : Parcelable {
 
     @Parcelize
-    data class UnsplashPhotoUrls(
+    data class PixelPhotoUrls(
         val raw: String?,
         val full: String?,
         val regular: String?,
@@ -25,17 +25,17 @@ data class UnsplashPhoto(
     ) : Parcelable
 
     @Parcelize
-    data class UnsplashUser(
+    data class PixelUser(
         val name: String?,
         val username: String?,
         val portfolio_url: String?,
-        val profile_image: UnsplashProfileImage?
+        val profile_image: PixelProfileImage?
     ) : Parcelable {
         val attributionUrl get() = "https://us.mahdi-saberi.ir/$username?utm_source=ImageSearchApp&utm_medium=referral"
     }
 
     @Parcelize
-    data class UnsplashProfileImage(
+    data class PixelProfileImage(
         val small: String?,
         val medium: String?,
         val large: String?,

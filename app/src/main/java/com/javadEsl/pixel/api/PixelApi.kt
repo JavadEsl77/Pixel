@@ -1,8 +1,8 @@
 package com.javadEsl.pixel.api
 
 import com.javadEsl.pixel.data.autocomplete.AutocompleteModel
-import com.javadEsl.pixel.data.ModelPhoto
-import com.javadEsl.pixel.data.UnsplashPhoto
+import com.javadEsl.pixel.data.detail.ModelPhoto
+import com.javadEsl.pixel.data.search.PixelPhoto
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Headers
@@ -54,5 +54,5 @@ interface PixelApi {
     @GET("napi/users/{username}/photos")
     suspend fun getUserPhotos(
         @Path("username") userName: String
-    ): List<UnsplashPhoto>?
+    ): List<PixelPhoto>?
 }

@@ -1,10 +1,7 @@
 package com.javadEsl.pixel.ui.myDownload
 
-import android.graphics.Color.alpha
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide

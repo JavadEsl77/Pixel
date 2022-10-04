@@ -1,7 +1,6 @@
 package com.javadEsl.pixel.ui.details
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Dialog
 import android.app.WallpaperManager
 import android.content.ActivityNotFoundException
@@ -19,7 +18,6 @@ import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.*
 import android.provider.Settings
-import android.system.Os
 import android.util.Log
 import android.util.TypedValue
 import android.view.*
@@ -58,9 +56,9 @@ import com.javadEsl.pixel.*
 import com.javadEsl.pixel.api.IMAGE_RAW
 import com.javadEsl.pixel.api.IMAGE_REGULAR
 import com.javadEsl.pixel.api.IMAGE_SMALL
-import com.javadEsl.pixel.data.ModelPhoto
-import com.javadEsl.pixel.data.UnsplashPhoto
-import com.javadEsl.pixel.data.convertedUrl
+import com.javadEsl.pixel.data.detail.ModelPhoto
+import com.javadEsl.pixel.data.search.PixelPhoto
+import com.javadEsl.pixel.data.search.convertedUrl
 import com.javadEsl.pixel.databinding.FragmentDetailsBinding
 import com.javadEsl.pixel.databinding.LayoutBottomSheetPhotoDetailBinding
 import com.javadEsl.pixel.ui.gallery.UnsplashPhotoAdapter
@@ -72,17 +70,10 @@ import ir.tapsell.plus.AdShowListener
 import ir.tapsell.plus.TapsellPlus
 import ir.tapsell.plus.model.TapsellPlusAdModel
 import ir.tapsell.plus.model.TapsellPlusErrorModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import me.saket.cascade.CascadePopupMenu
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.net.URL
-import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class DetailsFragment : Fragment(R.layout.fragment_details),
@@ -646,7 +637,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         }
         var downloadLink = "https://"
         var typeFile = "SD"
-        val dialog = Dialog(activity!!, R.style.AlertDialog)
+        val dialog = Dialog(requireActivity(), R.style.AlertDialog)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
         dialog.setContentView(R.layout.layout_downlaod_dialog)
@@ -860,7 +851,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         }
     }
 
-    override fun onItemClick(photo: UnsplashPhoto) {
+    override fun onItemClick(photo: PixelPhoto) {
         if (checkIsConnection()) {
             binding.layoutLoading.fadeIn()
             binding.layoutDetail.fadeOut()

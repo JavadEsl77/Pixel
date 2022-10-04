@@ -32,7 +32,7 @@
         tools:layout="@layout/fragment_details">
         <argument
             android:name="photo"
-            app:argType="com.javadEsl.pixel.data.UnsplashPhoto" />
+            app:argType="com.javadEsl.pixel.data.search.PixelPhoto" />
     </fragment>
     <fragment
         android:id="@+id/splashFragment"

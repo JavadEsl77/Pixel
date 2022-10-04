@@ -1,7 +1,8 @@
 package com.javadEsl.pixel.api
 
-import com.javadEsl.pixel.data.UnsplashPhoto
+import com.javadEsl.pixel.data.search.PixelPhoto
+
 
 data class PixelResponse(
-    val results: List<UnsplashPhoto>,
+    val results: List<PixelPhoto>,
 )

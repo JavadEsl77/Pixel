@@ -16,8 +16,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.javadEsl.pixel.BuildConfig
 import com.javadEsl.pixel.R
-import com.javadEsl.pixel.data.UnsplashPhoto
-import com.javadEsl.pixel.data.convertedUrl
+import com.javadEsl.pixel.data.search.PixelPhoto
+import com.javadEsl.pixel.data.search.convertedUrl
 import com.javadEsl.pixel.databinding.ItemUnsplashAdsBinding
 import com.javadEsl.pixel.databinding.ItemUnsplashPhotoBinding
 import com.javadEsl.pixel.isBrightColor
@@ -33,7 +33,7 @@ class UnsplashPhotoAdapter(
     private val listener: OnItemClickListener,
     private val activity: Activity
 ) :
-    PagingDataAdapter<UnsplashPhoto, RecyclerView.ViewHolder>(PHOTO_COMPARATOR) {
+    PagingDataAdapter<PixelPhoto, RecyclerView.ViewHolder>(PHOTO_COMPARATOR) {
 
     private var lastPosition = 0
 
@@ -68,7 +68,7 @@ class UnsplashPhotoAdapter(
             }
         }
 
-        fun bind(photo: UnsplashPhoto) {
+        fun bind(photo: PixelPhoto) {
             var responseId = ""
             binding.apply {
 
@@ -112,7 +112,7 @@ class UnsplashPhotoAdapter(
             }
         }
 
-        fun bind(photo: UnsplashPhoto) {
+        fun bind(photo: PixelPhoto) {
 
             binding.apply {
 
@@ -165,18 +165,18 @@ class UnsplashPhotoAdapter(
     }
 
     interface OnItemClickListener {
-        fun onItemClick(photo: UnsplashPhoto)
+        fun onItemClick(photo: PixelPhoto)
     }
 
     companion object {
         private const val TYPE_PHOTO = 1
         private const val TYPE_AD = 2
 
-        private val PHOTO_COMPARATOR = object : DiffUtil.ItemCallback<UnsplashPhoto>() {
-            override fun areItemsTheSame(oldItem: UnsplashPhoto, newItem: UnsplashPhoto) =
+        private val PHOTO_COMPARATOR = object : DiffUtil.ItemCallback<PixelPhoto>() {
+            override fun areItemsTheSame(oldItem: PixelPhoto, newItem: PixelPhoto) =
                 oldItem.id == newItem.id
 
-            override fun areContentsTheSame(oldItem: UnsplashPhoto, newItem: UnsplashPhoto) =
+            override fun areContentsTheSame(oldItem: PixelPhoto, newItem: PixelPhoto) =
                 oldItem == newItem
         }
     }

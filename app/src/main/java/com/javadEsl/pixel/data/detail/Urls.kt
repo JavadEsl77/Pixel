@@ -1,4 +1,4 @@
-package com.javadEsl.pixel.data
+package com.javadEsl.pixel.data.detail
 
 
 data class Urls(
