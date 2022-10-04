@@ -18,7 +18,6 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
@@ -32,14 +31,12 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.github.chrisbanes.photoview.PhotoView
 import com.javadEsl.pixel.R
-import com.javadEsl.pixel.data.allPhotos.AllPhotosItem
 import com.javadEsl.pixel.data.search.PixelPhoto
 import com.javadEsl.pixel.data.search.convertedUrl
+import com.javadEsl.pixel.databinding.FragmentGalleryBinding
 import com.javadEsl.pixel.databinding.FragmentSearchBinding
 import com.javadEsl.pixel.isBrightColor
-import com.javadEsl.pixel.ui.gallery.AllPhotoAdapter
 import com.javadEsl.pixel.ui.gallery.GalleryFragmentDirections
 import com.javadEsl.pixel.ui.gallery.UnsplashPhotoAdapter
 import com.javadEsl.pixel.ui.gallery.UnsplashPhotoLoadStateAdapter
@@ -59,7 +56,7 @@ class SearchingFragment : Fragment(R.layout.fragment_search), UnsplashPhotoAdapt
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        _binding = FragmentSearchBinding.bind(view)
         val adapter = UnsplashPhotoAdapter(this, requireActivity())
         binding.apply {
 

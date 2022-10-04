@@ -59,7 +59,7 @@ class GalleryFragment :
 
         binding.apply {
 
-            if (Color.parseColor("#000000").isBrightColor) {
+            if (Color.parseColor("#ffffff").isBrightColor) {
                 val wic = WindowInsetsControllerCompat(
                     requireActivity().window,
                     requireActivity().window.decorView
@@ -74,7 +74,7 @@ class GalleryFragment :
             }
 
             requireActivity().window.statusBarColor = Color.parseColor(
-                "#" + "000000".replace(
+                "#" + "ffffff".replace(
                     "#",
                     ""
                 )
@@ -113,11 +113,16 @@ class GalleryFragment :
                 allPhotoAdapter.retry()
             }
 
+            cardViewSearching.setOnClickListener {
+                val action = GalleryFragmentDirections.actionGalleryFragmentToSearchingFragment()
+                findNavController().navigate(action)
+            }
 
-//            cardMyDownload.setOnClickListener {
-//                val action = GalleryFragmentDirections.actionGalleryFragmentToMyDownloadFragment()
-//                findNavController().navigate(action)
-//            }
+
+            cardMyDownload.setOnClickListener {
+                val action = GalleryFragmentDirections.actionGalleryFragmentToMyDownloadFragment()
+                findNavController().navigate(action)
+            }
 
         }
 
@@ -128,10 +133,13 @@ class GalleryFragment :
         _binding = null
     }
 
-    override fun onItemClick(photo : AllPhotosItem) {
+    override fun onItemClick(photo: AllPhotosItem) {
         if (checkIsConnection()) {
             if (photo.isAdvertisement) return
-            val action = GalleryFragmentDirections.actionGalleryFragmentToDetailsFragment(photo.id.toString(), userName = photo.user?.username.toString())
+            val action = GalleryFragmentDirections.actionGalleryFragmentToDetailsFragment(
+                photo.id.toString(),
+                userName = photo.user?.username.toString()
+            )
             findNavController().navigate(action)
         } else {
             alertNetworkDialog(requireContext())
@@ -147,6 +155,7 @@ class GalleryFragment :
         if (return wifiConnection?.isConnectedOrConnecting == true || (mobileDataConnection?.isConnectedOrConnecting == true)) true
 
     }
+
     private fun alertNetworkDialog(context: Context) {
         val dialog = Dialog(context, com.javadEsl.pixel.R.style.AlertDialog)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)

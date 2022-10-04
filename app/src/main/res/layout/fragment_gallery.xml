@@ -8,21 +8,67 @@
     android:orientation="vertical"
     tools:context=".ui.gallery.GalleryFragment">
 
-
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/toolbar_home"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
+        android:background="@color/color_background_gallery_item"
+        android:gravity="center"
         android:orientation="horizontal"
-        android:background="@color/purple_500">
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:gravity="center|left"
+            android:text="@string/app_name"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_my_download"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            app:cardBackgroundColor="@color/purple_200"
+            app:cardCornerRadius="10dp"
+            app:contentPadding="7dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:drawableRight="@drawable/ic_download"
+                android:drawablePadding="4dp"
+                android:layout_marginLeft="7dp"
+                android:layout_marginRight="7dp"
+                android:scaleType="centerInside"
+                android:text="@string/string_my_download_title"
+                android:textColor="@color/white"
+                android:textSize="14dp" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_view_searching"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:cardBackgroundColor="@color/purple_200"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="0dp"
+            app:contentPadding="4dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_search" />
+
+        </androidx.cardview.widget.CardView>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
-
 
     <RelativeLayout
         android:layout_width="match_parent"

@@ -24,6 +24,13 @@
             app:exitAnim="@anim/to_right"
             app:popEnterAnim="@anim/from_right"
             app:popExitAnim="@anim/to_left"/>
+        <action
+            android:id="@+id/action_galleryFragment_to_searchingFragment"
+            app:destination="@id/searchingFragment"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right"/>
     </fragment>
     <fragment
         android:id="@+id/detailsFragment"
@@ -55,4 +62,8 @@
         android:id="@+id/myDownloadFragment"
         android:name="com.javadEsl.pixel.ui.myDownload.MyDownloadFragment"
         android:label="MyDownloadFragment" />
+    <fragment
+        android:id="@+id/searchingFragment"
+        android:name="com.javadEsl.pixel.ui.searching.SearchingFragment"
+        android:label="SearchingFragment" />
 </navigation>
