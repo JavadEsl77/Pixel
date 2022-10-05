@@ -35,12 +35,14 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SearchingFragment : Fragment(R.layout.fragment_search),
     SuggestPhotoAdapter.OnItemClickListener,
+    PreviousSearchAdapter.OnItemClickListener,
     UnsplashPhotoAdapter.OnItemClickListener {
     private val viewModel by viewModels<SearchingViewModel>()
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
     private var sharedPreference: SharedPreferences? = null
     private var previousSearchArrayList: MutableList<String> = ArrayList()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharedPreference =
@@ -52,24 +54,6 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
         _binding = FragmentSearchBinding.bind(view)
         val adapter = UnsplashPhotoAdapter(this, requireActivity())
         binding.apply {
-
-            val set: MutableSet<String>? = sharedPreference?.getStringSet("previousSearch", null)
-
-            if (!set.isNullOrEmpty()) {
-                previousSearchArrayList = ArrayList(set)
-                val count =
-                    if (previousSearchArrayList.size in 6..9) 2 else if (previousSearchArrayList.size in 9..19) 3 else 1
-                val layoutManager = StaggeredGridLayoutManager(count, RecyclerView.HORIZONTAL)
-                layoutManager.reverseLayout = true
-                val adapter = PreviousSearchAdapter(previousSearchArrayList)
-                recPreviousSearch.adapter = adapter
-                recPreviousSearch.layoutManager = layoutManager
-                layoutPreviousSearchList.show()
-
-            } else {
-                layoutPreviousSearchList.hide()
-            }
-
 
             val nightModeFlags = requireActivity().resources.configuration.uiMode and
                     Configuration.UI_MODE_NIGHT_MASK
@@ -99,18 +83,35 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
                 R.color.status_bar_color
             )
 
+            val set: MutableSet<String>? = sharedPreference?.getStringSet("previousSearch", null)
 
-            viewModel.suggestPhotos("game")
+            if (!set.isNullOrEmpty()) {
+                previousSearchArrayList = ArrayList(set)
+                val count =
+                    if (previousSearchArrayList.size in 6..9) 2 else if (previousSearchArrayList.size in 9..19) 3 else 1
+                val layoutManager = StaggeredGridLayoutManager(count, RecyclerView.HORIZONTAL)
+                layoutManager.reverseLayout = true
+                val adapter = PreviousSearchAdapter(this@SearchingFragment,previousSearchArrayList)
+                recPreviousSearch.adapter = adapter
+                recPreviousSearch.layoutManager = layoutManager
+                layoutPreviousSearchList.show()
 
+            } else {
+                layoutPreviousSearchList.hide()
+            }
+
+            viewModel.suggestPhotos("iran")
 
             viewModel.liveDataSuggestPhoto.observe(viewLifecycleOwner) { data ->
                 data?.let {
-                    val suggestAdapter = SuggestPhotoAdapter(data,this@SearchingFragment, requireActivity())
+                    val suggestAdapter =
+                        SuggestPhotoAdapter(data, this@SearchingFragment, requireActivity())
                     recSuggest.itemAnimator = null
-                    val suggestLayoutManager = StaggeredGridLayoutManager(1, RecyclerView.HORIZONTAL)
+                    val suggestLayoutManager =
+                        StaggeredGridLayoutManager(1, RecyclerView.HORIZONTAL)
                     suggestLayoutManager.reverseLayout = true
                     recSuggest.layoutManager = suggestLayoutManager
-                    recSuggest.adapter =suggestAdapter
+                    recSuggest.adapter = suggestAdapter
                 }
             }
 
@@ -155,7 +156,7 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
                         if (previousSearchArrayList.size in 6..9) 2 else if (previousSearchArrayList.size in 9..19) 3 else 1
                     val layoutManager = StaggeredGridLayoutManager(count, RecyclerView.HORIZONTAL)
                     layoutManager.reverseLayout = true;
-                    val adapter = PreviousSearchAdapter(previousSearchArrayList)
+                    val adapter = PreviousSearchAdapter(this@SearchingFragment,previousSearchArrayList)
                     recPreviousSearch.adapter = adapter
                     recPreviousSearch.layoutManager = layoutManager
                     layoutPreviousSearchList.show()
@@ -195,7 +196,8 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
 
                     adapter.addLoadStateListener { loadState ->
                         binding.apply {
-                            loadingAnimView.isVisible = loadState.source.refresh is LoadState.Loading
+                            loadingAnimView.isVisible =
+                                loadState.source.refresh is LoadState.Loading
                             recSearching.isVisible =
                                 loadState.source.refresh is LoadState.NotLoading
                             textViewError.isVisible = loadState.source.refresh is LoadState.Error
@@ -328,6 +330,13 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onItemClick(suggest: String) {
+        binding.apply {
+            edtSearch.setText(suggest)
+            cardViewSearch.performClick()
+        }
     }
 
 }
