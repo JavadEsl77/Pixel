@@ -61,7 +61,7 @@ import com.javadEsl.pixel.data.search.PixelPhoto
 import com.javadEsl.pixel.data.search.convertedUrl
 import com.javadEsl.pixel.databinding.FragmentDetailsBinding
 import com.javadEsl.pixel.databinding.LayoutBottomSheetPhotoDetailBinding
-import com.javadEsl.pixel.ui.gallery.UnsplashPhotoAdapter
+import com.javadEsl.pixel.ui.searching.UnsplashPhotoAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import eightbitlab.com.blurview.RenderScriptBlur
 import ir.tapsell.plus.AdHolder
@@ -197,6 +197,10 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 textViewCameraModel.isVisible = true
                 textViewCameraModel.text =
                     modelPhoto.exif?.make + " , " + modelPhoto.exif?.model
+            }
+
+            if (modelPhoto.location?.name.isNullOrEmpty() && modelPhoto.exif?.model.isNullOrEmpty()){
+                textViewEmptyPhotoInfo.show()
             }
 
             if (modelPhoto.user?.totalPhotos.toString().isNotEmpty()) {
@@ -911,7 +915,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             val drawable = imageView.drawable
             val bitmap = drawable.toBitmap()
             runClassification(bitmap)
-        }, 1000)
+        }, 1500)
 
     }
 
@@ -1004,7 +1008,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         labeler?.process(inputImage)?.addOnSuccessListener { labels ->
             if (labels.size > 0) {
                 val list = labels.map { it.text }
-                val count = if (labels.size in 6..9) 2 else 1
+                val count = if (labels.size in 6..9) 2 else if (labels.size in 9..19) 3 else 1
 
                 val layoutManager = StaggeredGridLayoutManager(count, RecyclerView.HORIZONTAL)
                 val adapter = ClassificationAdapter(list)

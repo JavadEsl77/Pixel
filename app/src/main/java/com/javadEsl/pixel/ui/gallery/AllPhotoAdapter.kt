@@ -3,25 +3,31 @@ package com.javadEsl.pixel.ui.gallery
 import android.app.Activity
 import android.content.ContentValues
 import android.graphics.Color
+import android.graphics.drawable.Drawable
+import android.opengl.Visibility
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.view.isVisible
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.javadEsl.pixel.BuildConfig
-import com.javadEsl.pixel.R
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
+import com.javadEsl.pixel.*
 import com.javadEsl.pixel.data.allPhotos.AllPhotosItem
 import com.javadEsl.pixel.data.search.PixelPhoto
 import com.javadEsl.pixel.data.search.convertedUrl
 import com.javadEsl.pixel.databinding.ItemUnsplashAdsBinding
 import com.javadEsl.pixel.databinding.ItemUnsplashPhotoBinding
-import com.javadEsl.pixel.isBrightColor
 import ir.tapsell.plus.AdHolder
 import ir.tapsell.plus.AdRequestCallback
 import ir.tapsell.plus.AdShowListener
@@ -56,7 +62,7 @@ class AllPhotoAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is PhotoViewHolder -> getItem(position)?.let { holder.bind(it) }
-            is AdViewHolder    -> getItem(position)?.let { holder.bind(it) }
+            is AdViewHolder    -> getItem(position)?.let { holder.bind() }
         }
     }
 
@@ -69,7 +75,7 @@ class AllPhotoAdapter(
             }
         }
 
-        fun bind(photo: AllPhotosItem) {
+        fun bind() {
             var responseId = ""
             binding.apply {
 
@@ -78,7 +84,7 @@ class AllPhotoAdapter(
                     param.setMargins(25, 25, 0, 25)
                     tapsellNativeadCtaView.layoutParams = param
                 }
-                setAnimation(tapsellNativeadCtaView, bindingAdapterPosition)
+                //setAnimation(tapsellNativeadCtaView, bindingAdapterPosition)
 
                 var adHolder: AdHolder = TapsellPlus.createAdHolder(
                     activity,
@@ -123,7 +129,7 @@ class AllPhotoAdapter(
                     cardGalleryItem.layoutParams = param
                 }
 
-                setAnimation(cardGalleryItem, bindingAdapterPosition)
+               // setAnimation(cardGalleryItem, bindingAdapterPosition)
 
                 Glide.with(itemView)
                     .load(photo.urls?.regular?.convertedUrl)

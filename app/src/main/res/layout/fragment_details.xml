@@ -228,27 +228,26 @@
                 </com.google.android.material.card.MaterialCardView>
 
 
+                <LinearLayout
+                    android:id="@+id/ly_classifications"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
 
-                    <LinearLayout
-                        android:id="@+id/ly_classifications"
+                    android:gravity="center|right"
+                    android:orientation="vertical">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rec_classification"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        tools:itemCount="15"
+                        tools:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+                        tools:listitem="@layout/item_calssification"
+                        tools:orientation="horizontal"
+                        tools:spanCount="2" />
 
-                        android:gravity="center|right"
-                        android:orientation="vertical">
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/rec_classification"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            tools:orientation="horizontal"
-                            tools:spanCount="2"
-                            tools:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-                            tools:itemCount="15"
-                            tools:listitem="@layout/item_calssification" />
-
-                    </LinearLayout>
+                </LinearLayout>
 
 
                 <com.google.android.material.card.MaterialCardView
@@ -334,6 +333,16 @@
 
                         </LinearLayout>
 
+                        <TextView
+                            android:id="@+id/text_view_empty_photo_info"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center|right"
+                            android:layout_marginRight="10dp"
+                            android:text="@string/string_empty_photo_info"
+                            android:textSize="14dp"
+                            android:visibility="gone"
+                            tools:visibility="visible" />
 
                         <LinearLayout
                             android:id="@+id/layout_location"
@@ -395,7 +404,7 @@
                                     <View
                                         android:id="@+id/view_on_map_click"
                                         android:layout_width="match_parent"
-                                        android:layout_height="match_parent"/>
+                                        android:layout_height="match_parent" />
 
                                 </RelativeLayout>
 
@@ -507,7 +516,7 @@
                     <FrameLayout
                         android:id="@+id/adContainer"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content" />
 
                 </com.google.android.material.card.MaterialCardView>
 

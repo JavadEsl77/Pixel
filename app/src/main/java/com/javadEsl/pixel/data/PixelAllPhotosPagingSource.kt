@@ -18,7 +18,6 @@ class PixelAllPhotosPagingSource @Inject constructor(
         return try {
             val response = pixelApi.getPhotos(page = position, perPage = params.loadSize)
             val photos = response.toMutableList()
-            Log.e("PixelAllPhotosPagingSo", "$response")
             if (photos.isNotEmpty()) {
                 photos.add(AllPhotosItem(id = "ad_item", isAdvertisement = true))
             }

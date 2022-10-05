@@ -20,6 +20,7 @@
     <string name="string_alert_success_download">دانلود با موفقیت انجام شد</string>
     <string name="string_alert_network_error">خطای شبکه ، اتصال به اینترنت خود را برسی کنید</string>
     <string name="string_alert_permission">خطا در ساخت مسیر ذخیره فایل</string>
+    <string name="string_empty_photo_info">اطلاعاتی توسط عکاس ثبت نشده!</string>
     <string name="string_title_alert_ok_permission">تایید دستی مجوز دسترسی به حافظه</string>
     <string name="string_title_alert_detail_ok_permission">برای دانلود تصاویر و اشتراک گزاری آنها نیاز به مجور دسترسی به حافظه می باشد . \n لطفا در تنظیمات برنامه مجوز را فعال کنید</string>
     <string name="string_my_download_title">دانلود های من</string>

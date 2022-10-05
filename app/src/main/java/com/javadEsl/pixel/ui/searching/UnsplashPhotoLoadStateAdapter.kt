@@ -1,4 +1,4 @@
-package com.javadEsl.pixel.ui.gallery
+package com.javadEsl.pixel.ui.searching
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -14,7 +14,7 @@ class UnsplashPhotoLoadStateAdapter(private val retry: () -> Unit) :
     override fun onCreateViewHolder(
         parent: ViewGroup,
         loadState: LoadState
-    ): UnsplashPhotoLoadStateAdapter.LoadStateViewHolder {
+    ): LoadStateViewHolder {
         var binding = UnsplashPhotoLoadStateFooterBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
@@ -24,7 +24,7 @@ class UnsplashPhotoLoadStateAdapter(private val retry: () -> Unit) :
     }
 
     override fun onBindViewHolder(
-        holder: UnsplashPhotoLoadStateAdapter.LoadStateViewHolder,
+        holder: LoadStateViewHolder,
         loadState: LoadState
     ) {
         holder.bind(loadState)

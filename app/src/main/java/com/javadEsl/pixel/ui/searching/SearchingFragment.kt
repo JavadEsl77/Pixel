@@ -36,9 +36,6 @@ import com.javadEsl.pixel.data.search.PixelPhoto
 import com.javadEsl.pixel.data.search.convertedUrl
 import com.javadEsl.pixel.databinding.FragmentSearchBinding
 import com.javadEsl.pixel.isBrightColor
-import com.javadEsl.pixel.ui.gallery.GalleryFragmentDirections
-import com.javadEsl.pixel.ui.gallery.UnsplashPhotoAdapter
-import com.javadEsl.pixel.ui.gallery.UnsplashPhotoLoadStateAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

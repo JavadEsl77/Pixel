@@ -1,46 +1,24 @@
 package com.javadEsl.pixel.ui.gallery
 
-import android.app.Activity
 import android.app.Dialog
 import android.content.Context
-import android.content.SharedPreferences
-import android.graphics.Color
-import android.graphics.drawable.Drawable
+import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Handler
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.Window
-import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputMethodManager
-import android.widget.ArrayAdapter
-import android.widget.TextView.OnEditorActionListener
-import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
 import com.javadEsl.pixel.R
 import com.javadEsl.pixel.data.allPhotos.AllPhotosItem
-import com.javadEsl.pixel.data.search.PixelPhoto
-import com.javadEsl.pixel.data.search.convertedUrl
 import com.javadEsl.pixel.databinding.FragmentGalleryBinding
-import com.javadEsl.pixel.isBrightColor
-import com.javadEsl.pixel.ui.searching.SearchingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -60,25 +38,31 @@ class GalleryFragment :
         binding.apply {
 
 
-            if (Color.parseColor("#ffffff").isBrightColor) {
-                val wic = WindowInsetsControllerCompat(
-                    requireActivity().window,
-                    requireActivity().window.decorView
-                )
-                wic.isAppearanceLightStatusBars = true;
-            } else {
-                val wic = WindowInsetsControllerCompat(
-                    requireActivity().window,
-                    requireActivity().window.decorView
-                )
-                wic.isAppearanceLightStatusBars = false
+            val nightModeFlags = requireActivity().resources.configuration.uiMode and
+                    Configuration.UI_MODE_NIGHT_MASK
+            when (nightModeFlags) {
+                Configuration.UI_MODE_NIGHT_YES -> {
+                    val wic = WindowInsetsControllerCompat(
+                        requireActivity().window,
+                        requireActivity().window.decorView
+                    )
+                    wic.isAppearanceLightStatusBars = false
+                }
+                Configuration.UI_MODE_NIGHT_NO ->{
+                    val wic = WindowInsetsControllerCompat(
+                        requireActivity().window,
+                        requireActivity().window.decorView
+                    )
+                    wic.isAppearanceLightStatusBars = true
+                }
+                Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+
+                }
             }
 
-            requireActivity().window.statusBarColor = Color.parseColor(
-                "#" + "ffffff".replace(
-                    "#",
-                    ""
-                )
+            requireActivity().window.statusBarColor = ContextCompat.getColor(
+                requireActivity(),
+                R.color.status_bar_color
             )
 
             recyclerView.itemAnimator = null
@@ -118,7 +102,6 @@ class GalleryFragment :
                 val action = GalleryFragmentDirections.actionGalleryFragmentToSearchingFragment()
                 findNavController().navigate(action)
             }
-
 
             cardMyDownload.setOnClickListener {
                 val action = GalleryFragmentDirections.actionGalleryFragmentToMyDownloadFragment()
