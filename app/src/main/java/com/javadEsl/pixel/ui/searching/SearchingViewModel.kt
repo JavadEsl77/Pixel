@@ -4,9 +4,11 @@ import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import com.javadEsl.pixel.NetworkHelper
+import com.javadEsl.pixel.api.PixelResponse
 import com.javadEsl.pixel.data.PixelRepository
 import com.javadEsl.pixel.data.autocomplete.Suggestion
 import com.javadEsl.pixel.data.detail.ModelPhoto
+import com.javadEsl.pixel.data.search.PixelPhoto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -46,6 +48,39 @@ class SearchingViewModel @Inject constructor(
     fun searchPhotos(query: String) {
         currentQuery.value = query
     }
+
+
+    private val _liveDataSuggestPhoto = MutableLiveData<List<PixelPhoto>>()
+    val liveDataSuggestPhoto: LiveData<List<PixelPhoto>> = _liveDataSuggestPhoto
+    fun suggestPhotos(suggest: String) {
+        viewModelScope.launch {
+            if (!networkHelper.hasInternetConnection()) {
+                _liveDataSuggestPhoto.postValue(emptyList())
+                return@launch
+            }
+
+            try {
+                val response = pixelRepository.getSuggestPhotos(suggest)
+                if (response.results.isNotEmpty()) {
+                    _liveDataSuggestPhoto.postValue(response.results)
+                }
+            } catch (e: Exception) {
+                Log.e("TAG", "getAutocomplete: $e")
+            }
+
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
 
     private val _liveDataAutocomplete = MutableLiveData<List<Suggestion>?>()
     val liveDataAutocomplete: LiveData<List<Suggestion>?> = _liveDataAutocomplete

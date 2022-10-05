@@ -39,12 +39,10 @@ class PixelRepository @Inject constructor(
 
     suspend fun getPhotoDetail(id: String) = pixelApi.getPhoto(id = id)
 
-
-
     suspend fun getUserPhotos(userName: String) = pixelApi.getUserPhotos(userName = userName)
 
     suspend fun getAutocomplete(query: String) = pixelApi.getAutocomplete(query = query)
 
-    //suspend fun getAllPhotos() = pixelApi.getPhotos(1,50)
+    suspend fun getSuggestPhotos(suggest: String) = pixelApi.searchPhotos(suggest, page = 1, perPage = 5)
 
 }

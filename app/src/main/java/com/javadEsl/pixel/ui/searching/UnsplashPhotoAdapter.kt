@@ -55,7 +55,7 @@ class UnsplashPhotoAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is PhotoViewHolder -> getItem(position)?.let { holder.bind(it) }
-            is AdViewHolder -> getItem(position)?.let { holder.bind(it) }
+            is AdViewHolder -> getItem(position)?.let { holder.bind() }
         }
     }
 
@@ -68,7 +68,7 @@ class UnsplashPhotoAdapter(
             }
         }
 
-        fun bind(photo: PixelPhoto) {
+        fun bind() {
             var responseId = ""
             binding.apply {
 

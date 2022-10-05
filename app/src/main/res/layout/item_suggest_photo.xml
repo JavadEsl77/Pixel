@@ -2,27 +2,34 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/card_gallery_item"
-    android:layout_width="match_parent"
+    android:id="@+id/card_suggest_item"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginStart="7dp"
+    android:layout_marginEnd="7dp"
+    android:layout_marginBottom="7dp"
     android:layout_marginTop="7dp"
     app:cardBackgroundColor="@color/color_background_gallery_item"
     app:cardCornerRadius="15dp"
-    app:cardElevation="4dp">
+    app:cardElevation="04dp">
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/image_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:minHeight="180dp" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/image_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:minWidth="150dp"
+                android:minHeight="100dp"
+                android:scaleType="centerCrop" />
+        </RelativeLayout>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/view_back_item"
@@ -62,6 +69,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_marginEnd="5dp"
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:gravity="center_vertical"
@@ -69,23 +77,6 @@
                     android:textColor="@color/white"
                     android:textSize="11dp"
                     tools:text="username" />
-
-
-                <TextView
-                    android:id="@+id/text_view_likes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="8dp"
-                    android:drawableLeft="@drawable/ic_like"
-                    android:drawablePadding="4dp"
-                    android:ellipsize="end"
-                    android:gravity="center_vertical"
-                    android:maxLines="1"
-                    android:text="likes"
-                    android:textColor="#B3FFFFFF"
-                    android:textSize="11dp"
-                    tools:text="likes" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 

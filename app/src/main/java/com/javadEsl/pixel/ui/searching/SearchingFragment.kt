@@ -4,8 +4,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.Color
-import android.graphics.drawable.Drawable
+import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Handler
@@ -18,36 +17,34 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
-import com.javadEsl.pixel.R
+import androidx.paging.LoadState
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.javadEsl.pixel.*
 import com.javadEsl.pixel.data.search.PixelPhoto
-import com.javadEsl.pixel.data.search.convertedUrl
 import com.javadEsl.pixel.databinding.FragmentSearchBinding
-import com.javadEsl.pixel.isBrightColor
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SearchingFragment : Fragment(R.layout.fragment_search), UnsplashPhotoAdapter.OnItemClickListener {
+class SearchingFragment : Fragment(R.layout.fragment_search),
+    SuggestPhotoAdapter.OnItemClickListener,
+    UnsplashPhotoAdapter.OnItemClickListener {
     private val viewModel by viewModels<SearchingViewModel>()
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
     private var sharedPreference: SharedPreferences? = null
+    private var previousSearchArrayList: MutableList<String> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.getRandomPhoto()
-        sharedPreference = requireContext().getSharedPreferences("Search_value", Context.MODE_PRIVATE)
+        sharedPreference =
+            requireContext().getSharedPreferences("Search_value", Context.MODE_PRIVATE)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -56,66 +53,72 @@ class SearchingFragment : Fragment(R.layout.fragment_search), UnsplashPhotoAdapt
         val adapter = UnsplashPhotoAdapter(this, requireActivity())
         binding.apply {
 
-            if (Color.parseColor("#000000").isBrightColor) {
-                val wic = WindowInsetsControllerCompat(
-                    requireActivity().window,
-                    requireActivity().window.decorView
-                )
-                wic.isAppearanceLightStatusBars = true;
+            val set: MutableSet<String>? = sharedPreference?.getStringSet("previousSearch", null)
+
+            if (!set.isNullOrEmpty()) {
+                previousSearchArrayList = ArrayList(set)
+                val count =
+                    if (previousSearchArrayList.size in 6..9) 2 else if (previousSearchArrayList.size in 9..19) 3 else 1
+                val layoutManager = StaggeredGridLayoutManager(count, RecyclerView.HORIZONTAL)
+                layoutManager.reverseLayout = true
+                val adapter = PreviousSearchAdapter(previousSearchArrayList)
+                recPreviousSearch.adapter = adapter
+                recPreviousSearch.layoutManager = layoutManager
+                layoutPreviousSearchList.show()
+
             } else {
-                val wic = WindowInsetsControllerCompat(
-                    requireActivity().window,
-                    requireActivity().window.decorView
-                )
-                wic.isAppearanceLightStatusBars = false
+                layoutPreviousSearchList.hide()
             }
 
-            requireActivity().window.statusBarColor = Color.parseColor(
-                "#" + "000000".replace(
-                    "#",
-                    ""
-                )
+
+            val nightModeFlags = requireActivity().resources.configuration.uiMode and
+                    Configuration.UI_MODE_NIGHT_MASK
+            when (nightModeFlags) {
+                Configuration.UI_MODE_NIGHT_YES -> {
+                    val wic = WindowInsetsControllerCompat(
+                        requireActivity().window,
+                        requireActivity().window.decorView
+                    )
+                    wic.isAppearanceLightStatusBars = false
+                }
+                Configuration.UI_MODE_NIGHT_NO -> {
+                    imageViewSearch.setColorFilter(R.color.color_background_fragments)
+                    val wic = WindowInsetsControllerCompat(
+                        requireActivity().window,
+                        requireActivity().window.decorView
+                    )
+                    wic.isAppearanceLightStatusBars = true
+                }
+                Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+
+                }
+            }
+
+            requireActivity().window.statusBarColor = ContextCompat.getColor(
+                requireActivity(),
+                R.color.status_bar_color
             )
+
+
+            viewModel.suggestPhotos("game")
+
+
+            viewModel.liveDataSuggestPhoto.observe(viewLifecycleOwner) { data ->
+                data?.let {
+                    val suggestAdapter = SuggestPhotoAdapter(data,this@SearchingFragment, requireActivity())
+                    recSuggest.itemAnimator = null
+                    val suggestLayoutManager = StaggeredGridLayoutManager(1, RecyclerView.HORIZONTAL)
+                    suggestLayoutManager.reverseLayout = true
+                    recSuggest.layoutManager = suggestLayoutManager
+                    recSuggest.adapter =suggestAdapter
+                }
+            }
 
             recSearching.itemAnimator = null
             recSearching.adapter = adapter.withLoadStateHeaderAndFooter(
                 header = UnsplashPhotoLoadStateAdapter { adapter.retry() },
                 footer = UnsplashPhotoLoadStateAdapter { adapter.retry() },
             )
-
-            viewModel.liveDataRandomPhoto.observe(viewLifecycleOwner) {
-                if (it != null) {
-
-                    Glide.with(requireActivity())
-                        .load(it.urls?.regular?.convertedUrl)
-                        .centerCrop()
-                        .diskCacheStrategy(DiskCacheStrategy.DATA)
-                        .transition(DrawableTransitionOptions.withCrossFade())
-                        .error(com.javadEsl.pixel.R.drawable.img)
-                        .listener(object : RequestListener<Drawable> {
-                            override fun onLoadFailed(
-                                p0: GlideException?,
-                                p1: Any?,
-                                p2: Target<Drawable>?,
-                                p3: Boolean
-                            ): Boolean {
-                                return false
-                            }
-
-                            override fun onResourceReady(
-                                p0: Drawable?,
-                                p1: Any?,
-                                p2: Target<Drawable>?,
-                                p3: DataSource?,
-                                p4: Boolean
-                            ): Boolean {
-
-                                return false
-                            }
-                        })
-                        .into(imageViewBanner)
-                }
-            }
 
             viewModel.liveDataAutocomplete.observe(viewLifecycleOwner) {
                 val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
@@ -134,6 +137,7 @@ class SearchingFragment : Fragment(R.layout.fragment_search), UnsplashPhotoAdapt
                 }
             }
 
+
             edtSearch.addTextChangedListener {
                 viewModel.getAutocomplete(it.toString())
             }
@@ -141,6 +145,23 @@ class SearchingFragment : Fragment(R.layout.fragment_search), UnsplashPhotoAdapt
             imgClean.setOnClickListener {
                 edtSearch.setText("")
                 imgClean.isVisible = false
+                layoutSuggestionList.show()
+                layoutSearchList.hide()
+                val set: MutableSet<String>? =
+                    sharedPreference?.getStringSet("previousSearch", null)
+                if (!set.isNullOrEmpty()) {
+                    previousSearchArrayList = ArrayList(set)
+                    val count =
+                        if (previousSearchArrayList.size in 6..9) 2 else if (previousSearchArrayList.size in 9..19) 3 else 1
+                    val layoutManager = StaggeredGridLayoutManager(count, RecyclerView.HORIZONTAL)
+                    layoutManager.reverseLayout = true;
+                    val adapter = PreviousSearchAdapter(previousSearchArrayList)
+                    recPreviousSearch.adapter = adapter
+                    recPreviousSearch.layoutManager = layoutManager
+                    layoutPreviousSearchList.show()
+                } else {
+                    layoutPreviousSearchList.hide()
+                }
             }
 
             edtSearch.addTextChangedListener(object : TextWatcher {
@@ -170,12 +191,74 @@ class SearchingFragment : Fragment(R.layout.fragment_search), UnsplashPhotoAdapt
                     val inputMethodManager =
                         requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
                     inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+
+
+                    adapter.addLoadStateListener { loadState ->
+                        binding.apply {
+                            loadingAnimView.isVisible = loadState.source.refresh is LoadState.Loading
+                            recSearching.isVisible =
+                                loadState.source.refresh is LoadState.NotLoading
+                            textViewError.isVisible = loadState.source.refresh is LoadState.Error
+                            buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
+                            if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && adapter.itemCount < 1) {
+                                recSearching.isVisible = false
+                                textViewEmpty.isVisible = true
+                            } else {
+                                textViewEmpty.isVisible = false
+                            }
+                        }
+                    }
+
+
                     performSearch()
+
+                    layoutSearchList.show()
+                    layoutPreviousSearchList.hide()
+                    layoutSuggestionList.hide()
+
                     recSearching.verticalScrollbarPosition = 0
                     return@OnEditorActionListener true
                 }
                 false
             })
+
+            cardViewSearch.setOnClickListener {
+                val inputMethodManager =
+                    requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
+
+
+                adapter.addLoadStateListener { loadState ->
+                    binding.apply {
+                        loadingAnimView.isVisible = loadState.source.refresh is LoadState.Loading
+                        recSearching.isVisible =
+                            loadState.source.refresh is LoadState.NotLoading
+                        textViewError.isVisible = loadState.source.refresh is LoadState.Error
+                        buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
+                        if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && adapter.itemCount < 1) {
+                            recSearching.isVisible = false
+                            textViewEmpty.isVisible = true
+                        } else {
+                            textViewEmpty.isVisible = false
+                        }
+                    }
+                }
+
+
+                performSearch()
+
+                layoutSearchList.show()
+                layoutPreviousSearchList.hide()
+                layoutSuggestionList.hide()
+
+                recSearching.verticalScrollbarPosition = 0
+            }
+
+            textViewClearPrevious.setOnClickListener {
+                sharedPreference?.edit()?.clear()?.apply()
+                previousSearchArrayList.clear()
+                layoutPreviousSearchList.fadeOut()
+            }
         }
 
     }
@@ -183,38 +266,41 @@ class SearchingFragment : Fragment(R.layout.fragment_search), UnsplashPhotoAdapt
     private fun performSearch() {
         if (binding.edtSearch.text.toString().isEmpty()) {
             binding.edtSearch.error =
-                getString(com.javadEsl.pixel.R.string.string_error_edittext_search)
+                getString(R.string.string_error_edittext_search)
         } else {
             val editor = sharedPreference?.edit()
-            if (sharedPreference?.getString("search", "").equals("")) {
-                editor?.putString("search", binding.edtSearch.text.toString())
-                editor?.apply()
+
+            if (!sharedPreference?.getString("search", "")
+                    .equals(binding.edtSearch.text.toString())
+            ) {
+                val set: MutableSet<String> = HashSet()
+                if (!previousSearchArrayList.contains(binding.edtSearch.text.toString())) {
+                    previousSearchArrayList.add(binding.edtSearch.text.toString())
+                    set.addAll(previousSearchArrayList)
+                    editor?.putStringSet("previousSearch", set)
+                    editor?.apply()
+                }
                 viewModel.searchPhotos(binding.edtSearch.text.toString())
                 binding.recSearching.scrollToPosition(0)
-            } else {
-                if (!sharedPreference?.getString("search", "")
-                        .equals(binding.edtSearch.text.toString())
-                ) {
-                    editor?.putString("search", binding.edtSearch.text.toString())
-                    editor?.apply()
-                    viewModel.searchPhotos(binding.edtSearch.text.toString())
-                    binding.recSearching.scrollToPosition(0)
-                }
             }
 
-
         }
+
     }
 
     override fun onItemClick(photo: PixelPhoto) {
         if (checkIsConnection()) {
             if (photo.isAdvertisement) return
-            val action = SearchingFragmentDirections.actionSearchingFragmentToDetailsFragment(photo.id, userName = photo.user?.username.toString())
+            val action = SearchingFragmentDirections.actionSearchingFragmentToDetailsFragment(
+                photo.id,
+                userName = photo.user?.username.toString()
+            )
             findNavController().navigate(action)
         } else {
             alertNetworkDialog(requireContext())
         }
     }
+
 
     private fun checkIsConnection(): Boolean {
         val connectionManager =
