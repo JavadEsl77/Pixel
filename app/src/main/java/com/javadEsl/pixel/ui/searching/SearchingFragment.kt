@@ -10,13 +10,13 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.Gravity
-import android.view.View
-import android.view.Window
+import android.util.Log
+import android.view.*
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
@@ -42,11 +42,12 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
     private val binding get() = _binding!!
     private var sharedPreference: SharedPreferences? = null
     private var previousSearchArrayList: MutableList<String> = ArrayList()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharedPreference =
             requireContext().getSharedPreferences("Search_value", Context.MODE_PRIVATE)
+        clearSearchCash()
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,6 +55,8 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
         _binding = FragmentSearchBinding.bind(view)
         val adapter = UnsplashPhotoAdapter(this, requireActivity())
         binding.apply {
+
+            suggestLoadingAnimView.show()
 
             val nightModeFlags = requireActivity().resources.configuration.uiMode and
                     Configuration.UI_MODE_NIGHT_MASK
@@ -84,23 +87,38 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
             )
 
             val set: MutableSet<String>? = sharedPreference?.getStringSet("previousSearch", null)
-
             if (!set.isNullOrEmpty()) {
                 previousSearchArrayList = ArrayList(set)
                 val count =
                     if (previousSearchArrayList.size in 6..9) 2 else if (previousSearchArrayList.size in 9..19) 3 else 1
                 val layoutManager = StaggeredGridLayoutManager(count, RecyclerView.HORIZONTAL)
                 layoutManager.reverseLayout = true
-                val adapter = PreviousSearchAdapter(this@SearchingFragment,previousSearchArrayList)
+                val adapter = PreviousSearchAdapter(this@SearchingFragment, previousSearchArrayList)
                 recPreviousSearch.adapter = adapter
                 recPreviousSearch.layoutManager = layoutManager
-                layoutPreviousSearchList.show()
 
-            } else {
-                layoutPreviousSearchList.hide()
             }
 
-            viewModel.suggestPhotos("iran")
+            if (!sharedPreference?.getString("searchValue","").equals("")) {
+                layoutPreviousSearchList.hide()
+                layoutSuggestionList.hide()
+                layoutSearchList.show()
+            } else {
+                if (previousSearchArrayList.isNotEmpty()) {
+                    layoutPreviousSearchList.show()
+                }
+                layoutSearchList.hide()
+                layoutSuggestionList.show()
+            }
+
+
+            var defaultSearch = "iran"
+            if(previousSearchArrayList.isNotEmpty()){
+                val randomNumber = (0 until previousSearchArrayList.size).random()
+                defaultSearch = previousSearchArrayList[randomNumber]
+            }
+
+            viewModel.suggestPhotos(defaultSearch)
 
             viewModel.liveDataSuggestPhoto.observe(viewLifecycleOwner) { data ->
                 data?.let {
@@ -112,6 +130,8 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
                     suggestLayoutManager.reverseLayout = true
                     recSuggest.layoutManager = suggestLayoutManager
                     recSuggest.adapter = suggestAdapter
+
+                    suggestLoadingAnimView.hide()
                 }
             }
 
@@ -138,13 +158,13 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
                 }
             }
 
-
             edtSearch.addTextChangedListener {
                 viewModel.getAutocomplete(it.toString())
             }
 
             imgClean.setOnClickListener {
                 edtSearch.setText("")
+                clearSearchCash()
                 imgClean.isVisible = false
                 layoutSuggestionList.show()
                 layoutSearchList.hide()
@@ -156,7 +176,8 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
                         if (previousSearchArrayList.size in 6..9) 2 else if (previousSearchArrayList.size in 9..19) 3 else 1
                     val layoutManager = StaggeredGridLayoutManager(count, RecyclerView.HORIZONTAL)
                     layoutManager.reverseLayout = true;
-                    val adapter = PreviousSearchAdapter(this@SearchingFragment,previousSearchArrayList)
+                    val adapter =
+                        PreviousSearchAdapter(this@SearchingFragment, previousSearchArrayList)
                     recPreviousSearch.adapter = adapter
                     recPreviousSearch.layoutManager = layoutManager
                     layoutPreviousSearchList.show()
@@ -168,6 +189,17 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
             edtSearch.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
                     imgClean.isVisible = edtSearch.text.toString() != ""
+
+                    Log.e("TAG", "onViewCreated: $s")
+                    if (s.toString().isEmpty()){
+                        clearSearchCash()
+                        layoutSuggestionList.show()
+                        layoutSearchList.hide()
+
+                        if (previousSearchArrayList.isNotEmpty()) {
+                            layoutPreviousSearchList.show()
+                        }
+                    }
                 }
 
                 override fun beforeTextChanged(
@@ -193,7 +225,6 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
                         requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
                     inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
 
-
                     adapter.addLoadStateListener { loadState ->
                         binding.apply {
                             loadingAnimView.isVisible =
@@ -210,8 +241,6 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
                             }
                         }
                     }
-
-
                     performSearch()
 
                     layoutSearchList.show()
@@ -245,8 +274,6 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
                         }
                     }
                 }
-
-
                 performSearch()
 
                 layoutSearchList.show()
@@ -261,17 +288,19 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
                 previousSearchArrayList.clear()
                 layoutPreviousSearchList.fadeOut()
             }
+
+            cardViewBackToolbarSearch.setOnClickListener {
+                findNavController().popBackStack()
+            }
         }
 
     }
 
     private fun performSearch() {
         if (binding.edtSearch.text.toString().isEmpty()) {
-            binding.edtSearch.error =
-                getString(R.string.string_error_edittext_search)
+            binding.edtSearch.error = getString(R.string.string_error_edittext_search)
         } else {
             val editor = sharedPreference?.edit()
-
             if (!sharedPreference?.getString("search", "")
                     .equals(binding.edtSearch.text.toString())
             ) {
@@ -280,6 +309,7 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
                     previousSearchArrayList.add(binding.edtSearch.text.toString())
                     set.addAll(previousSearchArrayList)
                     editor?.putStringSet("previousSearch", set)
+                    editor?.putString("searchValue", binding.edtSearch.text.toString())
                     editor?.apply()
                 }
                 viewModel.searchPhotos(binding.edtSearch.text.toString())
@@ -302,7 +332,6 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
             alertNetworkDialog(requireContext())
         }
     }
-
 
     private fun checkIsConnection(): Boolean {
         val connectionManager =
@@ -332,8 +361,17 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
         _binding = null
     }
 
+     private fun clearSearchCash(){
+         val editor = sharedPreference?.edit()
+         editor?.putString("searchValue","")
+         editor?.apply()
+     }
+
     override fun onItemClick(suggest: String) {
         binding.apply {
+            val editor = sharedPreference?.edit()
+            editor?.putString("searchValue",suggest)
+            editor?.apply()
             edtSearch.setText(suggest)
             cardViewSearch.performClick()
         }

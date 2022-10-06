@@ -117,6 +117,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible"
         android:orientation="vertical">
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -186,18 +188,32 @@
                     android:layout_marginRight="10dp"
                     android:layout_marginBottom="5dp"
                     android:gravity="center|right"
-                    android:text="ترکیبی از بهترین ها"
+                    android:text="پیشنهاد شده برای شما"
                     android:textColor="@color/black"
                     android:textSize="16dp"
                     android:textStyle="bold" />
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/suggest_loading_anim_view"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:visibility="gone"
+                    app:lottie_autoPlay="true"
+                    app:lottie_colorFilter="@color/purple_200"
+                    app:lottie_loop="true"
+                    app:lottie_rawRes="@raw/loading"
+                    app:tint="#fff"
+                    tools:visibility="visible" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rec_suggest"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="7dp"
                     android:clipToPadding="false"
                     android:orientation="horizontal"
+                    android:paddingLeft="7dp"
                     app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
                     app:spanCount="1"
                     tools:itemCount="10"
@@ -217,10 +233,10 @@
                     android:id="@+id/rec_searching"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:clipToPadding="false"
                     android:orientation="vertical"
                     android:paddingRight="5dp"
                     android:paddingBottom="5dp"
-                    android:clipToPadding="false"
                     app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
                     app:spanCount="2"
                     tools:itemCount="10"
@@ -229,7 +245,6 @@
             </androidx.appcompat.widget.LinearLayoutCompat>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
-
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/loading_anim_view"

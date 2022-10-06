@@ -3,7 +3,9 @@ package com.javadEsl.pixel.ui.searching
 import android.app.Activity
 import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -20,7 +22,7 @@ class SuggestPhotoAdapter(
     private val listener: OnItemClickListener,
     private val activity: Activity
 ) : RecyclerView.Adapter<SuggestPhotoAdapter.SuggestViewHolder>() {
-
+    private var lastPosition = 0
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SuggestViewHolder {
         val binding =
             ItemSuggestPhotoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -47,6 +49,8 @@ class SuggestPhotoAdapter(
 
         fun bind() {
             binding.apply {
+
+                 setAnimation(cardSuggestItem, bindingAdapterPosition)
 
                 Glide.with(itemView)
                     .load(suggestPhotoList[bindingAdapterPosition].urls?.regular?.convertedUrl)
@@ -85,6 +89,16 @@ class SuggestPhotoAdapter(
 
     interface OnItemClickListener {
         fun onItemClick(photo: PixelPhoto)
+    }
+
+    private fun setAnimation(viewToAnimate: View, position: Int) {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        if (position > lastPosition) {
+            viewToAnimate.animation =
+                AnimationUtils.loadAnimation(viewToAnimate.context, R.anim.from_left)
+
+            lastPosition = position
+        }
     }
 
 }
