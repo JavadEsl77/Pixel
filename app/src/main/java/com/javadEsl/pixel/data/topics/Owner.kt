@@ -19,7 +19,7 @@ data class Owner(
     @SerializedName("last_name")
     val lastName: Any?,
     @SerializedName("links")
-    val links: LinksXXX,
+    val links: Links,
     @SerializedName("location")
     val location: String,
     @SerializedName("name")
@@ -27,7 +27,7 @@ data class Owner(
     @SerializedName("portfolio_url")
     val portfolioUrl: String,
     @SerializedName("profile_image")
-    val profileImage: ProfileImageX,
+    val profileImage: ProfileImage,
     @SerializedName("social")
     val social: SocialX,
     @SerializedName("total_collections")

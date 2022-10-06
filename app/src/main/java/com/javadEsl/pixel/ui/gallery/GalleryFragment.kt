@@ -6,6 +6,7 @@ import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.Window
@@ -16,19 +17,29 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.javadEsl.pixel.R
 import com.javadEsl.pixel.data.allPhotos.AllPhotosItem
 import com.javadEsl.pixel.databinding.FragmentGalleryBinding
 import dagger.hilt.android.AndroidEntryPoint
+import kotlin.math.log
 
 
 @AndroidEntryPoint
 class GalleryFragment :
     Fragment(R.layout.fragment_gallery),
+    TopicsAdapter.OnItemClickListener,
     AllPhotoAdapter.OnItemClickListener {
     private val viewModel by viewModels<GalleryViewModel>()
     private var _binding: FragmentGalleryBinding? = null
     private val binding get() = _binding!!
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.topicsList()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -36,7 +47,6 @@ class GalleryFragment :
         _binding = FragmentGalleryBinding.bind(view)
 
         binding.apply {
-
 
             val nightModeFlags = requireActivity().resources.configuration.uiMode and
                     Configuration.UI_MODE_NIGHT_MASK
@@ -48,7 +58,7 @@ class GalleryFragment :
                     )
                     wic.isAppearanceLightStatusBars = false
                 }
-                Configuration.UI_MODE_NIGHT_NO ->{
+                Configuration.UI_MODE_NIGHT_NO -> {
                     val wic = WindowInsetsControllerCompat(
                         requireActivity().window,
                         requireActivity().window.decorView
@@ -65,12 +75,24 @@ class GalleryFragment :
                 R.color.status_bar_color
             )
 
+
+            viewModel.liveDataTopics.observe(viewLifecycleOwner) {
+                it.let {
+
+                    val layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
+                    layoutManager.reverseLayout = false
+                    val topicsAdapter = TopicsAdapter(this@GalleryFragment, it,requireActivity())
+                    recTopics.adapter = topicsAdapter
+                    recTopics.layoutManager= layoutManager
+                }
+            }
+
+
             recyclerView.itemAnimator = null
             recyclerView.adapter = allPhotoAdapter.withLoadStateHeaderAndFooter(
                 header = AllPhotoLoadStateAdapter { allPhotoAdapter.retry() },
                 footer = AllPhotoLoadStateAdapter { allPhotoAdapter.retry() },
             )
-
 
             viewModel.allPhotos.observe(viewLifecycleOwner) {
                 it.let {
@@ -151,6 +173,10 @@ class GalleryFragment :
 
         dialog.window?.setGravity(Gravity.BOTTOM)
         dialog.show()
+    }
+
+    override fun onItemClick() {
+        TODO("Not yet implemented")
     }
 
 

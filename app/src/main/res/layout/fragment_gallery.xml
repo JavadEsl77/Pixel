@@ -67,6 +67,29 @@
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/toolbar_topics"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_background_gallery_item"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rec_topics"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingRight="4dp"
+            android:paddingLeft="4dp"
+            android:clipToPadding="false"
+            tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:itemCount="7"
+            tools:listitem="@layout/item_topics"/>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

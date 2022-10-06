@@ -5,43 +5,43 @@ import com.google.gson.annotations.SerializedName
 
 data class TopicsModelItem(
     @SerializedName("cover_photo")
-    val coverPhoto: CoverPhoto,
+    val coverPhoto: CoverPhoto?=null,
     @SerializedName("current_user_contributions")
-    val currentUserContributions: List<Any>,
+    val currentUserContributions: List<Any>?=null,
     @SerializedName("description")
-    val description: String,
+    val description: String?=null,
     @SerializedName("direct_ads")
-    val directAds: Boolean,
+    val directAds: Boolean?=null,
     @SerializedName("ends_at")
-    val endsAt: String?,
+    val endsAt: String?=null,
     @SerializedName("featured")
-    val featured: Boolean,
+    val featured: Boolean?=null,
     @SerializedName("id")
     val id: String,
     @SerializedName("links")
-    val links: LinksXX,
+    val links: LinksXX?=null,
     @SerializedName("only_submissions_after")
-    val onlySubmissionsAfter: Any?,
+    val onlySubmissionsAfter: Any?=null,
     @SerializedName("owners")
-    val owners: List<Owner>,
+    val owners: List<Owner>?=null,
     @SerializedName("preview_photos")
-    val previewPhotos: List<PreviewPhoto>,
+    val previewPhotos: List<PreviewPhoto>?=null,
     @SerializedName("published_at")
-    val publishedAt: String,
+    val publishedAt: String?=null,
     @SerializedName("slug")
-    val slug: String,
+    val slug: String?=null,
     @SerializedName("starts_at")
-    val startsAt: String,
+    val startsAt: String?=null,
     @SerializedName("status")
-    val status: String,
+    val status: String?=null,
     @SerializedName("title")
-    val title: String,
+    val title: String?=null,
     @SerializedName("total_current_user_submissions")
-    val totalCurrentUserSubmissions: Any?,
+    val totalCurrentUserSubmissions: Any?=null,
     @SerializedName("total_photos")
-    val totalPhotos: Int,
+    val totalPhotos: Int?=null,
     @SerializedName("updated_at")
-    val updatedAt: String,
+    val updatedAt: String?=null,
     @SerializedName("visibility")
-    val visibility: String
+    val visibility: String?=null
 )
