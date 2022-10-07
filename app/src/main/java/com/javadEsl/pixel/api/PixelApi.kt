@@ -51,6 +51,13 @@ interface PixelApi {
         @Path("id") id: String
     ): Response<ModelPhoto>
 
+    @GET("napi/topics/{id}/photos")
+    suspend fun getTopicsPhoto(
+        @Path("id") id: String,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int
+    ): List<AllPhotosItem>
+
 
     @GET("nautocomplete/{query}")
     suspend fun getAutocomplete(

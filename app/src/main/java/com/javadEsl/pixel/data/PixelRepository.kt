@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.liveData
 import com.javadEsl.pixel.api.PixelApi
+import com.javadEsl.pixel.ui.gallery.PixelTopicsPhotoPagingSource
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -46,5 +47,16 @@ class PixelRepository @Inject constructor(
     suspend fun getSuggestPhotos(suggest: String) = pixelApi.searchPhotos(suggest, page = 1, perPage = 5)
 
     suspend fun getTopics() = pixelApi.getTopics(page = 1, perPage = 20)
+
+    fun getTopicsPhotos(topicId:String) = Pager(
+        config = PagingConfig(
+            pageSize = 20,
+            maxSize = 100,
+            enablePlaceholders = false
+        ),
+        pagingSourceFactory = {
+            PixelTopicsPhotoPagingSource(pixelApi,topicId)
+        }
+    ).liveData
 
 }

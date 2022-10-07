@@ -44,8 +44,7 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
     private var previousSearchArrayList: MutableList<String> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedPreference =
-            requireContext().getSharedPreferences("Search_value", Context.MODE_PRIVATE)
+        sharedPreference = requireContext().getSharedPreferences("Search_value", Context.MODE_PRIVATE)
         clearSearchCash()
 
     }

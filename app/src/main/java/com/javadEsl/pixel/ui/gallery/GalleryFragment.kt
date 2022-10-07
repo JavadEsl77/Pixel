@@ -2,14 +2,15 @@ package com.javadEsl.pixel.ui.gallery
 
 import android.app.Dialog
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.Window
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
@@ -18,13 +19,12 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.javadEsl.pixel.R
 import com.javadEsl.pixel.data.allPhotos.AllPhotosItem
 import com.javadEsl.pixel.databinding.FragmentGalleryBinding
+import com.javadEsl.pixel.hide
+import com.javadEsl.pixel.show
 import dagger.hilt.android.AndroidEntryPoint
-import kotlin.math.log
 
 
 @AndroidEntryPoint
@@ -35,15 +35,23 @@ class GalleryFragment :
     private val viewModel by viewModels<GalleryViewModel>()
     private var _binding: FragmentGalleryBinding? = null
     private val binding get() = _binding!!
+    private var allPhotoAdapter: AllPhotoAdapter ?= null
+
+    companion object {
+        var gallerySharedPreferences: SharedPreferences? = null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        gallerySharedPreferences =
+            requireContext().getSharedPreferences("gallery", Context.MODE_PRIVATE)
         viewModel.topicsList()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val allPhotoAdapter = AllPhotoAdapter(this, requireActivity())
+         allPhotoAdapter = AllPhotoAdapter(this, requireActivity())
         _binding = FragmentGalleryBinding.bind(view)
 
         binding.apply {
@@ -79,45 +87,30 @@ class GalleryFragment :
             viewModel.liveDataTopics.observe(viewLifecycleOwner) {
                 it.let {
 
-                    val layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
+                    val layoutManager =
+                        LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
                     layoutManager.reverseLayout = false
-                    val topicsAdapter = TopicsAdapter(this@GalleryFragment, it,requireActivity())
+                    val topicsAdapter = TopicsAdapter(this@GalleryFragment, it, requireActivity())
                     recTopics.adapter = topicsAdapter
-                    recTopics.layoutManager= layoutManager
+                    recTopics.layoutManager = layoutManager
+
+                    gallerySharedPreferences?.getInt("topic_position_item", 0)
+                        ?.let { it1 -> recTopics.scrollToPosition(it1) }
                 }
             }
 
 
-            recyclerView.itemAnimator = null
-            recyclerView.adapter = allPhotoAdapter.withLoadStateHeaderAndFooter(
-                header = AllPhotoLoadStateAdapter { allPhotoAdapter.retry() },
-                footer = AllPhotoLoadStateAdapter { allPhotoAdapter.retry() },
-            )
-
-            viewModel.allPhotos.observe(viewLifecycleOwner) {
-                it.let {
-                    allPhotoAdapter.submitData(viewLifecycleOwner.lifecycle, it)
-                }
-
+            val topicId = gallerySharedPreferences?.getString("topic_id_item", "user_type")
+            if (topicId.equals("user_type")
+            ) {
+                getRecommendedData(allPhotoAdapter!!)
+            } else {
+                topicId?.let { getTopicPhotoList(allPhotoAdapter!!, it) }
             }
-            allPhotoAdapter.addLoadStateListener { loadState ->
-                binding.apply {
-                    loadingAnimView.isVisible = loadState.source.refresh is LoadState.Loading
-                    recyclerView.isVisible =
-                        loadState.source.refresh is LoadState.NotLoading
-                    textViewError.isVisible = loadState.source.refresh is LoadState.Error
-                    buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
-                    if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && allPhotoAdapter.itemCount < 1) {
-                        recyclerView.isVisible = false
-                        textViewEmpty.isVisible = true
-                    } else {
-                        textViewEmpty.isVisible = false
-                    }
-                }
-            }
+
 
             buttonRetry.setOnClickListener {
-                allPhotoAdapter.retry()
+                allPhotoAdapter!!.retry()
             }
 
             cardViewSearching.setOnClickListener {
@@ -137,6 +130,77 @@ class GalleryFragment :
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun getRecommendedData(allPhotoAdapter: AllPhotoAdapter) {
+        binding.apply {
+            layoutRecommended.show()
+            layoutTopics.hide()
+
+            recyclerViewRecommended.itemAnimator = null
+            recyclerViewRecommended.adapter = allPhotoAdapter.withLoadStateHeaderAndFooter(
+                header = AllPhotoLoadStateAdapter { allPhotoAdapter.retry() },
+                footer = AllPhotoLoadStateAdapter { allPhotoAdapter.retry() },
+            )
+
+            viewModel.allPhotos.observe(viewLifecycleOwner) {
+                it.let {
+                    allPhotoAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+                }
+
+            }
+            allPhotoAdapter.addLoadStateListener { loadState ->
+                binding.apply {
+                    loadingAnimView.isVisible = loadState.source.refresh is LoadState.Loading
+                    recyclerViewRecommended.isVisible =
+                        loadState.source.refresh is LoadState.NotLoading
+                    textViewError.isVisible = loadState.source.refresh is LoadState.Error
+                    buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
+                    if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && allPhotoAdapter.itemCount < 1) {
+                        recyclerViewRecommended.isVisible = false
+                        textViewEmpty.isVisible = true
+                    } else {
+                        textViewEmpty.isVisible = false
+                    }
+                }
+            }
+        }
+    }
+
+    private fun getTopicPhotoList(allPhotoAdapter: AllPhotoAdapter, topicId: String) {
+        binding.apply {
+            layoutRecommended.hide()
+            layoutTopics.show()
+
+            recyclerViewTopics.itemAnimator = null
+            recyclerViewTopics.adapter = allPhotoAdapter.withLoadStateHeaderAndFooter(
+                header = AllPhotoLoadStateAdapter { allPhotoAdapter.retry() },
+                footer = AllPhotoLoadStateAdapter { allPhotoAdapter.retry() },
+            )
+
+            viewModel.topicPhotos(topicId).observe(viewLifecycleOwner) {
+                it.let {
+                    allPhotoAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+                }
+
+                allPhotoAdapter.addLoadStateListener { loadState ->
+                    binding.apply {
+                        loadingAnimView.isVisible = loadState.source.refresh is LoadState.Loading
+                        recyclerViewTopics.isVisible =
+                            loadState.source.refresh is LoadState.NotLoading
+                        textViewError.isVisible = loadState.source.refresh is LoadState.Error
+                        buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
+                        if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && allPhotoAdapter.itemCount < 1) {
+                            recyclerViewTopics.isVisible = false
+                            textViewEmpty.isVisible = true
+                        } else {
+                            textViewEmpty.isVisible = false
+                        }
+                    }
+                }
+            }
+        }
+
     }
 
     override fun onItemClick(photo: AllPhotosItem) {
@@ -163,10 +227,10 @@ class GalleryFragment :
     }
 
     private fun alertNetworkDialog(context: Context) {
-        val dialog = Dialog(context, com.javadEsl.pixel.R.style.AlertDialog)
+        val dialog = Dialog(context, R.style.AlertDialog)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
-        dialog.setContentView(com.javadEsl.pixel.R.layout.layout_dialog_network_alert)
+        dialog.setContentView(R.layout.layout_dialog_network_alert)
         Handler().postDelayed({
             dialog.dismiss()
         }, 2000)
@@ -175,9 +239,14 @@ class GalleryFragment :
         dialog.show()
     }
 
-    override fun onItemClick() {
-        TODO("Not yet implemented")
-    }
+    override fun onItemClick(topicId: String) {
+        if (topicId == "user_type"
+        ) {
+            allPhotoAdapter?.let { getRecommendedData(it) }
+        } else if (topicId!=gallerySharedPreferences?.getString("topic_id_item", "user_type")) {
+            allPhotoAdapter?.let { getTopicPhotoList(it, topicId) }
+        }
 
+    }
 
 }

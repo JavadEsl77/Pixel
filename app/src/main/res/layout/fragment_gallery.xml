@@ -78,15 +78,15 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rec_topics"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingRight="4dp"
-            android:paddingLeft="4dp"
+            android:layout_weight="1"
             android:clipToPadding="false"
-            tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="horizontal"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
             tools:itemCount="7"
-            tools:listitem="@layout/item_topics"/>
+            tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/item_topics" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -94,16 +94,54 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view"
+        <!--        //layout_recommended//-->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/layout_recommended"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_recommended"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingEnd="7dp"
+                app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+                app:spanCount="2"
+                tools:itemCount="10"
+                tools:listitem="@layout/item_unsplash_photo" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <!--        //layout_topics//-->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/layout_topics"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:paddingEnd="7dp"
-            app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-            app:spanCount="2"
-            tools:itemCount="10"
-            tools:listitem="@layout/item_unsplash_photo" />
+            android:visibility="gone">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="@color/purple_200"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view_topics"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingEnd="7dp"
+                    app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+                    app:spanCount="2"
+                    tools:itemCount="10"
+                    tools:listitem="@layout/item_unsplash_photo" />
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/loading_anim_view"

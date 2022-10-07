@@ -79,14 +79,9 @@ class AllPhotoAdapter(
             var responseId = ""
             binding.apply {
 
-                if (bindingAdapterPosition == itemCount - 1) {
-                    val param = tapsellNativeadCtaView.layoutParams as ViewGroup.MarginLayoutParams
-                    param.setMargins(25, 25, 0, 25)
-                    tapsellNativeadCtaView.layoutParams = param
-                }
                 //setAnimation(tapsellNativeadCtaView, bindingAdapterPosition)
 
-                var adHolder: AdHolder = TapsellPlus.createAdHolder(
+                val adHolder: AdHolder = TapsellPlus.createAdHolder(
                     activity,
                     binding.adContainerGallery, R.layout.item_unsplash_ads
                 )!!
@@ -129,7 +124,7 @@ class AllPhotoAdapter(
                     cardGalleryItem.layoutParams = param
                 }
 
-               // setAnimation(cardGalleryItem, bindingAdapterPosition)
+                setAnimation(cardGalleryItem, bindingAdapterPosition)
 
                 Glide.with(itemView)
                     .load(photo.urls?.regular?.convertedUrl)

@@ -19,6 +19,8 @@ class GalleryViewModel @Inject constructor(
 
     val allPhotos = pixelRepository.getAllPhotos().cachedIn(viewModelScope)
 
+    fun topicPhotos(topicId:String) = pixelRepository.getTopicsPhotos(topicId).cachedIn(viewModelScope)
+
     private val _liveDataTopics = MutableLiveData<List<TopicsModelItem>>()
     val liveDataTopics: LiveData<List<TopicsModelItem>> = _liveDataTopics
     fun topicsList() {
