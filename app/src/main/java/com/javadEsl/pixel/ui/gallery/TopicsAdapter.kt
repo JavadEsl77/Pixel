@@ -6,37 +6,38 @@ import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
+import androidx.annotation.ColorRes
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.javadEsl.pixel.R
-import com.javadEsl.pixel.data.search.convertedUrl
 import com.javadEsl.pixel.data.topics.TopicsModelItem
-import com.javadEsl.pixel.databinding.ItemPreviousSearchBinding
 import com.javadEsl.pixel.databinding.ItemTopicsBinding
 import com.javadEsl.pixel.fadeIn
-import com.javadEsl.pixel.hide
-import com.javadEsl.pixel.show
-import com.javadEsl.pixel.ui.gallery.GalleryFragment.Companion.gallerySharedPreferences
 
 class TopicsAdapter(
     private val listener: OnItemClickListener,
-    var topicList: List<TopicsModelItem>,
-    private val activity: Activity
+    private val topicList: List<TopicsModelItem>,
+    private val lastPosition: Int,
 ) : RecyclerView.Adapter<TopicsAdapter.TodoViewHolder>() {
 
-    var   rowIndex = 0
+    private var lastSelectedPosition = lastPosition
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         val binding = ItemTopicsBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TodoViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
-        holder.bind()
+    fun setSelect(position: Int) {
+        topicList[lastSelectedPosition].isSelected = false
+        notifyItemChanged(lastSelectedPosition)
+        lastSelectedPosition = position
+        topicList[lastSelectedPosition].isSelected = true
+        notifyItemChanged(lastSelectedPosition)
+    }
 
+
+    override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
+        holder.bind(topicList[position])
     }
 
     override fun getItemCount(): Int {
@@ -46,46 +47,41 @@ class TopicsAdapter(
     inner class TodoViewHolder(private val binding: ItemTopicsBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        @SuppressLint("NotifyDataSetChanged")
-        fun bind() {
-            binding.apply {
+        private val context = itemView.context
 
-                rowIndex =gallerySharedPreferences?.getInt("topic_position_item" , 0)!!
-
-                layoutTopicItem.setOnClickListener {
-
-                    topicList[bindingAdapterPosition].let { listener.onItemClick(topicList[bindingAdapterPosition].id) }
-
-                    val editor = gallerySharedPreferences?.edit()
-                    editor?.putInt("topic_position_item",bindingAdapterPosition)
-                    editor?.putString("topic_id_item",topicList[bindingAdapterPosition].id)
-                    editor?.apply()
-
-                    rowIndex = bindingAdapterPosition
-                    notifyDataSetChanged()
-                }
-
-                if(rowIndex==bindingAdapterPosition){
-                    textViewTopicItem.setTextColor(activity.resources.getColor(R.color.purple_200))
-                    layoutLineTopicItem.fadeIn()
-                    if (rowIndex == 0)
-                    textViewTopicItem.setTypeface(textViewTopicItem.typeface, Typeface.BOLD)
-                }
-                else
-                {
-                    layoutLineTopicItem.visibility = View.INVISIBLE
-                    textViewTopicItem.setTextColor(activity.resources.getColor(R.color.black))
-                }
-
-
-                textViewTopicItem.text = topicList[bindingAdapterPosition].title
+        init {
+            binding.layoutTopicItem.setOnClickListener {
+                val item = topicList[bindingAdapterPosition]
+                listener.onTopicsItemClick(item, bindingAdapterPosition)
+                setSelect(bindingAdapterPosition)
             }
         }
+
+        @SuppressLint("NotifyDataSetChanged")
+        fun bind(item: TopicsModelItem) {
+            binding.apply {
+                textViewTopicItem.text = item.title
+                if (lastSelectedPosition == bindingAdapterPosition) {
+                    textViewTopicItem.setTextColor(getColor(R.color.purple_200))
+                    layoutLineTopicItem.fadeIn()
+                    textViewTopicItem.setTypeface(textViewTopicItem.typeface, Typeface.BOLD)
+                } else {
+                    layoutLineTopicItem.visibility = View.INVISIBLE
+                    textViewTopicItem.setTextColor(getColor(R.color.black))
+                    textViewTopicItem.setTypeface(textViewTopicItem.typeface, Typeface.NORMAL)
+                }
+            }
+        }
+
+        private fun getColor(@ColorRes id: Int) = ResourcesCompat.getColor(
+            context.resources,
+            id,
+            null
+        )
     }
 
     interface OnItemClickListener {
-
-        fun onItemClick(topicId:String)
+        fun onTopicsItemClick(topicsModelItem: TopicsModelItem, position: Int)
     }
 }
 

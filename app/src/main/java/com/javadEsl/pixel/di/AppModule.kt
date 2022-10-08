@@ -1,6 +1,8 @@
 package com.javadEsl.pixel.di
 
 import android.content.Context
+import android.content.SharedPreferences
+import com.javadEsl.pixel.BuildConfig
 import com.javadEsl.pixel.R
 import com.javadEsl.pixel.api.PixelApi
 import dagger.Module
@@ -33,5 +35,15 @@ object AppModule {
     @Provides
     @Singleton
     fun provideFolder(@ApplicationContext context: Context): String =
-      context.getString(R.string.app_name)
+        context.getString(R.string.app_name)
+
+    @Provides
+    @Singleton
+    fun provideSharedPreferences(
+        @ApplicationContext context: Context
+    ): SharedPreferences = context.applicationContext.getSharedPreferences(
+        BuildConfig.APPLICATION_ID,
+        Context.MODE_PRIVATE
+    )
+
 }

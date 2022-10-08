@@ -5,43 +5,48 @@ import com.google.gson.annotations.SerializedName
 
 data class TopicsModelItem(
     @SerializedName("cover_photo")
-    val coverPhoto: CoverPhoto?=null,
+    val coverPhoto: CoverPhoto? = null,
     @SerializedName("current_user_contributions")
-    val currentUserContributions: List<Any>?=null,
+    val currentUserContributions: List<Any>? = null,
     @SerializedName("description")
-    val description: String?=null,
+    val description: String? = null,
     @SerializedName("direct_ads")
-    val directAds: Boolean?=null,
+    val directAds: Boolean? = null,
     @SerializedName("ends_at")
-    val endsAt: String?=null,
+    val endsAt: String? = null,
     @SerializedName("featured")
-    val featured: Boolean?=null,
+    val featured: Boolean? = null,
     @SerializedName("id")
     val id: String,
     @SerializedName("links")
-    val links: LinksXX?=null,
+    val links: LinksXX? = null,
     @SerializedName("only_submissions_after")
-    val onlySubmissionsAfter: Any?=null,
+    val onlySubmissionsAfter: Any? = null,
     @SerializedName("owners")
-    val owners: List<Owner>?=null,
+    val owners: List<Owner>? = null,
     @SerializedName("preview_photos")
-    val previewPhotos: List<PreviewPhoto>?=null,
+    val previewPhotos: List<PreviewPhoto>? = null,
     @SerializedName("published_at")
-    val publishedAt: String?=null,
+    val publishedAt: String? = null,
     @SerializedName("slug")
-    val slug: String?=null,
+    val slug: String? = null,
     @SerializedName("starts_at")
-    val startsAt: String?=null,
+    val startsAt: String? = null,
     @SerializedName("status")
-    val status: String?=null,
+    val status: String? = null,
     @SerializedName("title")
-    val title: String?=null,
+    val title: String? = null,
     @SerializedName("total_current_user_submissions")
-    val totalCurrentUserSubmissions: Any?=null,
+    val totalCurrentUserSubmissions: Any? = null,
     @SerializedName("total_photos")
-    val totalPhotos: Int?=null,
+    val totalPhotos: Int? = null,
     @SerializedName("updated_at")
-    val updatedAt: String?=null,
+    val updatedAt: String? = null,
     @SerializedName("visibility")
-    val visibility: String?=null
-)
+    val visibility: String? = null,
+    var isSelected: Boolean = false
+) {
+    object Type {
+        const val USER = "user_type"
+    }
+}
