@@ -19,11 +19,9 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.javadEsl.pixel.R
+import com.javadEsl.pixel.*
 import com.javadEsl.pixel.data.allPhotos.AllPhotosItem
 import com.javadEsl.pixel.databinding.FragmentGalleryBinding
-import com.javadEsl.pixel.hide
-import com.javadEsl.pixel.show
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -83,31 +81,30 @@ class GalleryFragment :
                 R.color.status_bar_color
             )
 
-
+            loadingAnimView.show()
             viewModel.liveDataTopics.observe(viewLifecycleOwner) {
                 it.let {
-
                     val layoutManager =
                         LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
                     layoutManager.reverseLayout = false
                     val topicsAdapter = TopicsAdapter(this@GalleryFragment, it, requireActivity())
                     recTopics.adapter = topicsAdapter
                     recTopics.layoutManager = layoutManager
-
+                    toolbarTopics.fadeIn()
+                    toolbarHome.fadeIn()
+                    loadingAnimView.hide()
                     gallerySharedPreferences?.getInt("topic_position_item", 0)
                         ?.let { it1 -> recTopics.scrollToPosition(it1) }
+
+                    val topicId = gallerySharedPreferences?.getString("topic_id_item", "user_type")
+                    if (topicId.equals("user_type")
+                    ) {
+                        getRecommendedData(allPhotoAdapter!!)
+                    } else {
+                        topicId?.let { getTopicPhotoList(allPhotoAdapter!!, it) }
+                    }
                 }
             }
-
-
-            val topicId = gallerySharedPreferences?.getString("topic_id_item", "user_type")
-            if (topicId.equals("user_type")
-            ) {
-                getRecommendedData(allPhotoAdapter!!)
-            } else {
-                topicId?.let { getTopicPhotoList(allPhotoAdapter!!, it) }
-            }
-
 
             buttonRetry.setOnClickListener {
                 allPhotoAdapter!!.retry()

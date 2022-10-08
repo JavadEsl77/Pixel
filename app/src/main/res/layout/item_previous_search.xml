@@ -9,7 +9,7 @@
     android:layout_marginBottom="4dp"
     app:cardElevation="0dp"
     app:cardCornerRadius="10dp"
-    app:cardBackgroundColor="@color/color_menu_download">
+    app:cardBackgroundColor="@color/color_background_item_previous">
 
     <TextView
         android:id="@+id/text_view_classification"

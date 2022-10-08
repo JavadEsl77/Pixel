@@ -915,7 +915,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             val drawable = imageView.drawable
             val bitmap = drawable.toBitmap()
             runClassification(bitmap)
-        }, 500)
+        }, 1500)
 
     }
 

@@ -50,7 +50,7 @@ class SuggestPhotoAdapter(
         fun bind() {
             binding.apply {
 
-                 setAnimation(cardSuggestItem, bindingAdapterPosition)
+                 //setAnimation(cardSuggestItem, bindingAdapterPosition)
 
                 Glide.with(itemView)
                     .load(suggestPhotoList[bindingAdapterPosition].urls?.regular?.convertedUrl)

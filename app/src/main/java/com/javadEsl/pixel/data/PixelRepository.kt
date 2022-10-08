@@ -44,7 +44,7 @@ class PixelRepository @Inject constructor(
 
     suspend fun getAutocomplete(query: String) = pixelApi.getAutocomplete(query = query)
 
-    suspend fun getSuggestPhotos(suggest: String) = pixelApi.searchPhotos(suggest, page = 1, perPage = 5)
+    suspend fun getSuggestPhotos(suggest: String) = pixelApi.searchPhotos(suggest, page = 1, perPage = 6)
 
     suspend fun getTopics() = pixelApi.getTopics(page = 1, perPage = 20)
 

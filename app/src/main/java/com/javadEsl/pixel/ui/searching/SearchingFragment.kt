@@ -11,12 +11,13 @@ import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.*
+import android.view.Gravity
+import android.view.View
+import android.view.Window
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
@@ -27,9 +28,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.javadEsl.pixel.*
+import com.javadEsl.pixel.R
 import com.javadEsl.pixel.data.search.PixelPhoto
 import com.javadEsl.pixel.databinding.FragmentSearchBinding
+import com.javadEsl.pixel.fadeOut
+import com.javadEsl.pixel.hide
+import com.javadEsl.pixel.show
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -122,10 +126,10 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
             viewModel.liveDataSuggestPhoto.observe(viewLifecycleOwner) { data ->
                 data?.let {
                     val suggestAdapter =
-                        SuggestPhotoAdapter(data, this@SearchingFragment, requireActivity())
+                        SuggestPhotoAdapter(data.shuffled(), this@SearchingFragment, requireActivity())
                     recSuggest.itemAnimator = null
                     val suggestLayoutManager =
-                        StaggeredGridLayoutManager(1, RecyclerView.HORIZONTAL)
+                        StaggeredGridLayoutManager(3, RecyclerView.VERTICAL)
                     suggestLayoutManager.reverseLayout = true
                     recSuggest.layoutManager = suggestLayoutManager
                     recSuggest.adapter = suggestAdapter
