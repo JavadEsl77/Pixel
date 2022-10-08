@@ -587,7 +587,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         canvas = Canvas(bitmap)
         canvas.drawBitmap(source, 0f, 0f, paint)
 
-        val watermark: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.img)
+        val watermark: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.img_splash)
 
         scale = ((200.toFloat() * 0.43f) / watermark.height)
         val matrix: Matrix = Matrix()
