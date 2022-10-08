@@ -33,7 +33,7 @@ class GalleryFragment :
     private val viewModel by viewModels<GalleryViewModel>()
     private var _binding: FragmentGalleryBinding? = null
     private val binding get() = _binding!!
-    private var allPhotoAdapter: AllPhotoAdapter ?= null
+    private var allPhotoAdapter: AllPhotoAdapter? = null
 
     companion object {
         var gallerySharedPreferences: SharedPreferences? = null
@@ -49,7 +49,7 @@ class GalleryFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-         allPhotoAdapter = AllPhotoAdapter(this, requireActivity())
+        allPhotoAdapter = AllPhotoAdapter(this, requireActivity())
         _binding = FragmentGalleryBinding.bind(view)
 
         binding.apply {
@@ -57,14 +57,14 @@ class GalleryFragment :
             val nightModeFlags = requireActivity().resources.configuration.uiMode and
                     Configuration.UI_MODE_NIGHT_MASK
             when (nightModeFlags) {
-                Configuration.UI_MODE_NIGHT_YES -> {
+                Configuration.UI_MODE_NIGHT_YES       -> {
                     val wic = WindowInsetsControllerCompat(
                         requireActivity().window,
                         requireActivity().window.decorView
                     )
                     wic.isAppearanceLightStatusBars = false
                 }
-                Configuration.UI_MODE_NIGHT_NO -> {
+                Configuration.UI_MODE_NIGHT_NO        -> {
                     val wic = WindowInsetsControllerCompat(
                         requireActivity().window,
                         requireActivity().window.decorView
@@ -237,13 +237,13 @@ class GalleryFragment :
     }
 
     override fun onItemClick(topicId: String) {
-        if (topicId == "user_type"
-        ) {
-            allPhotoAdapter?.let { getRecommendedData(it) }
-        } else if (topicId!=gallerySharedPreferences?.getString("topic_id_item", "user_type")) {
-            allPhotoAdapter?.let { getTopicPhotoList(it, topicId) }
+        if (topicId != gallerySharedPreferences?.getString("topic_id_item", "user_type")) {
+            if (topicId == "user_type") {
+                allPhotoAdapter?.let { getRecommendedData(it) }
+            } else {
+                allPhotoAdapter?.let { getTopicPhotoList(it, topicId) }
+            }
         }
-
     }
 
 }

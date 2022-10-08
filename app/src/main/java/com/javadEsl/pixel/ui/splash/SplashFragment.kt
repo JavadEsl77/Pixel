@@ -95,8 +95,8 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
                     layoutLoading.isVisible = true
                     layoutError.isVisible = false
                     Handler(Looper.getMainLooper()).postDelayed({
-                        val action =
-                            SplashFragmentDirections.actionSplashFragmentToGalleryFragment()
+                        val action = SplashFragmentDirections.actionSplashFragmentToGalleryFragment()
+                        findNavController().navigateUp()
                         findNavController().navigate(action)
 
 
