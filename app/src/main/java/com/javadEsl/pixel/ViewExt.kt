@@ -5,10 +5,13 @@ import android.animation.AnimatorListenerAdapter
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.view.animation.Transformation
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
+import androidx.interpolator.view.animation.FastOutLinearInInterpolator
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 
 const val ANIMATION_DURATION = 350L
 
@@ -156,3 +159,13 @@ fun View.collapse(listener: Animation.AnimationListener? = null) {
     animation.setAnimationListener(listener)
     startAnimation(animation)
 }
+
+fun View.slideUp(animTime: Long, startOffSet: Long) {
+    val slideUp = AnimationUtils.loadAnimation(context, R.anim.slide_up).apply {
+        duration = animTime
+        interpolator = FastOutSlowInInterpolator()
+        this.startOffset = startOffSet
+    }
+    startAnimation(slideUp)
+}
+

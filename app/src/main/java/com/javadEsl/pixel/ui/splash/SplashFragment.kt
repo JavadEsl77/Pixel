@@ -25,6 +25,7 @@ import com.farsitel.bazaar.IUpdateCheckService
 import com.javadEsl.pixel.BuildConfig
 import com.javadEsl.pixel.R
 import com.javadEsl.pixel.databinding.FragmentSplashBinding
+import com.javadEsl.pixel.slideUp
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -34,7 +35,6 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
     private val binding get() = _binding!!
     private var stateNetwork = false
     private val viewModel by viewModels<SplashViewModel>()
-
 
     var service: IUpdateCheckService? = null
     var connection: UpdateServiceConnection? = null
@@ -83,14 +83,18 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
         _binding = FragmentSplashBinding.bind(view)
         binding.apply {
 
+            animationView.slideUp(1000,0)
+
             viewModel.connection.observe(viewLifecycleOwner) {
                 stateNetwork = it == true
                 if (it == false) {
+                    layoutError.slideUp(1000,0)
                     layoutError.isVisible = true
                     layoutLoading.isVisible = false
                     animationView.isVisible = false
                     return@observe
                 } else {
+                    animationView.slideUp(1000,0)
                     animationView.isVisible = true
                     layoutLoading.isVisible = true
                     layoutError.isVisible = false
