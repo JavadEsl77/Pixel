@@ -1,14 +1,9 @@
 package com.javadEsl.pixel.ui.splash
 
 import android.app.Dialog
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.ServiceConnection
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
-import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import android.view.Gravity
@@ -21,7 +16,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.farsitel.bazaar.IUpdateCheckService
 import com.javadEsl.pixel.BuildConfig
 import com.javadEsl.pixel.R
 import com.javadEsl.pixel.databinding.FragmentSplashBinding
@@ -36,38 +30,8 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
     private var stateNetwork = false
     private val viewModel by viewModels<SplashViewModel>()
 
-    var service: IUpdateCheckService? = null
-    var connection: UpdateServiceConnection? = null
-    private val TAG = "UpdateCheck"
-
-    inner class UpdateServiceConnection : ServiceConnection {
-        override fun onServiceConnected(p0: ComponentName?, p1: IBinder?) {
-            service = IUpdateCheckService.Stub.asInterface(p1)
-            try {
-                val vCode = service?.getVersionCode("com.javadEsl.pixel")
-                Log.d(TAG, "initService() bound value vCode: $vCode")
-                if (vCode?.toInt() == -1) {
-                    viewModel.getStartNavigate()
-                }else{
-                    Log.d(TAG, "showDialogUpdate")
-                    showPermissionInfoDialog()
-                }
-
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-
-        override fun onServiceDisconnected(p0: ComponentName?) {
-            service = null
-            Log.d(TAG, "onServiceDisconnected(): Disconnected");
-        }
-
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initService()
         viewModel.getStartNavigate()
     }
 
@@ -78,7 +42,6 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
                 ""
             )
         )
-
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSplashBinding.bind(view)
         binding.apply {
@@ -132,14 +95,6 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
         }
     }
 
-    private fun initService() {
-        Log.i(TAG, "initService()")
-        connection = UpdateServiceConnection()
-        val i = Intent("com.farsitel.bazaar.service.UpdateCheckService.BIND")
-        i.setPackage("com.farsitel.bazaar")
-        val ret: Boolean = requireActivity().bindService(i, connection!!, Context.BIND_AUTO_CREATE)
-        Log.d(TAG, "initService() bound value ret: $ret")
-    }
 
     private fun showPermissionInfoDialog() {
         val dialog = Dialog(requireActivity(), R.style.AlertDialog)
@@ -162,14 +117,4 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
 
     }
 
-    private fun releaseService() {
-        connection?.let { requireActivity().unbindService(it) }
-        connection = null
-        Log.d(TAG, "releaseService(): unbound.")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        releaseService();
-    }
 }

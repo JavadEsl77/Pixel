@@ -60,7 +60,8 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
                         getFileGallery()
                     }
                 }
-            }
+            }else
+                findNavController().popBackStack()
         }
 
     override fun onCreateView(

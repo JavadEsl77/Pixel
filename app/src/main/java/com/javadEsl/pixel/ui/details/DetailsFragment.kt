@@ -21,6 +21,7 @@ import android.provider.Settings
 import android.util.Log
 import android.util.TypedValue
 import android.view.*
+import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -124,7 +125,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.getPhotoDetail(args.photoId,args.userName)
+        viewModel.getPhotoDetail(args.photoId, args.userName)
     }
 
     override fun onCreateView(
@@ -199,7 +200,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     modelPhoto.exif?.make + " , " + modelPhoto.exif?.model
             }
 
-            if (modelPhoto.location?.name.isNullOrEmpty() && modelPhoto.exif?.model.isNullOrEmpty()){
+            if (modelPhoto.location?.name.isNullOrEmpty() && modelPhoto.exif?.model.isNullOrEmpty()) {
                 textViewEmptyPhotoInfo.show()
             }
 
@@ -809,6 +810,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(true)
         dialog.setContentView(R.layout.layout_dialog_permissiont_info)
+
 
         val btnSetting = dialog.findViewById<Button>(R.id.btn_setting)
         val btnCancel = dialog.findViewById<Button>(R.id.btn_cancel)
