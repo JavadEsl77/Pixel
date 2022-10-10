@@ -1,6 +1,5 @@
 package com.javadEsl.pixel
 
-import android.R.attr
 import android.app.Service
 import android.content.Context
 import android.content.Intent
@@ -33,7 +32,7 @@ class DownloaderService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (!isRunning) starForegroundDownload("$startId")
+        if (!isRunning) starForegroundDownload("0")
         downloadImage()
         return START_STICKY
     }
@@ -58,7 +57,6 @@ class DownloaderService : Service() {
     }
 
     private fun downloadImage() {
-
         DownloadConfig.newBuilder()
             .setMaxRunningTaskNum(2)
             .setMinUsableStorageSpace(4 * 1024L)
@@ -69,7 +67,6 @@ class DownloaderService : Service() {
                 override fun onProgress(progress: Int) {
                     starForegroundDownload(progress.toString())
                 }
-
                 override fun onSuccess() {
                     stopForeground(true)
                     stopSelf()

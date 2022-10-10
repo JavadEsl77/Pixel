@@ -21,7 +21,10 @@ import android.provider.Settings
 import android.util.Log
 import android.util.TypedValue
 import android.view.*
-import android.widget.*
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
@@ -51,7 +54,6 @@ import com.google.mlkit.vision.label.ImageLabeler
 import com.google.mlkit.vision.label.ImageLabeling
 import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 import com.huxq17.download.Pump
-import com.huxq17.download.config.DownloadConfig
 import com.javadEsl.pixel.*
 import com.javadEsl.pixel.api.IMAGE_RAW
 import com.javadEsl.pixel.api.IMAGE_REGULAR
@@ -522,7 +524,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     File("${root}/${getString(R.string.app_name)}/${modelPhoto?.id}/${resolutionTypeSelected}.jpg")
 
                 if (!myDir.exists()) {
-                    modelPhoto?.let { it1 -> downloadDialog(it1) }
+                    modelPhoto?.let { it1 -> downloadPhoto(it1) }
                     popupMenu.dismiss()
                 } else {
                     Toast.makeText(
@@ -635,23 +637,15 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         startActivity(intent)
     }
 
-    private fun downloadDialog(modelPhoto: ModelPhoto) {
+    private fun downloadPhoto(modelPhoto: ModelPhoto){
 
         if (isRequireExternalStorageManager()) {
             requestPermission()
             return
         }
+
         var downloadLink = "https://"
         var typeFile = "SD"
-        val dialog = Dialog(requireActivity(), R.style.AlertDialog)
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
-        dialog.setCancelable(false)
-        dialog.setContentView(R.layout.layout_downlaod_dialog)
-
-        val processBarDownload = dialog.findViewById<ProgressBar>(R.id.progress_bar_download)
-        val textViewTitleFile = dialog.findViewById<TextView>(R.id.text_view_title_file)
-        textViewTitleFile.text = modelPhoto.id + ".jpg"
-
         when (resolutionType) {
             IMAGE_SMALL   -> {
                 downloadLink = modelPhoto.urls?.small?.convertedUrl.toString()
