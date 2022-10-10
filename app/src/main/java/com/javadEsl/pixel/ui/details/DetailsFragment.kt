@@ -21,7 +21,6 @@ import android.provider.Settings
 import android.util.Log
 import android.util.TypedValue
 import android.view.*
-import android.view.animation.AnimationUtils
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
@@ -411,6 +410,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     return@setOnClickListener
                 }
+                DownloaderService()
                 showDownloadMenu(anchor = it)
             }
 
@@ -438,7 +438,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             }
 
 
-            var adHolder: AdHolder = TapsellPlus.createAdHolder(
+            val adHolder: AdHolder = TapsellPlus.createAdHolder(
                 requireActivity(),
                 binding.adContainer,
                 R.layout.native_banner_detail
@@ -499,6 +499,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         popupMenu.show()
 
         popupMenu.setOnMenuItemClickListener { menuItem ->
+
 
             resolutionType = menuItem.toString()
             if (checkIsConnection()) {
@@ -651,11 +652,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         val textViewTitleFile = dialog.findViewById<TextView>(R.id.text_view_title_file)
         textViewTitleFile.text = modelPhoto.id + ".jpg"
 
-        DownloadConfig.newBuilder()
-            .setMaxRunningTaskNum(2)
-            .setMinUsableStorageSpace(4 * 1024L)
-            .build()
-
         when (resolutionType) {
             IMAGE_SMALL   -> {
                 downloadLink = modelPhoto.urls?.small?.convertedUrl.toString()
@@ -690,44 +686,14 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             return
         }
 
-        Pump.newRequest(downloadLink, myDir.path)
-            .listener(object : com.huxq17.download.core.DownloadListener() {
-                override fun onProgress(progress: Int) {
-                    processBarDownload.progress = progress
-                    downloadStatus = true
-                }
+        DownloaderService.start(requireContext(), downloadLink, myDir.path)
 
-                override fun onSuccess() {
-                    successDialog(
-                        getString(R.string.string_alert_success_download),
-                        activity!!.getDrawable(R.drawable.ic_cloud_download)!!,
-                        modelPhoto.color.toString(),
-                        700
-                    )
-                    dialog.dismiss()
-                    downloadStatus = false
-                    isOnSaveClicked = false
-                }
-
-                override fun onFailed() {
-                    dialog.dismiss()
-                    Toast.makeText(
-                        activity,
-                        "Download Error",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    downloadStatus = false
-                    isOnSaveClicked = false
-
-                }
-            })
-            .forceReDownload(true)
-            .threadNum(3)
-            .setRetry(3, 200)
-            .submit()
-        dialog.window?.setGravity(Gravity.BOTTOM)
-        dialog.show()
-
+        successDialog(
+            getString(R.string.string_alert_start_download),
+            requireContext().getDrawable(R.drawable.ic_cloud_download)!!,
+            modelPhoto.color.toString(),
+            1000
+        )
     }
 
     private fun alertNetworkDialog(context: Context, color: String) {
