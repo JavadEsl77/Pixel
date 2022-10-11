@@ -7,8 +7,8 @@ import android.app.NotificationManager
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.os.Build
-import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
+
 
 object DownloadNotificationHelper {
     const val DOWNLOADER_CHANNEL_ID = BuildConfig.APPLICATION_ID
@@ -17,26 +17,37 @@ object DownloadNotificationHelper {
     fun createNotification(
         context: Context,
         message: String,
-        title: String
+        title: String,
+        progress: Int
     ): Notification {
+
         val notificationManager =
             context.applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
             val channel = NotificationChannel(
                 DOWNLOADER_CHANNEL_ID,
                 "downloader",
-                NotificationManager.IMPORTANCE_HIGH
+                NotificationManager.IMPORTANCE_LOW
             )
+
             channel.description = "User for downloading photos"
+            channel.setSound(null,null)
+            channel.enableLights(false)
+            channel.enableVibration(false)
             notificationManager.createNotificationChannel(channel)
 
         }
 
-        val notification = NotificationCompat.Builder(context, DOWNLOADER_CHANNEL_ID)
+        val notification = NotificationCompat.Builder(context, DOWNLOADER_CHANNEL_ID).setSilent(true)
             .setContentTitle(title)
             .setContentText(message)
+            .setOngoing(false)
             .setSmallIcon(R.drawable.ic_download_detail)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setProgress(100, progress, false)
+            .setSound(null)
+            .setOnlyAlertOnce(true)
+            .setDefaults(0)
             .build()
 
         notificationManager.notify(

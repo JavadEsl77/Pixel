@@ -84,6 +84,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
     private val binding get() = _binding!!
     private var downloadStatus: Boolean = false
     private var isOnSaveClicked = false
+    private var isTapsellCreate = false
     var labeler: ImageLabeler? = null
     private var resolutionType = ""
     private var permissionType = ""
@@ -310,7 +311,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             layoutDetail.invisible()
             blurViewBackground.invisible()
             Glide.with(this@DetailsFragment)
-                .load(modelPhoto.urls?.raw?.convertedUrl)
+                .load(modelPhoto.urls?.regular?.convertedUrl)
                 .error(R.drawable.ic_error_photos)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .diskCacheStrategy(DiskCacheStrategy.DATA)
@@ -465,22 +466,26 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
     }
 
     private fun showAd(adHolder: AdHolder) {
+
         TapsellPlus.showNativeAd(requireActivity(), responseId, adHolder,
             object : AdShowListener() {
                 override fun onOpened(tapsellPlusAdModel: TapsellPlusAdModel) {
                     super.onOpened(tapsellPlusAdModel)
+                    isTapsellCreate = true
                     Log.d(TAG, "Ad Open")
                 }
 
                 override fun onError(tapsellPlusErrorModel: TapsellPlusErrorModel) {
                     super.onError(tapsellPlusErrorModel)
                     Log.e("onError", tapsellPlusErrorModel.toString())
+                    isTapsellCreate = false
                 }
             })
     }
 
     private fun destroyAd() {
-        TapsellPlus.destroyNativeBanner(requireActivity(), responseId)
+        if (isTapsellCreate)
+            TapsellPlus.destroyNativeBanner(requireActivity(), responseId)
     }
 
     private fun showDownloadMenu(anchor: View) {
@@ -637,7 +642,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         startActivity(intent)
     }
 
-    private fun downloadPhoto(modelPhoto: ModelPhoto){
+    private fun downloadPhoto(modelPhoto: ModelPhoto) {
 
         if (isRequireExternalStorageManager()) {
             requestPermission()
