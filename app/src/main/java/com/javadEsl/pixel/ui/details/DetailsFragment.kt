@@ -880,8 +880,12 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             labeler = ImageLabeling.getClient(options)
 
             val drawable = imageView.drawable
-            val bitmap = drawable.toBitmap()
-            runClassification(bitmap)
+
+            if (drawable!=null){
+                val bitmap = drawable.toBitmap()
+                runClassification(bitmap)
+            }
+
         }, 1500)
 
     }

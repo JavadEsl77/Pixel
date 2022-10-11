@@ -1,5 +1,6 @@
 package com.javadEsl.pixel
 
+import android.content.res.Resources
 import android.graphics.Color
 import java.text.DecimalFormat
 import java.util.*
@@ -38,3 +39,16 @@ fun Number?.toDecimal(): String {
 internal fun Number.roundTo(
     numFractionDigits: Int = 2
 ) = "%.${numFractionDigits}f".format(this, Locale.ENGLISH)
+
+
+/**
+ * convert px to dp
+ */
+val Int.toDp: Int
+    get() = (this / Resources.getSystem().displayMetrics.density).toInt()
+
+/**
+ * convert dp to px
+ */
+val Int.toPx: Int
+    get() = (this * Resources.getSystem().displayMetrics.density).toInt()
