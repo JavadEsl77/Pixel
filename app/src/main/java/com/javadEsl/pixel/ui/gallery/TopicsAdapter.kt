@@ -2,17 +2,24 @@ package com.javadEsl.pixel.ui.gallery
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.graphics.ColorFilter
 import android.graphics.Typeface
+import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.ColorRes
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.text.bold
+import androidx.core.text.color
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.javadEsl.pixel.R
 import com.javadEsl.pixel.data.topics.TopicsModelItem
 import com.javadEsl.pixel.databinding.ItemTopicsBinding
 import com.javadEsl.pixel.fadeIn
+import com.javadEsl.pixel.fadeOut
+import com.javadEsl.pixel.setTint
 
 class TopicsAdapter(
     private val listener: OnItemClickListener,
@@ -59,16 +66,19 @@ class TopicsAdapter(
 
         @SuppressLint("NotifyDataSetChanged")
         fun bind(item: TopicsModelItem) {
+            val textBuilder = SpannableStringBuilder()
             binding.apply {
-                textViewTopicItem.text = item.title
+
                 if (lastSelectedPosition == bindingAdapterPosition) {
-                    textViewTopicItem.setTextColor(getColor(R.color.purple_200))
                     layoutLineTopicItem.fadeIn()
-                    textViewTopicItem.setTypeface(textViewTopicItem.typeface, Typeface.BOLD)
+                    textViewTopicItem.text = textBuilder.color(getColor(R.color.purple_200)) {
+                        bold { bold { append(item.title) } }
+                    }
                 } else {
                     layoutLineTopicItem.visibility = View.INVISIBLE
-                    textViewTopicItem.setTextColor(getColor(R.color.black))
-                    textViewTopicItem.setTypeface(textViewTopicItem.typeface, Typeface.NORMAL)
+                    textViewTopicItem.text = textBuilder.color(getColor(R.color.black)) {
+                        append(item.title)
+                    }
                 }
             }
         }

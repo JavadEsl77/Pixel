@@ -440,28 +440,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 }
             }
 
-
-            val adHolder: AdHolder = TapsellPlus.createAdHolder(
-                requireActivity(),
-                binding.adContainer,
-                R.layout.native_banner_detail
-            )!!
-
-            TapsellPlus.requestNativeAd(
-                requireActivity(),
-                BuildConfig.TAPSELL_NATIVE_BANNER,
-                object : AdRequestCallback() {
-                    override fun response(tapsellPlusAdModel: TapsellPlusAdModel) {
-                        super.response(tapsellPlusAdModel)
-                        responseId = tapsellPlusAdModel.responseId
-                        showAd(adHolder)
-                    }
-
-                    override fun error(message: String) {
-                        Log.e(TAG, "error: $message")
-                    }
-                })
-
         }
     }
 
@@ -872,6 +850,28 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
         blurViewBackground.expand(duration = 1000)
         layoutDetail.fadeIn(duration = 1000)
+
+        val adHolder: AdHolder = TapsellPlus.createAdHolder(
+            requireActivity(),
+            binding.adContainer,
+            R.layout.native_banner_detail
+        )!!
+
+        TapsellPlus.requestNativeAd(
+            requireActivity(),
+            BuildConfig.TAPSELL_NATIVE_BANNER,
+            object : AdRequestCallback() {
+                override fun response(tapsellPlusAdModel: TapsellPlusAdModel) {
+                    super.response(tapsellPlusAdModel)
+                    responseId = tapsellPlusAdModel.responseId
+                    if (isTapsellCreate)
+                        showAd(adHolder)
+                }
+
+                override fun error(message: String) {
+                    Log.e(TAG, "error: $message")
+                }
+            })
 
         Handler(Looper.getMainLooper()).postDelayed({
             val options = ImageLabelerOptions.Builder()

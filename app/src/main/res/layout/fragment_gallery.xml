@@ -85,6 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:clipToPadding="false"
+            android:layoutDirection="rtl"
             android:orientation="horizontal"
             android:paddingLeft="4dp"
             android:paddingRight="4dp"

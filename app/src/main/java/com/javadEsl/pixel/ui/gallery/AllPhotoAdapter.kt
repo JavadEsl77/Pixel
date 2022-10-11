@@ -44,6 +44,7 @@ class AllPhotoAdapter(
             TYPE_PHOTO
         }
     }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         return when (viewType) {
@@ -86,7 +87,7 @@ class AllPhotoAdapter(
                         override fun response(tapsellPlusAdModel: TapsellPlusAdModel) {
                             super.response(tapsellPlusAdModel)
                             responseId = tapsellPlusAdModel.responseId
-                            showAd(adHolder,responseId)
+                            showAd(adHolder, responseId)
                         }
 
                         override fun error(message: String) {

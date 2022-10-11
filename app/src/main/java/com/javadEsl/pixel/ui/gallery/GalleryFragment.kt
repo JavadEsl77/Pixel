@@ -77,10 +77,10 @@ class GalleryFragment :
 
             loadingAnimView.show()
             viewModel.liveDataTopics.observe(viewLifecycleOwner) {
+
                 it.let {
                     val layoutManager =
                         LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-                    layoutManager.reverseLayout = false
                     val topicsAdapter = TopicsAdapter(
                         this@GalleryFragment,
                         it,
