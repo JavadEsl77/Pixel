@@ -133,7 +133,7 @@
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="30dp"
                             android:layout_height="30dp"
-                            app:cardBackgroundColor="#80FFFFFF"
+                            app:cardBackgroundColor="@color/color_background_card_icon_delete_share"
                             app:cardCornerRadius="10dp"
                             app:cardElevation="0dp">
 
@@ -183,7 +183,7 @@
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="30dp"
                             android:layout_height="30dp"
-                            app:cardBackgroundColor="#80FFFFFF"
+                            app:cardBackgroundColor="@color/color_background_card_icon_delete_share"
                             app:cardCornerRadius="10dp"
                             app:cardElevation="0dp">
 
@@ -266,7 +266,7 @@
                             android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/string_btn_cancel"
-                            android:textColor="@color/purple_500"
+                            android:textColor="@color/purple_200"
                             android:textStyle="bold" />
 
                     </androidx.appcompat.widget.LinearLayoutCompat>

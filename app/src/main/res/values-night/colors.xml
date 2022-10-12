@@ -24,4 +24,6 @@
     <color name="color_background_preview_menu">#10161B</color>
     <color name="color_download_button">#2eac68</color>
     <color name="color_download_popup">#2eac68</color>
+    <color name="color_background_card_icon_delete_share">#0D1C27</color>
+
 </resources>
