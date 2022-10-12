@@ -14,11 +14,11 @@
         android:layout_height="?actionBarSize"
         android:background="@color/color_background_gallery_item"
         android:gravity="center"
-        android:visibility="gone"
-        tools:visibility="visible"
         android:orientation="horizontal"
         android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+        android:paddingRight="16dp"
+        android:visibility="visible"
+        tools:visibility="visible">
 
         <TextView
             android:layout_width="0dp"
@@ -75,9 +75,9 @@
         android:layout_height="wrap_content"
         android:background="@color/color_background_gallery_item"
         android:gravity="center"
+        android:orientation="horizontal"
         android:visibility="gone"
-        tools:visibility="visible"
-        android:orientation="horizontal">
+        tools:visibility="visible">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rec_topics"
@@ -95,39 +95,46 @@
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <RelativeLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/layout_gallery"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
 
-        <!--        //layout_recommended//-->
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/layout_recommended"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone"
-            tools:visibility="visible">
+            android:layout_height="match_parent">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view_recommended"
+            <!--        //layout_recommended//-->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/layout_recommended"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view_recommended"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:paddingEnd="7dp"
+                    app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+                    app:spanCount="2"
+                    tools:itemCount="10"
+                    tools:listitem="@layout/item_unsplash_photo" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <!--        //layout_topics//-->
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/layout_topics"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-                android:paddingEnd="7dp"
-                app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-                app:spanCount="2"
-                tools:itemCount="10"
-                tools:listitem="@layout/item_unsplash_photo" />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <!--        //layout_topics//-->
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/layout_topics"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:visibility="gone">
+                android:visibility="gone">
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view_topics"
@@ -141,20 +148,34 @@
                     tools:listitem="@layout/item_unsplash_photo" />
 
 
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </RelativeLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shrimmer_view_contaner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <include layout="@layout/shrimmer_gallery_layout" />
+
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/loading_anim_view"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_centerInParent="true"
-            android:visibility="gone"
-            app:lottie_autoPlay="true"
-            app:lottie_colorFilter="@color/purple_200"
-            app:lottie_loop="true"
-            app:lottie_rawRes="@raw/loading"
-            app:tint="#fff"
-            tools:visibility="visible" />
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
 
         <TextView
             android:id="@+id/text_view_error"
@@ -184,6 +205,7 @@
             android:visibility="gone"
             tools:visibility="visible" />
 
-    </RelativeLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
 
 </LinearLayout>

@@ -90,6 +90,8 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
     private var permissionType = ""
     private var responseId = ""
     private var modelPhoto: ModelPhoto? = null
+
+    private lateinit var adHolder: AdHolder
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) {
             if (it) {
@@ -321,6 +323,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                         model: Any?,
                         target: Target<Drawable>?,
                         isFirstResource: Boolean
+
                     ): Boolean {
                         showViews()
                         hideViews()
@@ -450,7 +453,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 override fun onOpened(tapsellPlusAdModel: TapsellPlusAdModel) {
                     super.onOpened(tapsellPlusAdModel)
                     isTapsellCreate = true
-                    Log.d(TAG, "Ad Open")
+                    Log.d("ContentValues", "Ad Open")
                 }
 
                 override fun onError(tapsellPlusErrorModel: TapsellPlusErrorModel) {
@@ -851,7 +854,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         blurViewBackground.expand(duration = 1000)
         layoutDetail.fadeIn(duration = 1000)
 
-        val adHolder: AdHolder = TapsellPlus.createAdHolder(
+        adHolder = TapsellPlus.createAdHolder(
             requireActivity(),
             binding.adContainer,
             R.layout.native_banner_detail
@@ -864,8 +867,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 override fun response(tapsellPlusAdModel: TapsellPlusAdModel) {
                     super.response(tapsellPlusAdModel)
                     responseId = tapsellPlusAdModel.responseId
-                    if (isTapsellCreate)
-                        showAd(adHolder)
+                    showAd(adHolder)
                 }
 
                 override fun error(message: String) {
@@ -874,6 +876,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             })
 
         Handler(Looper.getMainLooper()).postDelayed({
+
             val options = ImageLabelerOptions.Builder()
                 .setConfidenceThreshold(0.7f)
                 .build()
@@ -881,7 +884,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
             val drawable = imageView.drawable
 
-            if (drawable!=null){
+            if (drawable != null) {
                 val bitmap = drawable.toBitmap()
                 runClassification(bitmap)
             }

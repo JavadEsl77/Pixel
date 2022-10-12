@@ -10,6 +10,7 @@ import android.os.Handler
 import android.view.Gravity
 import android.view.View
 import android.view.Window
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
@@ -48,6 +49,8 @@ class GalleryFragment :
 
         binding.apply {
 
+
+
             val nightModeFlags = requireActivity().resources.configuration.uiMode and
                     Configuration.UI_MODE_NIGHT_MASK
             when (nightModeFlags) {
@@ -75,7 +78,8 @@ class GalleryFragment :
                 R.color.status_bar_color
             )
 
-            loadingAnimView.show()
+            shrimmerViewContaner.show()
+            shrimmerViewContaner.startShimmer()
             viewModel.liveDataTopics.observe(viewLifecycleOwner) {
 
                 it.let {
@@ -90,7 +94,7 @@ class GalleryFragment :
                     recTopics.layoutManager = layoutManager
                     toolbarTopics.fadeIn()
                     toolbarHome.fadeIn()
-                    loadingAnimView.hide()
+                    shrimmerViewContaner.hide()
                     val topicIdAndPosition = viewModel.getTopicIdAndPosition()
                     recTopics.scrollToPosition(topicIdAndPosition.second)
 
@@ -144,13 +148,16 @@ class GalleryFragment :
         }
         allPhotoAdapter.addLoadStateListener { loadState ->
             binding.apply {
-                loadingAnimView.isVisible = loadState.source.refresh is LoadState.Loading
-                recyclerViewRecommended.isVisible =
-                    loadState.source.refresh is LoadState.NotLoading
+                shrimmerViewContaner.isVisible = loadState.source.refresh is LoadState.Loading
+                shrimmerViewContaner.isVisible = loadState.source.refresh is LoadState.NotLoading
+                recyclerViewRecommended.isVisible = loadState.source.refresh is LoadState.NotLoading
+                layoutGallery.isVisible = loadState.source.refresh is LoadState.NotLoading
                 textViewError.isVisible = loadState.source.refresh is LoadState.Error
                 buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
                 if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && allPhotoAdapter.itemCount < 1) {
+                    shrimmerViewContaner.isVisible = false
                     recyclerViewRecommended.isVisible = false
+                    if (shrimmerViewContaner.isShimmerStarted) shrimmerViewContaner.stopShimmer()
                     textViewEmpty.isVisible = true
                 } else {
                     textViewEmpty.isVisible = false
@@ -177,13 +184,18 @@ class GalleryFragment :
 
                 allPhotoAdapter.addLoadStateListener { loadState ->
                     binding.apply {
-                        loadingAnimView.isVisible = loadState.source.refresh is LoadState.Loading
+                        shrimmerViewContaner.isVisible = loadState.source.refresh is LoadState.NotLoading
+                        shrimmerViewContaner.isVisible =
+                            loadState.source.refresh is LoadState.Loading
                         recyclerViewTopics.isVisible =
                             loadState.source.refresh is LoadState.NotLoading
+                        layoutGallery.isVisible = loadState.source.refresh is LoadState.NotLoading
                         textViewError.isVisible = loadState.source.refresh is LoadState.Error
                         buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
                         if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && allPhotoAdapter.itemCount < 1) {
                             recyclerViewTopics.isVisible = false
+                            shrimmerViewContaner.isVisible = false
+                            if (shrimmerViewContaner.isShimmerStarted) shrimmerViewContaner.stopShimmer()
                             textViewEmpty.isVisible = true
                         } else {
                             textViewEmpty.isVisible = false

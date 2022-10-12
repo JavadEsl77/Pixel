@@ -11,7 +11,6 @@ class MyDownloadViewModel @Inject constructor(
     private val folderName: String
 ) : ViewModel() {
 
-
     fun getDownloadPictures(): List<File> {
         val root = Environment.getExternalStorageDirectory()
         val myDir = File("${root}/${folderName}")

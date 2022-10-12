@@ -146,11 +146,6 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
         dialog.behavior.isDraggable = false
 
         sheetDialog.apply {
-            when (photo.name.replace(".jpg", "")) {
-                "Full-HD" -> {
-                    cardFullHd.isVisible = true
-                }
-            }
 
             Glide.with(requireContext())
                 .load(photo)

@@ -48,18 +48,7 @@ class MyDownloadAdapter(
 
             binding.apply {
 
-                if (bindingAdapterPosition == itemCount - 1) {
-                    val param = cardViewItemMyDownload.layoutParams as ViewGroup.MarginLayoutParams
-                    param.setMargins(25, 25, 0, 25)
-                    cardViewItemMyDownload.layoutParams = param
-                }
-
                 val quality = photo.name.replace(".jpg", "")
-                when (quality) {
-                    "Full-HD" -> {
-                        cardFullHd.isVisible = true
-                    }
-                }
                 textViewQuality.text = quality
                 textViewFileSize.text = "( " + photo.size() + " )"
 
