@@ -17,12 +17,39 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/tapsell_nativead_banner"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:minHeight="180dp" />
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/tapsell_nativead_banner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:minHeight="180dp" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/tapsell_nativead_sponsored"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="7dp"
+                app:contentPadding="4dp"
+                app:cardCornerRadius="10dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/color_ad_indicator_admob">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="تبلیغات"
+                    android:textSize="10dp"
+                    android:textColor="@color/white"/>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </RelativeLayout>
+
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/view_back_item"

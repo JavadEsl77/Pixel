@@ -227,12 +227,10 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
-
                 <LinearLayout
                     android:id="@+id/ly_classifications"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-
                     android:gravity="center|right"
                     android:orientation="vertical">
 
@@ -248,7 +246,6 @@
                         tools:spanCount="2" />
 
                 </LinearLayout>
-
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"

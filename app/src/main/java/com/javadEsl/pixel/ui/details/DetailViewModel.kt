@@ -9,9 +9,6 @@ import com.javadEsl.pixel.data.PixelRepository
 import com.javadEsl.pixel.data.detail.ModelPhoto
 import com.javadEsl.pixel.data.search.PixelPhoto
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,10 +19,8 @@ class DetailViewModel @Inject constructor(
 ) : ViewModel() {
     private val _liveDataList = MutableLiveData<ModelPhoto?>()
     val liveDataList: LiveData<ModelPhoto?> = _liveDataList
-
     private val _liveDataUserPhotosList = MutableLiveData<List<PixelPhoto>?>()
     val liveDataUserPhotosList: LiveData<List<PixelPhoto>?> = _liveDataUserPhotosList
-
     private var photoResponse: ModelPhoto? = null
 
     fun getPhotoDetail(photoId:String , userName: String) {
