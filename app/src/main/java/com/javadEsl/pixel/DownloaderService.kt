@@ -83,17 +83,15 @@ class DownloaderService : Service() {
                     stopForeground(true)
                     stopSelf()
                     isRunning = false
-                    Toast.makeText(
-                        applicationContext,
-                        R.string.string_alert_success_download,
-                        Toast.LENGTH_SHORT
-                    ).show()
                     r.stop()
 
                 }
 
                 override fun onFailed() {
-
+                    isRunning = false
+                    r.stop()
+                    stopForeground(true)
+                    stopSelf()
                 }
             })
             .forceReDownload(true)

@@ -14,6 +14,7 @@
     <string name="string_photo_category">دسته بندی عکس</string>
     <string name="string_photo_location">موقعیت مکانی عکس</string>
     <string name="string_camera_info">اطلاعات دوربین</string>
+    <string name="string_alert_exist_photo">این تصویر در حافظه موجود می باشد</string>
     <string name="string_title_download_dialog">در حال دانلود ...</string>
     <string name="string_waiting_download_dialog">لطفا صبر کنید تا دانلود بارگیری شود...</string>
     <string name="string_alert_success_wallpaper">تصویر پس زمینه با موفقیت اعمال شد</string>

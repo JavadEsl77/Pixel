@@ -24,7 +24,6 @@ import android.view.*
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
@@ -90,7 +89,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
     private var permissionType = ""
     private var responseId = ""
     private var modelPhoto: ModelPhoto? = null
-
     private lateinit var adHolder: AdHolder
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) {
@@ -101,7 +99,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                             "Download" -> {
                                 binding.cardDownload.performClick()
                             }
-                            "Share"    -> {
+                            "Share" -> {
                                 binding.imageView.invalidate()
                                 val drawable = binding.imageView.drawable
                                 val bitmap = drawable.toBitmap()
@@ -110,7 +108,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                                     shareImageUri(it2)
                                 }
                             }
-                            else       -> {
+                            else -> {
                                 false
                             }
                         }
@@ -123,7 +121,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 showPermissionInfoDialog()
             }
         }
-
     private val viewModel by viewModels<DetailViewModel>()
     private val args by navArgs<DetailsFragmentArgs>()
 
@@ -498,10 +495,10 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     IMAGE_REGULAR -> {
                         resolutionTypeSelected = "HD"
                     }
-                    IMAGE_RAW     -> {
+                    IMAGE_RAW -> {
                         resolutionTypeSelected = "Full-HD"
                     }
-                    IMAGE_SMALL   -> {
+                    IMAGE_SMALL -> {
                         resolutionTypeSelected = "SD"
                     }
                 }
@@ -513,11 +510,8 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                     modelPhoto?.let { it1 -> downloadPhoto(it1) }
                     popupMenu.dismiss()
                 } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "این تصویر در حافظه موجود می باشد",
-                        Toast.LENGTH_LONG
-                    ).show()
+
+                    alert(getString(R.string.string_alert_exist_photo))
                 }
             } else {
                 alertNetworkDialog(requireContext(), modelPhoto?.color.toString())
@@ -633,7 +627,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         var downloadLink = "https://"
         var typeFile = "SD"
         when (resolutionType) {
-            IMAGE_SMALL   -> {
+            IMAGE_SMALL -> {
                 downloadLink = modelPhoto.urls?.small?.convertedUrl.toString()
                 typeFile = "SD"
             }
@@ -641,11 +635,11 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
                 downloadLink = modelPhoto.urls?.regular?.convertedUrl.toString()
                 typeFile = "HD"
             }
-            IMAGE_RAW     -> {
+            IMAGE_RAW -> {
                 downloadLink = modelPhoto.urls?.raw?.convertedUrl.toString()
                 typeFile = "Full-HD"
             }
-            ""            -> {
+            "" -> {
                 downloadLink = modelPhoto.urls?.regular?.convertedUrl.toString()
                 typeFile = "HD"
             }
@@ -658,11 +652,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         myDir.mkdirs()
 
         if (!myDir.exists()) {
-            Toast.makeText(
-                requireContext(),
-                getString(R.string.string_alert_permission),
-                Toast.LENGTH_SHORT
-            ).show()
+            alert(getString(R.string.string_alert_permission))
             return
         }
 
@@ -959,19 +949,19 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
     private fun separationCountNumber(number: Int): String {
         var value = ""
         when (number) {
-            in 1_000_000..9_999_999     -> {
+            in 1_000_000..9_999_999 -> {
                 value = number.toString().substring(0, 1) + "+" + " میلیون"
             }
-            in 10_000_000..99_999_999   -> {
+            in 10_000_000..99_999_999 -> {
                 value = number.toString().substring(0, 2) + "+" + " میلیون"
             }
             in 100_000_000..999_999_999 -> {
                 value = number.toString().substring(0, 3) + "+" + " میلیون"
             }
-            in 1..999_999               -> {
+            in 1..999_999 -> {
                 value = number.toDecimal()
             }
-            else                        -> ""
+            else -> ""
         }
 
         return value

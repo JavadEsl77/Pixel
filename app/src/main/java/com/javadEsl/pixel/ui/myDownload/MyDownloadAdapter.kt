@@ -40,7 +40,7 @@ class MyDownloadAdapter(
 
         init {
             binding.root.setOnClickListener {
-                downloadList[bindingAdapterPosition].let { listener.onItemClick(it) }
+                downloadList[bindingAdapterPosition].let { listener.onItemClick(it, bindingAdapterPosition) }
             }
         }
 
@@ -63,7 +63,7 @@ class MyDownloadAdapter(
     }
 
     interface OnItemClickListener {
-        fun onItemClick(photo: File)
+        fun onItemClick(photo: File , position: Int)
     }
 }
 

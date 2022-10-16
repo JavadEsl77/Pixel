@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -34,6 +35,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.javadEsl.pixel.R
 import com.javadEsl.pixel.alert
 import com.javadEsl.pixel.collapse
+import com.javadEsl.pixel.data.detail.Position
 import com.javadEsl.pixel.databinding.FragmentMyDownloadBinding
 import com.javadEsl.pixel.databinding.LayoutBottomSheetPhotoBinding
 import com.javadEsl.pixel.expand
@@ -51,16 +53,15 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
     private val binding get() = _binding!!
     private var permissionType = "Start"
     private var isOnOpeningPage = false
-
-    private val permissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+    private var lastItemSelected: Int = 0
+    private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
             if (it) {
                 when (permissionType) {
                     "Start" -> {
                         getFileGallery()
                     }
                 }
-            }else
+            } else
                 findNavController().popBackStack()
         }
 
@@ -75,6 +76,7 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
 
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
@@ -98,6 +100,9 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
         val adapter = MyDownloadAdapter(viewModel.getDownloadPictures(), this)
         binding.apply {
 
+            if (adapter.downloadList.isNotEmpty())
+            recyclerViewMyDownload.scrollToPosition(lastItemSelected-1)
+
             layoutToolbar.textViewTitleToolbarScreens.text =
                 resources.getString(com.javadEsl.pixel.R.string.string_my_download_title)
             layoutToolbar.cardViewBackToolbarScreens.setOnClickListener {
@@ -118,8 +123,9 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
         }
     }
 
-    override fun onItemClick(photo: File) {
+    override fun onItemClick(photo: File, position: Int) {
         showImageSheetDialog(photo)
+        lastItemSelected = position
     }
 
     private fun isRequireExternalStorageManager() =
@@ -262,5 +268,4 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
             getFileGallery()
         }
     }
-
 }
