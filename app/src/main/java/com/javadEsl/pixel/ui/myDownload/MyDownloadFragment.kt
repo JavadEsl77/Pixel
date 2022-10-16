@@ -27,18 +27,16 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.javadEsl.pixel.R
-import com.javadEsl.pixel.alert
-import com.javadEsl.pixel.collapse
+import com.javadEsl.pixel.*
 import com.javadEsl.pixel.data.detail.Position
 import com.javadEsl.pixel.databinding.FragmentMyDownloadBinding
 import com.javadEsl.pixel.databinding.LayoutBottomSheetPhotoBinding
-import com.javadEsl.pixel.expand
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.FileOutputStream
@@ -48,13 +46,15 @@ import java.io.IOException
 @AndroidEntryPoint
 class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
     MyDownloadAdapter.OnItemClickListener {
+
     private val viewModel by viewModels<MyDownloadViewModel>()
     private var _binding: FragmentMyDownloadBinding? = null
     private val binding get() = _binding!!
     private var permissionType = "Start"
     private var isOnOpeningPage = false
     private var lastItemSelected: Int = 0
-    private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+    private val permissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
             if (it) {
                 when (permissionType) {
                     "Start" -> {
@@ -64,6 +64,7 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
             } else
                 findNavController().popBackStack()
         }
+    private lateinit var adapter: MyDownloadAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -76,7 +77,6 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
 
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
@@ -97,11 +97,9 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
             return
         }
 
-        val adapter = MyDownloadAdapter(viewModel.getDownloadPictures(), this)
+        adapter = MyDownloadAdapter(this)
+        adapter.submitList(viewModel.getDownloadPictures())
         binding.apply {
-
-            if (adapter.downloadList.isNotEmpty())
-            recyclerViewMyDownload.scrollToPosition(lastItemSelected-1)
 
             layoutToolbar.textViewTitleToolbarScreens.text =
                 resources.getString(com.javadEsl.pixel.R.string.string_my_download_title)
@@ -109,7 +107,7 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
                 findNavController().popBackStack()
             }
 
-            if (adapter.downloadList.isEmpty()) {
+            if (adapter.currentList.isEmpty()) {
                 recyclerViewMyDownload.isVisible = false
                 layoutMyDownloadError.isVisible = true
             } else {
@@ -118,7 +116,6 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
                 recyclerViewMyDownload.setHasFixedSize(true)
                 recyclerViewMyDownload.itemAnimator = null
                 recyclerViewMyDownload.adapter = adapter
-
             }
         }
     }
@@ -204,11 +201,12 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
                     return@setOnClickListener
                 }
 
-                if (photo.exists()) {
-                    photo.delete()
+                viewModel.deletePhotoAndDirectory(photo) {
                     dialog.dismiss()
-                    getFileGallery()
-                    alert(getString(R.string.string_alert_delete_photo))
+                    if (it) {
+                        alert(getString(R.string.string_alert_delete_photo))
+                        adapter.submitList(viewModel.getDownloadPictures())
+                    }
                 }
             }
 

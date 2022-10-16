@@ -2,7 +2,8 @@ package com.javadEsl.pixel.ui.myDownload
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.view.isVisible
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -13,9 +14,8 @@ import com.javadEsl.pixel.size
 import java.io.File
 
 class MyDownloadAdapter(
-    var downloadList: List<File>,
-    private val listener: MyDownloadFragment
-) : RecyclerView.Adapter<MyDownloadAdapter.TodoViewHolder>() {
+    private val listener: OnItemClickListener
+) : ListAdapter<File, MyDownloadAdapter.TodoViewHolder>(Comparator) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoViewHolder {
         val binding =
@@ -25,22 +25,20 @@ class MyDownloadAdapter(
     }
 
     override fun onBindViewHolder(holder: TodoViewHolder, position: Int) {
-        holder.bind(downloadList[position])
-
-    }
-
-    override fun getItemCount(): Int {
-        return downloadList.size
+        holder.bind(getItem(position))
     }
 
     inner class TodoViewHolder(private val binding: ItemListMyDownloadBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-
-
         init {
             binding.root.setOnClickListener {
-                downloadList[bindingAdapterPosition].let { listener.onItemClick(it, bindingAdapterPosition) }
+                getItem(bindingAdapterPosition).let {
+                    listener.onItemClick(
+                        it,
+                        bindingAdapterPosition
+                    )
+                }
             }
         }
 
@@ -63,7 +61,16 @@ class MyDownloadAdapter(
     }
 
     interface OnItemClickListener {
-        fun onItemClick(photo: File , position: Int)
+        fun onItemClick(photo: File, position: Int)
+    }
+
+    companion object {
+        private val Comparator = object : DiffUtil.ItemCallback<File>() {
+            override fun areItemsTheSame(oldItem: File, newItem: File) =
+                oldItem.name.hashCode() == newItem.name.hashCode()
+
+            override fun areContentsTheSame(oldItem: File, newItem: File) = oldItem == newItem
+        }
     }
 }
 

@@ -1,8 +1,5 @@
 package com.javadEsl.pixel
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.media.MediaMetadataRetriever
 import java.io.File
 
 internal val File.size get() = if (!exists()) 0.0 else length().toDouble()
