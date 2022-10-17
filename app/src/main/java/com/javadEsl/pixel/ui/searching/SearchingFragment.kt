@@ -245,7 +245,8 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
             layoutSuggestionList.show()
         }
 
-        suggestLoadingAnimView.show()
+        shrimmerViewContaner.show()
+        shrimmerViewContaner.startShimmer()
         viewModel.suggestPhotos()
 
         viewModel.liveDataSuggestPhoto.observe(viewLifecycleOwner) { data ->
@@ -261,11 +262,12 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
                 suggestLayoutManager.reverseLayout = true
                 recSuggest.layoutManager = suggestLayoutManager
                 recSuggest.adapter = suggestAdapter
-
+                layoutSuggestion.show()
                 textViewEmpty.hide()
                 buttonRetry.hide()
                 textViewError.hide()
-                suggestLoadingAnimView.hide()
+                shrimmerViewContaner.hide()
+                shrimmerViewContaner.stopShimmer()
             }
         }
     }
