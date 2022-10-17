@@ -32,7 +32,8 @@ interface PixelApi {
     @GET("napi/photos")
     suspend fun getPhotos(
         @Query("page") page: Int,
-        @Query("per_page") perPage: Int
+        @Query("per_page") perPage: Int,
+        @Query("order_by") order_by: String = "latest"
     ): List<AllPhotosItem>
 
     @GET("napi/topics")

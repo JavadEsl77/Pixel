@@ -2,7 +2,6 @@ package com.javadEsl.pixel.ui.gallery
 
 import android.app.Dialog
 import android.content.Context
-import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.os.Bundle
@@ -10,7 +9,6 @@ import android.os.Handler
 import android.view.Gravity
 import android.view.View
 import android.view.Window
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
@@ -19,12 +17,14 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.javadEsl.pixel.*
+import com.javadEsl.pixel.R
 import com.javadEsl.pixel.data.allPhotos.AllPhotosItem
 import com.javadEsl.pixel.data.topics.TopicsModelItem
 import com.javadEsl.pixel.databinding.FragmentGalleryBinding
+import com.javadEsl.pixel.fadeIn
+import com.javadEsl.pixel.hide
+import com.javadEsl.pixel.show
 import dagger.hilt.android.AndroidEntryPoint
-
 
 @AndroidEntryPoint
 class GalleryFragment :
@@ -48,7 +48,6 @@ class GalleryFragment :
         _binding = FragmentGalleryBinding.bind(view)
 
         binding.apply {
-
 
 
             val nightModeFlags = requireActivity().resources.configuration.uiMode and
@@ -81,7 +80,6 @@ class GalleryFragment :
             shrimmerViewContaner.show()
             shrimmerViewContaner.startShimmer()
             viewModel.liveDataTopics.observe(viewLifecycleOwner) {
-
                 it.let {
                     val layoutManager =
                         LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -184,7 +182,8 @@ class GalleryFragment :
 
                 allPhotoAdapter.addLoadStateListener { loadState ->
                     binding.apply {
-                        shrimmerViewContaner.isVisible = loadState.source.refresh is LoadState.NotLoading
+                        shrimmerViewContaner.isVisible =
+                            loadState.source.refresh is LoadState.NotLoading
                         shrimmerViewContaner.isVisible =
                             loadState.source.refresh is LoadState.Loading
                         recyclerViewTopics.isVisible =

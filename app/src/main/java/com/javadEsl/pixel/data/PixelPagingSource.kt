@@ -1,5 +1,6 @@
 package com.javadEsl.pixel.data
 
+import android.content.SharedPreferences
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.javadEsl.pixel.api.PixelApi

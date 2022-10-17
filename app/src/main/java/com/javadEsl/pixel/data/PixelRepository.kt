@@ -44,18 +44,19 @@ class PixelRepository @Inject constructor(
 
     suspend fun getAutocomplete(query: String) = pixelApi.getAutocomplete(query = query)
 
-    suspend fun getSuggestPhotos(suggest: String) = pixelApi.searchPhotos(suggest, page = 1, perPage = 12)
+    suspend fun getSuggestPhotos() =
+        pixelApi.getPhotos(page = 1, perPage = 6 , order_by = "popular")
 
     suspend fun getTopics() = pixelApi.getTopics(page = 1, perPage = 20)
 
-    fun getTopicsPhotos(topicId:String) = Pager(
+    fun getTopicsPhotos(topicId: String) = Pager(
         config = PagingConfig(
             pageSize = 20,
             maxSize = 100,
             enablePlaceholders = false
         ),
         pagingSourceFactory = {
-            PixelTopicsPhotoPagingSource(pixelApi,topicId)
+            PixelTopicsPhotoPagingSource(pixelApi, topicId)
         }
     ).liveData
 

@@ -1,15 +1,16 @@
 package com.javadEsl.pixel.ui.searching
 
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import com.javadEsl.pixel.NetworkHelper
-import com.javadEsl.pixel.api.PixelResponse
 import com.javadEsl.pixel.data.PixelRepository
+import com.javadEsl.pixel.data.allPhotos.AllPhotosItem
 import com.javadEsl.pixel.data.autocomplete.Suggestion
 import com.javadEsl.pixel.data.detail.ModelPhoto
-import com.javadEsl.pixel.data.search.PixelPhoto
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,8 +18,12 @@ import javax.inject.Inject
 class SearchingViewModel @Inject constructor(
     private val pixelRepository: PixelRepository,
     private val networkHelper: NetworkHelper,
+    private val pref: SharedPreferences,
     state: SavedStateHandle
 ) : ViewModel() {
+
+    var searchJob: Job? = null
+        private set
 
     private val _liveDataRandomPhoto = MutableLiveData<ModelPhoto?>()
     val liveDataRandomPhoto: LiveData<ModelPhoto?> = _liveDataRandomPhoto
@@ -50,19 +55,21 @@ class SearchingViewModel @Inject constructor(
     }
 
 
-    private val _liveDataSuggestPhoto = MutableLiveData<List<PixelPhoto>>()
-    val liveDataSuggestPhoto: LiveData<List<PixelPhoto>> = _liveDataSuggestPhoto
-    fun suggestPhotos(suggest: String) {
-        viewModelScope.launch {
+    private val _liveDataSuggestPhoto = MutableLiveData<List<AllPhotosItem>>()
+    val liveDataSuggestPhoto: LiveData<List<AllPhotosItem>> = _liveDataSuggestPhoto
+    fun suggestPhotos() {
+        searchJob = viewModelScope.launch {
             if (!networkHelper.hasInternetConnection()) {
                 _liveDataSuggestPhoto.postValue(emptyList())
                 return@launch
             }
 
             try {
-                val response = pixelRepository.getSuggestPhotos(suggest)
-                if (response.results.isNotEmpty()) {
-                    _liveDataSuggestPhoto.postValue(response.results)
+                val response = pixelRepository.getSuggestPhotos()
+                if (response.isNotEmpty()) {
+                    _liveDataSuggestPhoto.postValue(response)
+                }else{
+                    _liveDataSuggestPhoto.postValue(emptyList())
                 }
             } catch (e: Exception) {
                 Log.e("TAG", "getAutocomplete: $e")
@@ -70,16 +77,6 @@ class SearchingViewModel @Inject constructor(
 
         }
     }
-
-
-
-
-
-
-
-
-
-
 
 
     private val _liveDataAutocomplete = MutableLiveData<List<Suggestion>?>()
@@ -106,5 +103,50 @@ class SearchingViewModel @Inject constructor(
     companion object {
         private const val CURRENT_QUERY = "current_query"
         private const val DEFAULT_QUERY = "tehran"
+    }
+
+
+    fun setSuccessSearchInCash(
+        searchValue: String,
+        previousSearchArrayList: MutableList<String>
+    ) {
+        val set: MutableSet<String> = HashSet()
+        val editor = pref.edit()
+        if (!previousSearchArrayList.contains(searchValue)) {
+            previousSearchArrayList.add(searchValue)
+            set.addAll(previousSearchArrayList)
+            editor?.putStringSet("previousSearch", set)
+            editor?.putString("searchValue", searchValue)
+            editor?.putString("searchStatus", searchValue)
+            editor?.apply()
+        }else{
+            editor?.putString("searchValue", searchValue)
+            editor?.putString("searchStatus", searchValue)
+            editor?.apply()
+        }
+    }
+
+    fun getSearchValueFromCash(): Pair<MutableSet<String>?, String?> {
+        val searchValue = pref.getString("searchValue", null)
+        val previousSearch = pref.getStringSet("previousSearch", null)
+        return Pair(previousSearch, searchValue)
+    }
+
+    fun getSearchStatus(): String? {
+        return pref.getString("searchStatus", null)
+    }
+
+    fun clearSearchStatus() {
+        val editor = pref.edit()
+        editor.putString("searchStatus", "")
+        editor.apply()
+    }
+
+    fun clearSearchCash() {
+        val editor = pref.edit()
+        editor.putString("searchValue", "")
+        editor.putStringSet("previousSearch", null)
+        editor.putString("searchStatus", "")
+        editor.apply()
     }
 }

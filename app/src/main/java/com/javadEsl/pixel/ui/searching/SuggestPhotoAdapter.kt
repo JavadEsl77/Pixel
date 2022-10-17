@@ -11,16 +11,15 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.javadEsl.pixel.R
-import com.javadEsl.pixel.data.search.PixelPhoto
+import com.javadEsl.pixel.data.allPhotos.AllPhotosItem
 import com.javadEsl.pixel.data.search.convertedUrl
 import com.javadEsl.pixel.databinding.ItemSuggestPhotoBinding
 import com.javadEsl.pixel.isBrightColor
 
 
 class SuggestPhotoAdapter(
-    var suggestPhotoList: List<PixelPhoto>,
-    private val listener: OnItemClickListener,
-    private val activity: Activity
+    var suggestPhotoList: List<AllPhotosItem>,
+    private val listener: OnItemClickListener
 ) : RecyclerView.Adapter<SuggestPhotoAdapter.SuggestViewHolder>() {
     private var lastPosition = 0
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SuggestViewHolder {
@@ -61,7 +60,7 @@ class SuggestPhotoAdapter(
 
 
                 Glide.with(itemView)
-                    .load(suggestPhotoList[bindingAdapterPosition].user?.profile_image?.medium?.convertedUrl)
+                    .load(suggestPhotoList[bindingAdapterPosition].user?.profileImage?.medium?.convertedUrl)
                     .centerCrop()
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .error(R.drawable.ic_user)
@@ -88,7 +87,7 @@ class SuggestPhotoAdapter(
     }
 
     interface OnItemClickListener {
-        fun onItemClick(photo: PixelPhoto)
+        fun onItemClick(photo: AllPhotosItem)
     }
 
     private fun setAnimation(viewToAnimate: View, position: Int) {

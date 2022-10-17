@@ -3,14 +3,12 @@ package com.javadEsl.pixel.ui.searching
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
-import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.Window
@@ -29,6 +27,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.javadEsl.pixel.R
+import com.javadEsl.pixel.data.allPhotos.AllPhotosItem
 import com.javadEsl.pixel.data.search.PixelPhoto
 import com.javadEsl.pixel.databinding.FragmentSearchBinding
 import com.javadEsl.pixel.fadeOut
@@ -44,12 +43,11 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
     private val viewModel by viewModels<SearchingViewModel>()
     private var _binding: FragmentSearchBinding? = null
     private val binding get() = _binding!!
-    private var sharedPreference: SharedPreferences? = null
+
     private var previousSearchArrayList: MutableList<String> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharedPreference = requireContext().getSharedPreferences("Search_value", Context.MODE_PRIVATE)
-        clearSearchCash()
+        viewModel.clearSearchStatus()
 
     }
 
@@ -58,8 +56,6 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
         _binding = FragmentSearchBinding.bind(view)
         val adapter = UnsplashPhotoAdapter(this, requireActivity())
         binding.apply {
-
-            suggestLoadingAnimView.show()
 
             val nightModeFlags = requireActivity().resources.configuration.uiMode and
                     Configuration.UI_MODE_NIGHT_MASK
@@ -89,20 +85,21 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
                 R.color.status_bar_color
             )
 
-            val set: MutableSet<String>? = sharedPreference?.getStringSet("previousSearch", null)
+            val set: MutableSet<String>? = viewModel.getSearchValueFromCash().first
             if (!set.isNullOrEmpty()) {
                 previousSearchArrayList = ArrayList(set)
                 val count =
                     if (previousSearchArrayList.size in 6..9) 2 else if (previousSearchArrayList.size in 9..19) 3 else 1
                 val layoutManager = StaggeredGridLayoutManager(count, RecyclerView.HORIZONTAL)
                 layoutManager.reverseLayout = true
-                val adapter = PreviousSearchAdapter(this@SearchingFragment, previousSearchArrayList)
-                recPreviousSearch.adapter = adapter
+                val previousAdapter =
+                    PreviousSearchAdapter(this@SearchingFragment, previousSearchArrayList)
+                recPreviousSearch.adapter = previousAdapter
                 recPreviousSearch.layoutManager = layoutManager
 
             }
 
-            if (!sharedPreference?.getString("searchValue","").equals("")) {
+            if (!viewModel.getSearchStatus().equals("")) {
                 layoutPreviousSearchList.hide()
                 layoutSuggestionList.hide()
                 layoutSearchList.show()
@@ -114,19 +111,16 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
                 layoutSuggestionList.show()
             }
 
-
-            var defaultSearch = "iran"
-            if(previousSearchArrayList.isNotEmpty()){
-                val randomNumber = (0 until previousSearchArrayList.size).random()
-                defaultSearch = previousSearchArrayList[randomNumber]
-            }
-
-            viewModel.suggestPhotos(defaultSearch)
+            suggestLoadingAnimView.show()
+            viewModel.suggestPhotos()
 
             viewModel.liveDataSuggestPhoto.observe(viewLifecycleOwner) { data ->
                 data?.let {
                     val suggestAdapter =
-                        SuggestPhotoAdapter(data.shuffled(), this@SearchingFragment, requireActivity())
+                        SuggestPhotoAdapter(
+                            data.shuffled(),
+                            this@SearchingFragment
+                        )
                     recSuggest.itemAnimator = null
                     val suggestLayoutManager =
                         StaggeredGridLayoutManager(3, RecyclerView.VERTICAL)
@@ -134,6 +128,9 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
                     recSuggest.layoutManager = suggestLayoutManager
                     recSuggest.adapter = suggestAdapter
 
+                    textViewEmpty.hide()
+                    buttonRetry.hide()
+                    textViewError.hide()
                     suggestLoadingAnimView.hide()
                 }
             }
@@ -166,23 +163,32 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
             }
 
             imgClean.setOnClickListener {
+                viewModel.clearSearchStatus()
                 edtSearch.setText("")
-                clearSearchCash()
                 imgClean.isVisible = false
                 layoutSuggestionList.show()
                 layoutSearchList.hide()
-                val set: MutableSet<String>? =
-                    sharedPreference?.getStringSet("previousSearch", null)
+                textViewEmpty.hide()
+                buttonRetry.hide()
+                textViewError.hide()
+                loadingAnimView.hide()
+                viewModel.searchJob?.cancel()
+
+                val set: MutableSet<String>? = viewModel.getSearchValueFromCash().first
                 if (!set.isNullOrEmpty()) {
+
                     previousSearchArrayList = ArrayList(set)
+
                     val count =
                         if (previousSearchArrayList.size in 6..9) 2 else if (previousSearchArrayList.size in 9..19) 3 else 1
+
                     val layoutManager = StaggeredGridLayoutManager(count, RecyclerView.HORIZONTAL)
-                    layoutManager.reverseLayout = true;
+                    layoutManager.reverseLayout = true
                     val adapter =
                         PreviousSearchAdapter(this@SearchingFragment, previousSearchArrayList)
                     recPreviousSearch.adapter = adapter
                     recPreviousSearch.layoutManager = layoutManager
+
                     layoutPreviousSearchList.show()
                 } else {
                     layoutPreviousSearchList.hide()
@@ -193,11 +199,15 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
                 override fun afterTextChanged(s: Editable?) {
                     imgClean.isVisible = edtSearch.text.toString() != ""
 
-                    Log.e("TAG", "onViewCreated: $s")
-                    if (s.toString().isEmpty()){
-                        clearSearchCash()
+                    if (s.toString().isEmpty()) {
+                        viewModel.clearSearchStatus()
                         layoutSuggestionList.show()
                         layoutSearchList.hide()
+                        textViewEmpty.hide()
+                        buttonRetry.hide()
+                        textViewError.hide()
+                        loadingAnimView.hide()
+                        viewModel.searchJob?.cancel()
 
                         if (previousSearchArrayList.isNotEmpty()) {
                             layoutPreviousSearchList.show()
@@ -261,7 +271,6 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
                     requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
 
-
                 adapter.addLoadStateListener { loadState ->
                     binding.apply {
                         loadingAnimView.isVisible = loadState.source.refresh is LoadState.Loading
@@ -277,6 +286,8 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
                         }
                     }
                 }
+
+
                 performSearch()
 
                 layoutSearchList.show()
@@ -287,7 +298,7 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
             }
 
             textViewClearPrevious.setOnClickListener {
-                sharedPreference?.edit()?.clear()?.apply()
+                viewModel.clearSearchCash()
                 previousSearchArrayList.clear()
                 layoutPreviousSearchList.fadeOut()
             }
@@ -303,24 +314,22 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
         if (binding.edtSearch.text.toString().isEmpty()) {
             binding.edtSearch.error = getString(R.string.string_error_edittext_search)
         } else {
-            val editor = sharedPreference?.edit()
-            if (!sharedPreference?.getString("search", "")
-                    .equals(binding.edtSearch.text.toString())
-            ) {
-                val set: MutableSet<String> = HashSet()
-                if (!previousSearchArrayList.contains(binding.edtSearch.text.toString())) {
-                    previousSearchArrayList.add(binding.edtSearch.text.toString())
-                    set.addAll(previousSearchArrayList)
-                    editor?.putStringSet("previousSearch", set)
-                    editor?.putString("searchValue", binding.edtSearch.text.toString())
-                    editor?.apply()
-                }
-                viewModel.searchPhotos(binding.edtSearch.text.toString())
-                binding.recSearching.scrollToPosition(0)
-            }
-
+            setSearchCash()
+            viewModel.searchPhotos(binding.edtSearch.text.toString())
+            binding.recSearching.scrollToPosition(0)
         }
+    }
 
+    private fun setSearchCash() {
+        if (viewModel.getSearchStatus().equals("")
+            ||
+            viewModel.getSearchStatus() != binding.edtSearch.text.toString()
+        ) {
+            viewModel.setSuccessSearchInCash(
+                binding.edtSearch.text.toString(),
+                previousSearchArrayList
+            )
+        }
     }
 
     override fun onItemClick(photo: PixelPhoto) {
@@ -364,20 +373,26 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
         _binding = null
     }
 
-     private fun clearSearchCash(){
-         val editor = sharedPreference?.edit()
-         editor?.putString("searchValue","")
-         editor?.apply()
-     }
-
     override fun onItemClick(suggest: String) {
         binding.apply {
-            val editor = sharedPreference?.edit()
-            editor?.putString("searchValue",suggest)
-            editor?.apply()
             edtSearch.setText(suggest)
             cardViewSearch.performClick()
         }
+    }
+
+    override fun onItemClick(photo: AllPhotosItem) {
+
+        if (checkIsConnection()) {
+            if (photo.isAdvertisement) return
+            val action = SearchingFragmentDirections.actionSearchingFragmentToDetailsFragment(
+                photo.id!!,
+                userName = photo.user?.username.toString()
+            )
+            findNavController().navigate(action)
+        } else {
+            alertNetworkDialog(requireContext())
+        }
+
     }
 
 }
