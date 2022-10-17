@@ -211,7 +211,7 @@
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <com.facebook.shimmer.ShimmerFrameLayout
-                    android:id="@+id/shrimmer_view_contaner"
+                    android:id="@+id/shrimmer_view_contaner_suggestion"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="visible">
@@ -240,35 +240,49 @@
                 android:visibility="gone"
                 tools:visibility="visible">
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rec_searching"
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/layout_search"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clipToPadding="false"
+                    android:layout_height="match_parent"
                     android:orientation="vertical"
-                    android:paddingRight="5dp"
-                    android:paddingBottom="5dp"
-                    app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
-                    app:spanCount="2"
-                    tools:itemCount="10"
-                    tools:listitem="@layout/item_unsplash_photo" />
+                    android:visibility="gone">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rec_searching"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipToPadding="false"
+                        android:orientation="vertical"
+                        android:paddingRight="5dp"
+                        android:paddingBottom="5dp"
+                        app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+                        app:spanCount="2"
+                        tools:itemCount="10"
+                        tools:listitem="@layout/item_unsplash_photo" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+                <com.facebook.shimmer.ShimmerFrameLayout
+                    android:id="@+id/shrimmer_view_contaner_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible">
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <include layout="@layout/shrimmer_gallery_layout" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                </com.facebook.shimmer.ShimmerFrameLayout>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
-
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/loading_anim_view"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_centerInParent="true"
-            android:visibility="gone"
-            app:lottie_autoPlay="true"
-            app:lottie_colorFilter="@color/purple_200"
-            app:lottie_loop="true"
-            app:lottie_rawRes="@raw/loading"
-            app:tint="#fff"
-            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/text_view_error"
