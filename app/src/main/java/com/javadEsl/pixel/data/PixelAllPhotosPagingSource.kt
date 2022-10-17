@@ -34,6 +34,6 @@ class PixelAllPhotosPagingSource @Inject constructor(
     }
 
     override fun getRefreshKey(state: PagingState<Int, AllPhotosItem>): Int? {
-       return state.anchorPosition
+        return state.anchorPosition
     }
 }

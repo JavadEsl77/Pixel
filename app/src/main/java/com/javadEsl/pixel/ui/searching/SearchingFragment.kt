@@ -306,6 +306,10 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
             cardViewBackToolbarSearch.setOnClickListener {
                 findNavController().popBackStack()
             }
+
+            buttonRetry.setOnClickListener {
+                adapter.retry()
+            }
         }
 
     }
