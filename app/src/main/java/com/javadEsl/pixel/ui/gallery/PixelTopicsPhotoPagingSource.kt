@@ -19,7 +19,10 @@ class PixelTopicsPhotoPagingSource @Inject constructor(
         return try {
             val response =
                 pixelApi.getTopicsPhoto(topicId, page = position, perPage = params.loadSize)
-            val photos = response.toMutableList()
+            val photos = response.filter {
+                it.premium != true
+            }.toMutableList()
+
             if (photos.isNotEmpty()) {
                 photos.add(AllPhotosItem(id = "ad_item", isAdvertisement = true))
             }
@@ -31,8 +34,6 @@ class PixelTopicsPhotoPagingSource @Inject constructor(
         } catch (exception: Exception) {
             LoadResult.Error(exception)
         }
-
-
     }
 
     override fun getRefreshKey(state: PagingState<Int, AllPhotosItem>): Int? {

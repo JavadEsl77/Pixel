@@ -12,6 +12,7 @@ data class PixelPhoto(
     val user: PixelUser? = null,
     val description: String? = null,
     val urls: PixelPhotoUrls? = null,
+    val premium: Boolean? = null,
     val isAdvertisement: Boolean = false
 ) : Parcelable {
 

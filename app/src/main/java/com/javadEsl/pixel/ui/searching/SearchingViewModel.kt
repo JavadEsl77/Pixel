@@ -65,10 +65,11 @@ class SearchingViewModel @Inject constructor(
             }
 
             try {
+
                 val response = pixelRepository.getSuggestPhotos()
                 if (response.isNotEmpty()) {
                     _liveDataSuggestPhoto.postValue(response)
-                }else{
+                } else {
                     _liveDataSuggestPhoto.postValue(emptyList())
                 }
             } catch (e: Exception) {
@@ -119,7 +120,7 @@ class SearchingViewModel @Inject constructor(
             editor?.putString("searchValue", searchValue)
             editor?.putString("searchStatus", searchValue)
             editor?.apply()
-        }else{
+        } else {
             editor?.putString("searchValue", searchValue)
             editor?.putString("searchStatus", searchValue)
             editor?.apply()

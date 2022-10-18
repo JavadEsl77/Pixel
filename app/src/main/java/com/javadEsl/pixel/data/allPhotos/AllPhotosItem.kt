@@ -25,6 +25,7 @@ data class AllPhotosItem(
     val sponsorship: Sponsorship? = null,
     @SerializedName("topic_submissions")
     val topicSubmissions: TopicSubmissions? = null,
+    val premium:Boolean?=null,
     @SerializedName("updated_at")
     val updatedAt: String? = null,
     val urls: Urls? = null,

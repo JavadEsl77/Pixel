@@ -17,8 +17,12 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.javadEsl.pixel.R
 import com.javadEsl.pixel.data.allPhotos.AllPhotosItem
+import com.javadEsl.pixel.data.search.convertedUrl
 import com.javadEsl.pixel.data.topics.TopicsModelItem
 import com.javadEsl.pixel.databinding.FragmentGalleryBinding
 import com.javadEsl.pixel.fadeIn
@@ -279,6 +283,14 @@ class GalleryFragment :
             if (topicsModelItem.id == TopicsModelItem.Type.USER) {
                 getRecommendedData()
             } else {
+                val coverUrl = topicsModelItem.coverPhoto?.urls?.small.toString()
+                Glide.with(requireContext())
+                    .load(coverUrl.convertedUrl)
+                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .error(R.drawable.ic_error_photos)
+                    .into(binding.imageViewTopicCover)
+
                 getTopicPhotoList(allPhotoAdapter, topicsModelItem.id)
             }
         }

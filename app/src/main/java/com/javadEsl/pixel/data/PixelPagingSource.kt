@@ -19,7 +19,11 @@ class UnsplashPagingSource @Inject constructor(
         val position = params.key ?: UNSPLASH_STARTING_PAGE_INDEX
         return try {
             val response = pixelApi.searchPhotos(query, position, params.loadSize)
-            val photos = response.results.toMutableList()
+
+            val photos = response.results.filter {
+                it.premium != true
+            }.toMutableList()
+
             if (photos.isNotEmpty()) {
                 photos.add(PixelPhoto(id = "ad_item", isAdvertisement = true))
             }

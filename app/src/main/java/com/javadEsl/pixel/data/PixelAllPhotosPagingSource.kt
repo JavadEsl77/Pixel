@@ -17,7 +17,10 @@ class PixelAllPhotosPagingSource @Inject constructor(
         val position = params.key ?: UNSPLASH_STARTING_PAGE_INDEX
         return try {
             val response = pixelApi.getPhotos(page = position, perPage = params.loadSize)
-            val photos = response.toMutableList()
+            val photos = response.filter {
+                it.premium != true
+            }.toMutableList()
+
             if (photos.isNotEmpty()) {
                 photos.add(AllPhotosItem(id = "ad_item", isAdvertisement = true))
             }
