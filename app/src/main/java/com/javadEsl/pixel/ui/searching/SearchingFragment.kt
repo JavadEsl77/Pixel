@@ -135,6 +135,7 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
                 }
             })
             edtSearch.setOnEditorActionListener(TextView.OnEditorActionListener { v, actionId, event ->
+
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     val inputMethodManager =
                         requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
@@ -142,9 +143,14 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
 
                     adapter.addLoadStateListener { loadState ->
                         binding.apply {
-                            shrimmerViewContanerSearch.isVisible = loadState.source.refresh is LoadState.Loading
-                            shrimmerViewContanerSearch.isVisible = loadState.source.refresh is LoadState.NotLoading
-                            recSearching.isVisible = loadState.source.refresh is LoadState.NotLoading
+                            shrimmerViewContanerSearch.isVisible =
+                                loadState.source.refresh is LoadState.Loading
+                            recSearching.isVisible =
+                                loadState.source.refresh is LoadState.NotLoading
+                            layoutSearch.isVisible =
+                                loadState.source.refresh is LoadState.NotLoading
+                            layoutSearch.isVisible =
+                                loadState.source.refresh is LoadState.NotLoading
                             textViewError.isVisible = loadState.source.refresh is LoadState.Error
                             buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
                             if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && adapter.itemCount < 1) {
@@ -159,6 +165,8 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
                     }
                     performSearch()
 
+                    shrimmerViewContanerSearch.show()
+                    shrimmerViewContanerSearch.startShimmer()
                     layoutSearchList.show()
                     layoutPreviousSearchList.hide()
                     layoutSuggestionList.hide()
@@ -170,32 +178,34 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
             })
 
             cardViewSearch.setOnClickListener {
+
                 val inputMethodManager =
                     requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
 
                 adapter.addLoadStateListener { loadState ->
                     binding.apply {
-                        shrimmerViewContanerSearch.isVisible = loadState.source.refresh is LoadState.Loading
-                        shrimmerViewContanerSearch.isVisible = loadState.source.refresh is LoadState.NotLoading
-                        recSearching.isVisible =
-                            loadState.source.refresh is LoadState.NotLoading
+                        shrimmerViewContanerSearch.isVisible =
+                            loadState.source.refresh is LoadState.Loading
+                        recSearching.isVisible = loadState.source.refresh is LoadState.NotLoading
+                        layoutSearch.isVisible = loadState.source.refresh is LoadState.NotLoading
                         textViewError.isVisible = loadState.source.refresh is LoadState.Error
                         buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
                         if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && adapter.itemCount < 1) {
                             shrimmerViewContanerSearch.isVisible = false
                             recSearching.isVisible = false
                             textViewEmpty.isVisible = true
-                            if (shrimmerViewContanerSearch.isShimmerStarted) shrimmerViewContanerSearch.stopShimmer()
+//                            if (shrimmerViewContanerSearch.isShimmerStarted) shrimmerViewContanerSearch.stopShimmer()
                         } else {
                             textViewEmpty.isVisible = false
                         }
                     }
                 }
 
-
                 performSearch()
 
+                shrimmerViewContanerSearch.show()
+                shrimmerViewContanerSearch.startShimmer()
                 layoutSearchList.show()
                 layoutPreviousSearchList.hide()
                 layoutSuggestionList.hide()
@@ -276,9 +286,6 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
 
     private fun setSearchConfig(adapter: UnsplashPhotoAdapter) = binding.apply {
 
-        shrimmerViewContanerSearch.show()
-        shrimmerViewContanerSearch.startShimmer()
-
         recSearching.itemAnimator = null
         recSearching.adapter = adapter.withLoadStateHeaderAndFooter(
             header = UnsplashPhotoLoadStateAdapter { adapter.retry() },
@@ -299,7 +306,6 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
         viewModel.photos.observe(viewLifecycleOwner) { data ->
             data?.let {
                 adapter.submitData(viewLifecycleOwner.lifecycle, data)
-                shrimmerViewContanerSearch.hide()
             }
         }
     }
