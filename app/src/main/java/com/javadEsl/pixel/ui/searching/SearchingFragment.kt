@@ -157,7 +157,6 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
                                 shrimmerViewContanerSearch.isVisible = false
                                 recSearching.isVisible = false
                                 textViewEmpty.isVisible = true
-                                if (shrimmerViewContanerSearch.isShimmerStarted) shrimmerViewContanerSearch.stopShimmer()
                             } else {
                                 textViewEmpty.isVisible = false
                             }
@@ -195,7 +194,6 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
                             shrimmerViewContanerSearch.isVisible = false
                             recSearching.isVisible = false
                             textViewEmpty.isVisible = true
-//                            if (shrimmerViewContanerSearch.isShimmerStarted) shrimmerViewContanerSearch.stopShimmer()
                         } else {
                             textViewEmpty.isVisible = false
                         }

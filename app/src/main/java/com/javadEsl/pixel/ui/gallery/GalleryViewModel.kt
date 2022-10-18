@@ -34,14 +34,19 @@ class GalleryViewModel @Inject constructor(
 
             try {
                 val response = pixelRepository.getTopics()
-                val photos = response.toMutableList()
-                if (photos.isNotEmpty()) {
-                    photos.add(0, TopicsModelItem(id = "user_type", title = "recommended for you"))
+                val topics = response.toMutableList()
+                if (topics.isNotEmpty()) {
+                    val currentEvents = topics.firstOrNull { it.title == "Current Events" }
+                    if (currentEvents != null) {
+                        topics.remove(currentEvents)
+                    }
+                    topics.add(0, TopicsModelItem(id = "user_type", title = "recommended for you"))
                 }
-                if (response.isNotEmpty()) {
-                    _liveDataTopics.postValue(getTranslatedPhotos(photos))
+                if (topics.isNotEmpty()) {
+                    _liveDataTopics.postValue(getTranslatedPhotos(topics))
                 }
             } catch (e: Exception) {
+                _liveDataTopics.postValue(emptyList())
                 Log.e("TAG", "getAutocomplete: $e")
             }
 
@@ -58,7 +63,7 @@ class GalleryViewModel @Inject constructor(
 
     private fun getTranslatedTitle(title: String?): String {
         return when (title) {
-            "recommended for you" -> "پیشنهاد شده به شما"
+            "recommended for you" -> "تازه ترین ها"
             "Food & Drink"        -> "غذا و نوشیدنی"
             "Current Events"      -> "رویدادهای جاری"
             "Wallpapers"          -> "تصاویر پس زمینه"

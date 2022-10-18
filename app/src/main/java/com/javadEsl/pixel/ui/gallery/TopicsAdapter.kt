@@ -14,12 +14,9 @@ import androidx.core.text.bold
 import androidx.core.text.color
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
-import com.javadEsl.pixel.R
+import com.javadEsl.pixel.*
 import com.javadEsl.pixel.data.topics.TopicsModelItem
 import com.javadEsl.pixel.databinding.ItemTopicsBinding
-import com.javadEsl.pixel.fadeIn
-import com.javadEsl.pixel.fadeOut
-import com.javadEsl.pixel.setTint
 
 class TopicsAdapter(
     private val listener: OnItemClickListener,
@@ -70,15 +67,19 @@ class TopicsAdapter(
             binding.apply {
 
                 if (lastSelectedPosition == bindingAdapterPosition) {
-                    layoutLineTopicItem.fadeIn()
+                    textViewTopicItem.textSize = 13f
+                    layoutLineTopicItem.show()
                     textViewTopicItem.text = textBuilder.color(getColor(R.color.purple_200)) {
                         bold { bold { append(item.title) } }
                     }
+
                 } else {
+                    textViewTopicItem.textSize = 12f
                     layoutLineTopicItem.visibility = View.INVISIBLE
-                    textViewTopicItem.text = textBuilder.color(getColor(R.color.black)) {
+                    textViewTopicItem.text = textBuilder.color(getColor(R.color.color_hint_edittext)) {
                         append(item.title)
                     }
+
                 }
             }
         }

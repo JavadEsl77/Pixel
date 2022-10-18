@@ -34,8 +34,10 @@ class GalleryFragment :
 
     private val viewModel by viewModels<GalleryViewModel>()
     private var _binding: FragmentGalleryBinding? = null
+    private var emptyDataReceiver = false
     private val binding get() = _binding!!
     private lateinit var allPhotoAdapter: AllPhotoAdapter
+    private lateinit var topicsAdapter: TopicsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,13 +79,57 @@ class GalleryFragment :
                 R.color.status_bar_color
             )
 
-            shrimmerViewContaner.show()
-            shrimmerViewContaner.startShimmer()
-            viewModel.liveDataTopics.observe(viewLifecycleOwner) {
-                it.let {
+            getTopicData()
+
+            buttonRetry.setOnClickListener {
+                if (emptyDataReceiver) {
+                    getTopicData()
+                } else {
+                    allPhotoAdapter.retry()
+                }
+
+            }
+
+            cardViewSearching.setOnClickListener {
+                val action =
+                    GalleryFragmentDirections.actionGalleryFragmentToSearchingFragment()
+                findNavController().navigate(action)
+            }
+
+            cardMyDownload.setOnClickListener {
+                val action =
+                    GalleryFragmentDirections.actionGalleryFragmentToMyDownloadFragment()
+                findNavController().navigate(action)
+            }
+
+        }
+
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
+    private fun getTopicData() = binding.apply {
+        shrimmerViewContaner.show()
+        shrimmerViewContaner.startShimmer()
+        viewModel.liveDataTopics.observe(viewLifecycleOwner) {
+            it?.let {
+                if (it.isNotEmpty()) {
+                    layoutTopics.show()
+                    layoutRecommended.show()
+                    buttonRetry.hide()
+                    textViewError.hide()
+                    emptyDataReceiver = false
+
                     val layoutManager =
-                        LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-                    val topicsAdapter = TopicsAdapter(
+                        LinearLayoutManager(
+                            requireContext(),
+                            LinearLayoutManager.HORIZONTAL,
+                            false
+                        )
+                    topicsAdapter = TopicsAdapter(
                         this@GalleryFragment,
                         it,
                         viewModel.getTopicIdAndPosition().second
@@ -102,30 +148,16 @@ class GalleryFragment :
                     } else {
                         getTopicPhotoList(allPhotoAdapter, topicId)
                     }
+                } else {
+                    layoutTopics.hide()
+                    layoutRecommended.hide()
+                    shrimmerViewContaner.hide()
+                    buttonRetry.show()
+                    textViewError.show()
+                    emptyDataReceiver = true
                 }
             }
-
-            buttonRetry.setOnClickListener {
-                allPhotoAdapter.retry()
-            }
-
-            cardViewSearching.setOnClickListener {
-                val action = GalleryFragmentDirections.actionGalleryFragmentToSearchingFragment()
-                findNavController().navigate(action)
-            }
-
-            cardMyDownload.setOnClickListener {
-                val action = GalleryFragmentDirections.actionGalleryFragmentToMyDownloadFragment()
-                findNavController().navigate(action)
-            }
-
         }
-
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     private fun getRecommendedData() = binding.apply {
@@ -142,20 +174,17 @@ class GalleryFragment :
             it.let {
                 allPhotoAdapter.submitData(viewLifecycleOwner.lifecycle, it)
             }
-
         }
         allPhotoAdapter.addLoadStateListener { loadState ->
             binding.apply {
-                shrimmerViewContaner.isVisible = loadState.source.refresh is LoadState.Loading
-                shrimmerViewContaner.isVisible = loadState.source.refresh is LoadState.NotLoading
-                recyclerViewRecommended.isVisible = loadState.source.refresh is LoadState.NotLoading
+                recyclerViewRecommended.isVisible =
+                    loadState.source.refresh is LoadState.NotLoading
                 layoutGallery.isVisible = loadState.source.refresh is LoadState.NotLoading
                 textViewError.isVisible = loadState.source.refresh is LoadState.Error
                 buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
                 if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && allPhotoAdapter.itemCount < 1) {
                     shrimmerViewContaner.isVisible = false
                     recyclerViewRecommended.isVisible = false
-                    if (shrimmerViewContaner.isShimmerStarted) shrimmerViewContaner.stopShimmer()
                     textViewEmpty.isVisible = true
                 } else {
                     textViewEmpty.isVisible = false
@@ -188,7 +217,8 @@ class GalleryFragment :
                             loadState.source.refresh is LoadState.Loading
                         recyclerViewTopics.isVisible =
                             loadState.source.refresh is LoadState.NotLoading
-                        layoutGallery.isVisible = loadState.source.refresh is LoadState.NotLoading
+                        layoutGallery.isVisible =
+                            loadState.source.refresh is LoadState.NotLoading
                         textViewError.isVisible = loadState.source.refresh is LoadState.Error
                         buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
                         if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && allPhotoAdapter.itemCount < 1) {
@@ -223,7 +253,8 @@ class GalleryFragment :
         val connectionManager =
             requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val wifiConnection = connectionManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-        val mobileDataConnection = connectionManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
+        val mobileDataConnection =
+            connectionManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE)
 
         if (return wifiConnection?.isConnectedOrConnecting == true || (mobileDataConnection?.isConnectedOrConnecting == true)) true
 
