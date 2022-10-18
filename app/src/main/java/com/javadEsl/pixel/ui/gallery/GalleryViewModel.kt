@@ -56,7 +56,9 @@ class GalleryViewModel @Inject constructor(
     private fun getTranslatedPhotos(photos: List<TopicsModelItem>) = buildList {
         photos.forEach {
             val title = getTranslatedTitle(it.title)
-            val model = it.copy(title = title)
+            val description = getTranslatedDescription(it.title)
+
+            val model = it.copy(title = title, description = description)
             add(model)
         }
     }.reversed()
@@ -65,6 +67,33 @@ class GalleryViewModel @Inject constructor(
         return when (title) {
             "recommended for you" -> "تازه ترین ها"
             "Food & Drink"        -> "غذا و نوشیدنی"
+            "Current Events"      -> "رویدادهای جاری"
+            "Wallpapers"          -> "تصاویر پس زمینه"
+            "3D Renders"          -> "رندرهای سه بعدی"
+            "Textures & Patterns" -> "بافت ها و الگوها"
+            "Experimental"        -> "عکس های آزمایشی"
+            "Architecture"        -> "معماری"
+            "Nature"              -> "طبیعت"
+            "Business & Work"     -> "تجارت و کار"
+            "Fashion"             -> "مد و فشن"
+            "Film"                -> "فیلم"
+            "Health & Wellness"   -> "سلامتی و تندرستی"
+            "People"              -> "مردم"
+            "Interiors"           -> "فضای داخلی"
+            "Street Photography"  -> "عکاسی خیابانی"
+            "Animals"             -> "حیوانات"
+            "Spirituality"        -> "معنویت"
+            "Travel"              -> "مسافرت"
+            "Arts & Culture"      -> "هنر و فرهنگ"
+            "History"             -> "تاریخی"
+            else                  -> "unknown"
+        }
+    }
+
+    private fun getTranslatedDescription(title: String?): String {
+        return when (title) {
+            "recommended for you" -> "تازه ترین ها"
+            "Food & Drink"        -> "هشدار:  اگر گرسنه هستید به این موضوع نگاه نکنید!  \n به دنیای عکاسی آشپزی خوش آمدید \n با عکسهایی از نوشیدنی های سرد، غذاهای خانگی و موارد دیگر"
             "Current Events"      -> "رویدادهای جاری"
             "Wallpapers"          -> "تصاویر پس زمینه"
             "3D Renders"          -> "رندرهای سه بعدی"

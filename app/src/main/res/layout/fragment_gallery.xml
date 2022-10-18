@@ -97,9 +97,9 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/layout_gallery"
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:visibility="gone">
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
@@ -112,23 +112,51 @@
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="200dp">
+                    android:layout_height="180dp"
+                    android:gravity="center|right">
 
                     <androidx.appcompat.widget.AppCompatImageView
                         android:id="@+id/image_view_topic_cover"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/img_splash"/>
+                        android:src="@drawable/img_splash" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="#80000000"/>
+                        android:background="#99000000" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="25dp">
+
+                        <TextView
+                            android:id="@+id/text_view_title_topic_cover"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center|right"
+                            android:textColor="@color/white"
+                            android:textSize="18dp"
+                            android:textStyle="bold"
+                            tools:text="عنوان تاپیک" />
+
+                        <TextView
+                            android:id="@+id/text_view_description_topic_cover"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="7dp"
+                            android:gravity="center|right"
+                            android:textColor="@color/white"
+                            android:textSize="14dp"
+                            tools:text="توضیحات" />
+
+                    </LinearLayout>
 
                 </RelativeLayout>
-
-                <!--                //example_layout//-->
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -137,9 +165,8 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
             android:orientation="vertical"
-            >
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
             <RelativeLayout
                 android:layout_width="match_parent"

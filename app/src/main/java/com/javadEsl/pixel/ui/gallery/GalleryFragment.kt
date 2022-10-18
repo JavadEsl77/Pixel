@@ -4,18 +4,22 @@ import android.app.Dialog
 import android.content.Context
 import android.content.res.Configuration
 import android.net.ConnectivityManager
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.view.Gravity
 import android.view.View
 import android.view.Window
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import androidx.paging.filter
+import androidx.paging.map
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -29,6 +33,8 @@ import com.javadEsl.pixel.fadeIn
 import com.javadEsl.pixel.hide
 import com.javadEsl.pixel.show
 import dagger.hilt.android.AndroidEntryPoint
+import retrofit2.http.Url
+import java.util.Locale.filter
 
 @AndroidEntryPoint
 class GalleryFragment :
@@ -86,12 +92,13 @@ class GalleryFragment :
             getTopicData()
 
             buttonRetry.setOnClickListener {
+
                 if (emptyDataReceiver) {
                     getTopicData()
-                } else {
-                    allPhotoAdapter.retry()
                 }
-
+//                else {
+//                    allPhotoAdapter.retry()
+//                }
             }
 
             cardViewSearching.setOnClickListener {
@@ -283,13 +290,27 @@ class GalleryFragment :
             if (topicsModelItem.id == TopicsModelItem.Type.USER) {
                 getRecommendedData()
             } else {
-                val coverUrl = topicsModelItem.coverPhoto?.urls?.small.toString()
-                Glide.with(requireContext())
-                    .load(coverUrl.convertedUrl)
-                    .diskCacheStrategy(DiskCacheStrategy.DATA)
-                    .transition(DrawableTransitionOptions.withCrossFade())
-                    .error(R.drawable.ic_error_photos)
-                    .into(binding.imageViewTopicCover)
+
+                if (topicsModelItem.coverPhoto?.premium != true) {
+                    val urlCover = topicsModelItem.coverPhoto?.urls?.regular
+                    Glide.with(requireContext())
+                        .load(urlCover?.convertedUrl)
+                        .diskCacheStrategy(DiskCacheStrategy.DATA)
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .error(R.drawable.ic_error_photos)
+                        .into(binding.imageViewTopicCover)
+                } else {
+                    Glide.with(requireContext())
+                        .load(R.drawable.img_splash)
+                        .diskCacheStrategy(DiskCacheStrategy.DATA)
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .error(R.drawable.ic_error_photos)
+                        .into(binding.imageViewTopicCover)
+                }
+                binding.apply {
+                    textViewTitleTopicCover.text = topicsModelItem.title
+                    textViewDescriptionTopicCover.text = topicsModelItem.description
+                }
 
                 getTopicPhotoList(allPhotoAdapter, topicsModelItem.id)
             }
