@@ -48,7 +48,7 @@ class PixelRepository @Inject constructor(
     suspend fun getAutocomplete(query: String) = pixelApi.getAutocomplete(query = query)
 
     suspend fun getSuggestPhotos() =
-        pixelApi.getPhotos(page = 10, perPage = 6, order_by = "popular").filter {
+        pixelApi.getPhotos(page = 2, perPage = 7, order_by = "popular").filter {
             it.premium != true
         }
 
@@ -64,5 +64,7 @@ class PixelRepository @Inject constructor(
             PixelTopicsPhotoPagingSource(pixelApi, topicId)
         }
     ).liveData
+
+    suspend fun checkUpdate() = pixelApi.checkUpdate()
 
 }

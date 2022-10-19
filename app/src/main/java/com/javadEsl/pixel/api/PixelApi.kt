@@ -5,6 +5,7 @@ import com.javadEsl.pixel.data.autocomplete.AutocompleteModel
 import com.javadEsl.pixel.data.detail.ModelPhoto
 import com.javadEsl.pixel.data.search.PixelPhoto
 import com.javadEsl.pixel.data.topics.TopicsModelItem
+import com.javadEsl.pixel.data.update.Update
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -13,10 +14,10 @@ import retrofit2.http.Query
 interface PixelApi {
 
     companion object {
-        //const val BASE_URL = "https://un.one-developer.ir/napi/"
-        //        const val BASE_URL = "https://api.unsplash.com/"
+        //const val BASE_URL = "https://api.unsplash.com/"
+        //const val BASE_URL = "https://us.mahdi-saberi.ir/"
 
-        const val BASE_URL = "https://us.mahdi-saberi.ir/"
+        const val BASE_URL = "https://us.one-developer.ir/"
         const val CLIENT_ID = "KbhV9-G3KY1l7EtsmS0wI3BgeOVBhjWodZ9Ix9n1Btw"
     }
 
@@ -46,7 +47,6 @@ interface PixelApi {
     @GET("napi/photos/random")
     suspend fun getRandomPhotos(): ModelPhoto
 
-
     @GET("napi/photos/{id}")
     suspend fun getPhoto(
         @Path("id") id: String
@@ -69,4 +69,7 @@ interface PixelApi {
     suspend fun getUserPhotos(
         @Path("username") userName: String
     ): List<PixelPhoto>?
+
+    @GET("pixel/update")
+    suspend fun checkUpdate(): ApiResponse<Update>
 }

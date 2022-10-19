@@ -164,14 +164,14 @@
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <!--            //layout_suggestion_list//-->
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/layout_suggestion_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@color/color_background_gallery_item"
                 android:orientation="vertical">
 
@@ -244,8 +244,7 @@
                     android:id="@+id/layout_search"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:visibility="gone">
+                    android:orientation="vertical">
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rec_searching"
@@ -267,14 +266,14 @@
                     android:id="@+id/shrimmer_view_contaner_search"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="visible">
+                    android:visibility="gone">
 
                     <androidx.appcompat.widget.LinearLayoutCompat
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">
 
-                        <include layout="@layout/shrimmer_gallery_layout" />
+                        <include layout="@layout/shrimmer_search_layout" />
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
 

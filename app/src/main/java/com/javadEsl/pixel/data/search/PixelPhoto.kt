@@ -32,7 +32,7 @@ data class PixelPhoto(
         val portfolio_url: String?,
         val profile_image: PixelProfileImage?
     ) : Parcelable {
-        val attributionUrl get() = "https://us.mahdi-saberi.ir/$username?utm_source=ImageSearchApp&utm_medium=referral"
+        val attributionUrl get() = "https://us.one-developer.ir/$username?utm_source=ImageSearchApp&utm_medium=referral"
     }
 
     @Parcelize
@@ -45,5 +45,5 @@ data class PixelPhoto(
 }
 
 val String.convertedUrl: String
-    get() = this.replace("https://images.unsplash.com/", "https://im.mahdi-saberi.ir/")
+    get() = this.replace("https://images.unsplash.com/", "https://im.one-developer.ir/")
 

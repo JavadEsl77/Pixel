@@ -1,6 +1,9 @@
 package com.javadEsl.pixel
 
 import android.app.Activity
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
 import android.view.Gravity
 import android.widget.TextView
 import com.tapadoo.alerter.Alerter
@@ -48,3 +51,20 @@ fun Activity.alert(message: String) =
  */
 fun Activity.longAlert(message: String) =
     alert(message = message, duration = ALERT_LONG_DURATION)
+
+/**
+* Browse url
+*
+* @param url
+*/
+fun Activity.browseUrl(url: String?) {
+    if (url.isNullOrEmpty()) {
+        toast("لینک خالی میباشد!!!")
+        return
+    }
+    try {
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url.normalized)))
+    } catch (e: ActivityNotFoundException) {
+        toast("مرورگری برای باز کردن لینک یافت نشد")
+    }
+}

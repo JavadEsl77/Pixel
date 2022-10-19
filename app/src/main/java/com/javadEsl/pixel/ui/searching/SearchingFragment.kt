@@ -184,8 +184,7 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
 
                 adapter.addLoadStateListener { loadState ->
                     binding.apply {
-                        shrimmerViewContanerSearch.isVisible =
-                            loadState.source.refresh is LoadState.Loading
+                        shrimmerViewContanerSearch.isVisible = loadState.source.refresh is LoadState.Loading
                         recSearching.isVisible = loadState.source.refresh is LoadState.NotLoading
                         layoutSearch.isVisible = loadState.source.refresh is LoadState.NotLoading
                         textViewError.isVisible = loadState.source.refresh is LoadState.Error

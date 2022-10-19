@@ -4,22 +4,19 @@ import android.app.Dialog
 import android.content.Context
 import android.content.res.Configuration
 import android.net.ConnectivityManager
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.view.Gravity
 import android.view.View
 import android.view.Window
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
-import androidx.paging.filter
-import androidx.paging.map
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -33,8 +30,6 @@ import com.javadEsl.pixel.fadeIn
 import com.javadEsl.pixel.hide
 import com.javadEsl.pixel.show
 import dagger.hilt.android.AndroidEntryPoint
-import retrofit2.http.Url
-import java.util.Locale.filter
 
 @AndroidEntryPoint
 class GalleryFragment :
@@ -60,7 +55,6 @@ class GalleryFragment :
         _binding = FragmentGalleryBinding.bind(view)
 
         binding.apply {
-
 
             val nightModeFlags = requireActivity().resources.configuration.uiMode and
                     Configuration.UI_MODE_NIGHT_MASK
@@ -95,10 +89,8 @@ class GalleryFragment :
 
                 if (emptyDataReceiver) {
                     getTopicData()
+                    allPhotoAdapter.retry()
                 }
-//                else {
-//                    allPhotoAdapter.retry()
-//                }
             }
 
             cardViewSearching.setOnClickListener {
@@ -150,13 +142,24 @@ class GalleryFragment :
                     toolbarTopics.fadeIn()
                     toolbarHome.fadeIn()
                     shrimmerViewContaner.hide()
+
                     val topicIdAndPosition = viewModel.getTopicIdAndPosition()
                     recTopics.scrollToPosition(topicIdAndPosition.second)
 
                     val topicId = topicIdAndPosition.first
                     if (topicId == TopicsModelItem.Type.USER) {
+                        textViewTitleTopicCover.text = "تازه ترین ها"
+                        textViewDescriptionTopicCover.text =
+                            "بیش از 3 میلیون تصویر با وضوح بالا رایگان توسط سخاوتمندترین جامعه عکاسان جهان برای شما آورده شده است."
                         getRecommendedData()
+                        Glide.with(requireContext())
+                            .load(R.drawable.img_splash)
+                            .diskCacheStrategy(DiskCacheStrategy.DATA)
+                            .transition(DrawableTransitionOptions.withCrossFade())
+                            .error(R.drawable.ic_error_photos)
+                            .into(binding.imageViewTopicCover)
                     } else {
+                        setCoverImage(topicIdAndPosition.second, it)
                         getTopicPhotoList(allPhotoAdapter, topicId)
                     }
                 } else {
@@ -285,37 +288,63 @@ class GalleryFragment :
     }
 
     override fun onTopicsItemClick(topicsModelItem: TopicsModelItem, position: Int) {
-
-        if (topicsModelItem.id != viewModel.getTopicIdAndPosition().first) {
-            if (topicsModelItem.id == TopicsModelItem.Type.USER) {
-                getRecommendedData()
-            } else {
-
-                if (topicsModelItem.coverPhoto?.premium != true) {
-                    val urlCover = topicsModelItem.coverPhoto?.urls?.regular
-                    Glide.with(requireContext())
-                        .load(urlCover?.convertedUrl)
-                        .diskCacheStrategy(DiskCacheStrategy.DATA)
-                        .transition(DrawableTransitionOptions.withCrossFade())
-                        .error(R.drawable.ic_error_photos)
-                        .into(binding.imageViewTopicCover)
-                } else {
+        binding.apply {
+            if (topicsModelItem.id != viewModel.getTopicIdAndPosition().first) {
+                if (topicsModelItem.id == TopicsModelItem.Type.USER) {
+                    textViewTitleTopicCover.text = "تازه ترین ها"
+                    textViewDescriptionTopicCover.text =
+                        "بیش از 3 میلیون تصویر با وضوح بالا رایگان توسط سخاوتمندترین جامعه عکاسان جهان برای شما آورده شده است."
+                    getRecommendedData()
                     Glide.with(requireContext())
                         .load(R.drawable.img_splash)
                         .diskCacheStrategy(DiskCacheStrategy.DATA)
                         .transition(DrawableTransitionOptions.withCrossFade())
                         .error(R.drawable.ic_error_photos)
                         .into(binding.imageViewTopicCover)
+                    getRecommendedData()
+                } else {
+                    setCoverImage(topicsModelItem)
+                    getTopicPhotoList(allPhotoAdapter, topicsModelItem.id)
                 }
-                binding.apply {
-                    textViewTitleTopicCover.text = topicsModelItem.title
-                    textViewDescriptionTopicCover.text = topicsModelItem.description
-                }
-
-                getTopicPhotoList(allPhotoAdapter, topicsModelItem.id)
             }
         }
         viewModel.onTopicItemClick(topicsModelItem, position)
+    }
+
+    private fun setCoverImage(topicsModelItem: TopicsModelItem) = binding.apply {
+
+        if (topicsModelItem.coverPhoto?.premium != true) {
+            val urlCover = topicsModelItem.coverPhoto?.urls?.regular
+            Glide.with(requireContext())
+                .load(urlCover?.convertedUrl)
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .error(R.drawable.ic_error_photos)
+                .into(binding.imageViewTopicCover)
+
+        } else {
+            Glide.with(requireContext())
+                .load(R.drawable.img_splash)
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .error(R.drawable.ic_error_photos)
+                .into(binding.imageViewTopicCover)
+        }
+
+        textViewTitleTopicCover.text = topicsModelItem.title
+        textViewDescriptionTopicCover.text = topicsModelItem.description
+    }
+
+    private fun setCoverImage(position: Int, list: List<TopicsModelItem>) = binding.apply {
+        val urlCover = list[position].coverPhoto?.urls?.regular
+        Glide.with(requireContext())
+            .load(urlCover?.convertedUrl)
+            .diskCacheStrategy(DiskCacheStrategy.DATA)
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .error(R.drawable.ic_error_photos).into(binding.imageViewTopicCover)
+
+        textViewTitleTopicCover.text = list[position].title
+        textViewDescriptionTopicCover.text = list[position].description
     }
 
 }
