@@ -9,7 +9,6 @@ import android.os.Handler
 import android.view.Gravity
 import android.view.View
 import android.view.Window
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
@@ -54,67 +53,12 @@ class GalleryFragment :
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentGalleryBinding.bind(view)
 
-        binding.apply {
-
-            val nightModeFlags = requireActivity().resources.configuration.uiMode and
-                    Configuration.UI_MODE_NIGHT_MASK
-            when (nightModeFlags) {
-                Configuration.UI_MODE_NIGHT_YES       -> {
-                    val wic = WindowInsetsControllerCompat(
-                        requireActivity().window,
-                        requireActivity().window.decorView
-                    )
-                    wic.isAppearanceLightStatusBars = false
-                }
-                Configuration.UI_MODE_NIGHT_NO        -> {
-                    val wic = WindowInsetsControllerCompat(
-                        requireActivity().window,
-                        requireActivity().window.decorView
-                    )
-                    wic.isAppearanceLightStatusBars = true
-                }
-                Configuration.UI_MODE_NIGHT_UNDEFINED -> {
-
-                }
-            }
-
-            requireActivity().window.statusBarColor = ContextCompat.getColor(
-                requireActivity(),
-                R.color.status_bar_color
-            )
-
-            getTopicData()
-
-            buttonRetry.setOnClickListener {
-
-                if (emptyDataReceiver) {
-                    getTopicData()
-                    allPhotoAdapter.retry()
-                }
-            }
-
-            cardViewSearching.setOnClickListener {
-                val action =
-                    GalleryFragmentDirections.actionGalleryFragmentToSearchingFragment()
-                findNavController().navigate(action)
-            }
-
-            cardMyDownload.setOnClickListener {
-                val action =
-                    GalleryFragmentDirections.actionGalleryFragmentToMyDownloadFragment()
-                findNavController().navigate(action)
-            }
-
-        }
+        setupViews()
+        observe()
 
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    private fun getTopicData() = binding.apply {
+    private fun observe() = binding.apply {
         shrimmerViewContaner.show()
         shrimmerViewContaner.startShimmer()
         viewModel.liveDataTopics.observe(viewLifecycleOwner) {
@@ -147,7 +91,7 @@ class GalleryFragment :
                     recTopics.scrollToPosition(topicIdAndPosition.second)
 
                     val topicId = topicIdAndPosition.first
-                    if (topicId == com.javadEsl.pixel.data.model.topics.TopicsModelItem.Type.USER) {
+                    if (topicId == TopicsModelItem.Type.USER) {
                         textViewTitleTopicCover.text = "تازه ترین ها"
                         textViewDescriptionTopicCover.text =
                             "بیش از 3 میلیون تصویر با وضوح بالا رایگان توسط سخاوتمندترین جامعه عکاسان جهان برای شما آورده شده است."
@@ -172,6 +116,59 @@ class GalleryFragment :
                 }
             }
         }
+    }
+
+    private fun setupViews() = binding.apply {
+        val nightModeFlags = requireActivity().resources.configuration.uiMode and
+                Configuration.UI_MODE_NIGHT_MASK
+        when (nightModeFlags) {
+            Configuration.UI_MODE_NIGHT_YES       -> {
+                val wic = WindowInsetsControllerCompat(
+                    requireActivity().window,
+                    requireActivity().window.decorView
+                )
+                wic.isAppearanceLightStatusBars = false
+            }
+            Configuration.UI_MODE_NIGHT_NO        -> {
+                val wic = WindowInsetsControllerCompat(
+                    requireActivity().window,
+                    requireActivity().window.decorView
+                )
+                wic.isAppearanceLightStatusBars = true
+            }
+            Configuration.UI_MODE_NIGHT_UNDEFINED -> {
+
+            }
+        }
+
+        requireActivity().window.statusBarColor = ContextCompat.getColor(
+            requireActivity(),
+            R.color.status_bar_color
+        )
+
+        buttonRetry.setOnClickListener {
+            viewModel.topicsList()
+            shrimmerViewContaner.show()
+            shrimmerViewContaner.startShimmer()
+        }
+
+        cardViewSearching.setOnClickListener {
+            val action =
+                GalleryFragmentDirections.actionGalleryFragmentToSearchingFragment()
+            findNavController().navigate(action)
+        }
+
+        cardMyDownload.setOnClickListener {
+            val action =
+                GalleryFragmentDirections.actionGalleryFragmentToMyDownloadFragment()
+            findNavController().navigate(action)
+        }
+
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun getRecommendedData() = binding.apply {
@@ -287,10 +284,10 @@ class GalleryFragment :
         dialog.show()
     }
 
-    override fun onTopicsItemClick(topicsModelItem: com.javadEsl.pixel.data.model.topics.TopicsModelItem, position: Int) {
+    override fun onTopicsItemClick(topicsModelItem: TopicsModelItem, position: Int) {
         binding.apply {
             if (topicsModelItem.id != viewModel.getTopicIdAndPosition().first) {
-                if (topicsModelItem.id == com.javadEsl.pixel.data.model.topics.TopicsModelItem.Type.USER) {
+                if (topicsModelItem.id == TopicsModelItem.Type.USER) {
                     textViewTitleTopicCover.text = "تازه ترین ها"
                     textViewDescriptionTopicCover.text =
                         "بیش از 3 میلیون تصویر با وضوح بالا رایگان توسط سخاوتمندترین جامعه عکاسان جهان برای شما آورده شده است."
@@ -311,7 +308,7 @@ class GalleryFragment :
         viewModel.onTopicItemClick(topicsModelItem, position)
     }
 
-    private fun setCoverImage(topicsModelItem: com.javadEsl.pixel.data.model.topics.TopicsModelItem) = binding.apply {
+    private fun setCoverImage(topicsModelItem: TopicsModelItem) = binding.apply {
 
         if (topicsModelItem.coverPhoto?.premium != true) {
             val urlCover = topicsModelItem.coverPhoto?.urls?.regular
@@ -335,7 +332,7 @@ class GalleryFragment :
         textViewDescriptionTopicCover.text = topicsModelItem.description
     }
 
-    private fun setCoverImage(position: Int, list: List<com.javadEsl.pixel.data.model.topics.TopicsModelItem>) = binding.apply {
+    private fun setCoverImage(position: Int, list: List<TopicsModelItem>) = binding.apply {
         val urlCover = list[position].coverPhoto?.urls?.regular
         Glide.with(requireContext())
             .load(urlCover?.convertedUrl)

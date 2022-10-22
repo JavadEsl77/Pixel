@@ -19,9 +19,9 @@
         android:clipToPadding="false"
         android:orientation="vertical"
         android:paddingEnd="7dp"
-        app:layoutManager="androidx.recyclerview.widget.StaggeredGridLayoutManager"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         app:spanCount="2"
-        tools:itemCount="10"
+        tools:itemCount="6"
         tools:listitem="@layout/item_list_my_download" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
