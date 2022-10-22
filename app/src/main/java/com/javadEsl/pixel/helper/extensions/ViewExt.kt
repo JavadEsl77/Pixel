@@ -1,4 +1,4 @@
-package com.javadEsl.pixel
+package com.javadEsl.pixel.helper.extensions
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -10,8 +10,8 @@ import android.view.animation.Transformation
 import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
-import androidx.interpolator.view.animation.FastOutLinearInInterpolator
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import com.javadEsl.pixel.R
 
 const val ANIMATION_DURATION = 350L
 
@@ -49,7 +49,7 @@ fun View.fadeOut(
 ) {
     if (!isVisible) return
     val mListener = object : AnimatorListenerAdapter() {
-        override fun onAnimationEnd(animation: Animator?) {
+        override fun onAnimationEnd(animation: Animator) {
             if (invisibleView) invisible() else hide()
         }
     }

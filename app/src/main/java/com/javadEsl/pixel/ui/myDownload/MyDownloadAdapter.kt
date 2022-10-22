@@ -7,10 +7,9 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.javadEsl.pixel.R
 import com.javadEsl.pixel.databinding.ItemListMyDownloadBinding
-import com.javadEsl.pixel.size
+import com.javadEsl.pixel.helper.extensions.size
 import java.io.File
 
 class MyDownloadAdapter(

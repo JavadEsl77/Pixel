@@ -255,6 +255,20 @@
     @android.webkit.JavascriptInterface <methods>;
 }
 
+################################### START Webview #################
+-keepattributes JavascriptInterface
+-keep public class android.net.http.SslError
+-keep public class android.webkit.WebViewClient
+-keepclassmembers class android.webkit.WebView{
+   public *;
+}
+
+-dontwarn android.webkit.WebView
+-dontwarn android.net.http.SslError
+-dontwarn android.webkit.WebViewClient
+-dontwarn android.support.**
+################################### END Webvieww #################
+
 # TapsellPlus needs their formal names
 -keepnames public class com.google.android.gms.ads.MobileAds
 -keepnames public class com.unity3d.services.monetization.IUnityMonetizationListener

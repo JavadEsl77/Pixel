@@ -1,9 +1,6 @@
 package com.javadEsl.pixel.ui.gallery
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.graphics.ColorFilter
-import android.graphics.Typeface
 import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
@@ -12,11 +9,10 @@ import androidx.annotation.ColorRes
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.bold
 import androidx.core.text.color
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.javadEsl.pixel.*
-import com.javadEsl.pixel.data.model.topics.TopicsModelItem
 import com.javadEsl.pixel.databinding.ItemTopicsBinding
+import com.javadEsl.pixel.helper.extensions.show
 
 class TopicsAdapter(
     private val listener: OnItemClickListener,

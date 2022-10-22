@@ -1,4 +1,4 @@
-package com.javadEsl.pixel
+package com.javadEsl.pixel.helper.extensions
 
 import android.content.res.Resources
 import android.graphics.Color

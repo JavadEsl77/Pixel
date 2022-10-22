@@ -30,9 +30,9 @@ import com.javadEsl.pixel.R
 import com.javadEsl.pixel.data.model.allPhotos.AllPhotosItem
 import com.javadEsl.pixel.data.model.search.PixelPhoto
 import com.javadEsl.pixel.databinding.FragmentSearchBinding
-import com.javadEsl.pixel.fadeOut
-import com.javadEsl.pixel.hide
-import com.javadEsl.pixel.show
+import com.javadEsl.pixel.helper.extensions.fadeOut
+import com.javadEsl.pixel.helper.extensions.hide
+import com.javadEsl.pixel.helper.extensions.show
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

@@ -1,4 +1,4 @@
-package com.javadEsl.pixel
+package com.javadEsl.pixel.helper.extensions
 
 import java.io.File
 

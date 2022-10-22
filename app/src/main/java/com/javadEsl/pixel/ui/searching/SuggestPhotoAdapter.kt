@@ -1,6 +1,5 @@
 package com.javadEsl.pixel.ui.searching
 
-import android.app.Activity
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +13,7 @@ import com.javadEsl.pixel.R
 import com.javadEsl.pixel.data.model.allPhotos.AllPhotosItem
 import com.javadEsl.pixel.data.model.search.convertedUrl
 import com.javadEsl.pixel.databinding.ItemSuggestPhotoBinding
-import com.javadEsl.pixel.isBrightColor
+import com.javadEsl.pixel.helper.extensions.isBrightColor
 
 
 class SuggestPhotoAdapter(

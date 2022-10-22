@@ -1,4 +1,4 @@
-package com.javadEsl.pixel
+package com.javadEsl.pixel.helper.extensions
 
 import android.app.Activity
 import android.content.ActivityNotFoundException
@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.view.Gravity
 import android.widget.TextView
+import com.javadEsl.pixel.R
 import com.tapadoo.alerter.Alerter
 
 private const val ALERT_SHORT_DURATION = 3000L

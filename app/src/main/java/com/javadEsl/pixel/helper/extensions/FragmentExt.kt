@@ -1,4 +1,4 @@
-package com.javadEsl.pixel
+package com.javadEsl.pixel.helper.extensions
 
 import androidx.fragment.app.Fragment
 import com.tapadoo.alerter.Alerter

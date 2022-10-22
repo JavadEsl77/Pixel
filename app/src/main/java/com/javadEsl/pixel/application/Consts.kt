@@ -1,4 +1,4 @@
-package com.javadEsl.pixel.api
+package com.javadEsl.pixel.application
 
 const val IMAGE_SMALL = "کیفیت SD"
 const val IMAGE_REGULAR = "کیفیت HD"

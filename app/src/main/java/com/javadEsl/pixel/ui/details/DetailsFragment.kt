@@ -38,8 +38,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
@@ -48,21 +46,20 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.label.ImageLabeler
-import com.google.mlkit.vision.label.ImageLabeling
-import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 import com.huxq17.download.Pump
-import com.javadEsl.pixel.*
-import com.javadEsl.pixel.api.IMAGE_RAW
-import com.javadEsl.pixel.api.IMAGE_REGULAR
-import com.javadEsl.pixel.api.IMAGE_SMALL
+import com.javadEsl.pixel.BuildConfig
+import com.javadEsl.pixel.R
+import com.javadEsl.pixel.helper.extensions.alert
+import com.javadEsl.pixel.application.IMAGE_RAW
+import com.javadEsl.pixel.application.IMAGE_REGULAR
+import com.javadEsl.pixel.application.IMAGE_SMALL
 import com.javadEsl.pixel.data.model.detail.ModelPhoto
 import com.javadEsl.pixel.data.model.search.PixelPhoto
 import com.javadEsl.pixel.data.model.search.convertedUrl
 import com.javadEsl.pixel.databinding.FragmentDetailsBinding
 import com.javadEsl.pixel.databinding.LayoutBottomSheetPhotoDetailBinding
 import com.javadEsl.pixel.helper.RoundedRectDrawable
+import com.javadEsl.pixel.helper.extensions.*
 import com.javadEsl.pixel.service.DownloaderService
 import com.javadEsl.pixel.ui.searching.UnsplashPhotoAdapter
 import dagger.hilt.android.AndroidEntryPoint
@@ -86,7 +83,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
     private var downloadStatus: Boolean = false
     private var isOnSaveClicked = false
     private var isTapsellCreate = false
-    var labeler: ImageLabeler? = null
+//    var labeler: ImageLabeler? = null
     private var resolutionType = ""
     private var permissionType = ""
     private var responseId = ""
@@ -871,17 +868,17 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
 
         Handler(Looper.getMainLooper()).postDelayed({
 
-            val options = ImageLabelerOptions.Builder()
-                .setConfidenceThreshold(0.7f)
-                .build()
-            labeler = ImageLabeling.getClient(options)
+//            val options = ImageLabelerOptions.Builder()
+//                .setConfidenceThreshold(0.7f)
+//                .build()
+//            labeler = ImageLabeling.getClient(options)
+//
+//            val drawable = imageView.drawable
 
-            val drawable = imageView.drawable
-
-            if (drawable != null) {
-                val bitmap = drawable.toBitmap()
-                runClassification(bitmap)
-            }
+//            if (drawable != null) {
+//                val bitmap = drawable.toBitmap()
+//                runClassification(bitmap)
+//            }
 
         }, 1500)
 
@@ -971,26 +968,26 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
         return value
     }
 
-    private fun runClassification(bitmap: Bitmap) {
-        val inputImage: InputImage = InputImage.fromBitmap(bitmap, 0)
-        labeler?.process(inputImage)?.addOnSuccessListener { labels ->
-            if (labels.size > 0) {
-                val list = labels.map { it.text }
-                val count = if (labels.size in 6..9) 2 else if (labels.size in 9..19) 3 else 1
-
-                val layoutManager = StaggeredGridLayoutManager(count, RecyclerView.HORIZONTAL)
-                val adapter = ClassificationAdapter(list)
-                binding.recClassification.apply {
-                    this.adapter = adapter
-                    this.layoutManager = layoutManager
-                }
-                binding.lyClassifications.fadeIn()
-            } else {
-                binding.lyClassifications.fadeOut()
-            }
-        }?.addOnFailureListener { e ->
-            e.printStackTrace()
-        }
-    }
+//    private fun runClassification(bitmap: Bitmap) {
+//        val inputImage: InputImage = InputImage.fromBitmap(bitmap, 0)
+//        labeler?.process(inputImage)?.addOnSuccessListener { labels ->
+//            if (labels.size > 0) {
+//                val list = labels.map { it.text }
+//                val count = if (labels.size in 6..9) 2 else if (labels.size in 9..19) 3 else 1
+//
+//                val layoutManager = StaggeredGridLayoutManager(count, RecyclerView.HORIZONTAL)
+//                val adapter = ClassificationAdapter(list)
+//                binding.recClassification.apply {
+//                    this.adapter = adapter
+//                    this.layoutManager = layoutManager
+//                }
+//                binding.lyClassifications.fadeIn()
+//            } else {
+//                binding.lyClassifications.fadeOut()
+//            }
+//        }?.addOnFailureListener { e ->
+//            e.printStackTrace()
+//        }
+//    }
 
 }

@@ -20,7 +20,7 @@ import com.javadEsl.pixel.data.model.allPhotos.AllPhotosItem
 import com.javadEsl.pixel.data.model.search.convertedUrl
 import com.javadEsl.pixel.databinding.ItemUnsplashAdsBinding
 import com.javadEsl.pixel.databinding.ItemUnsplashPhotoBinding
-import com.javadEsl.pixel.isBrightColor
+import com.javadEsl.pixel.helper.extensions.isBrightColor
 import ir.tapsell.plus.AdHolder
 import ir.tapsell.plus.AdRequestCallback
 import ir.tapsell.plus.AdShowListener

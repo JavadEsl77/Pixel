@@ -18,6 +18,10 @@ import com.javadEsl.pixel.data.model.update.Update
 import com.javadEsl.pixel.databinding.FragmentSplashBinding
 import com.javadEsl.pixel.databinding.LayoutDialogUpdateBinding
 import com.javadEsl.pixel.helper.Resource
+import com.javadEsl.pixel.helper.extensions.browseUrl
+import com.javadEsl.pixel.helper.extensions.isPackageInstalled
+import com.javadEsl.pixel.helper.extensions.show
+import com.javadEsl.pixel.helper.extensions.slideUp
 import dagger.hilt.android.AndroidEntryPoint
 
 

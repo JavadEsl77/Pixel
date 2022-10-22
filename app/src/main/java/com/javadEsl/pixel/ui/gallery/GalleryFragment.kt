@@ -25,9 +25,9 @@ import com.javadEsl.pixel.data.model.allPhotos.AllPhotosItem
 import com.javadEsl.pixel.data.model.search.convertedUrl
 import com.javadEsl.pixel.data.model.topics.TopicsModelItem
 import com.javadEsl.pixel.databinding.FragmentGalleryBinding
-import com.javadEsl.pixel.fadeIn
-import com.javadEsl.pixel.hide
-import com.javadEsl.pixel.show
+import com.javadEsl.pixel.helper.extensions.fadeIn
+import com.javadEsl.pixel.helper.extensions.hide
+import com.javadEsl.pixel.helper.extensions.show
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
