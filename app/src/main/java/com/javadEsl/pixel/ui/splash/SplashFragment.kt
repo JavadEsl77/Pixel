@@ -14,9 +14,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.javadEsl.pixel.*
-import com.javadEsl.pixel.data.update.Update
+import com.javadEsl.pixel.data.model.update.Update
 import com.javadEsl.pixel.databinding.FragmentSplashBinding
 import com.javadEsl.pixel.databinding.LayoutDialogUpdateBinding
+import com.javadEsl.pixel.helper.Resource
 import dagger.hilt.android.AndroidEntryPoint
 
 

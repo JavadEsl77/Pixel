@@ -3,7 +3,7 @@ package com.javadEsl.pixel.ui.searching
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.javadEsl.pixel.data.search.PixelPhoto
+import com.javadEsl.pixel.data.model.search.PixelPhoto
 import com.javadEsl.pixel.databinding.ItemCalssificationBinding
 import com.javadEsl.pixel.databinding.ItemPreviousSearchBinding
 import com.javadEsl.pixel.databinding.ItemUnsplashUserPhotoBinding

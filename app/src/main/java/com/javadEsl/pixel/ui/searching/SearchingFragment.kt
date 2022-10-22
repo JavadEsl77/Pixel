@@ -27,8 +27,8 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.javadEsl.pixel.R
-import com.javadEsl.pixel.data.allPhotos.AllPhotosItem
-import com.javadEsl.pixel.data.search.PixelPhoto
+import com.javadEsl.pixel.data.model.allPhotos.AllPhotosItem
+import com.javadEsl.pixel.data.model.search.PixelPhoto
 import com.javadEsl.pixel.databinding.FragmentSearchBinding
 import com.javadEsl.pixel.fadeOut
 import com.javadEsl.pixel.hide

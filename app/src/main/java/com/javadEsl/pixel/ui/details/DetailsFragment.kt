@@ -57,11 +57,13 @@ import com.javadEsl.pixel.*
 import com.javadEsl.pixel.api.IMAGE_RAW
 import com.javadEsl.pixel.api.IMAGE_REGULAR
 import com.javadEsl.pixel.api.IMAGE_SMALL
-import com.javadEsl.pixel.data.detail.ModelPhoto
-import com.javadEsl.pixel.data.search.PixelPhoto
-import com.javadEsl.pixel.data.search.convertedUrl
+import com.javadEsl.pixel.data.model.detail.ModelPhoto
+import com.javadEsl.pixel.data.model.search.PixelPhoto
+import com.javadEsl.pixel.data.model.search.convertedUrl
 import com.javadEsl.pixel.databinding.FragmentDetailsBinding
 import com.javadEsl.pixel.databinding.LayoutBottomSheetPhotoDetailBinding
+import com.javadEsl.pixel.helper.RoundedRectDrawable
+import com.javadEsl.pixel.service.DownloaderService
 import com.javadEsl.pixel.ui.searching.UnsplashPhotoAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import eightbitlab.com.blurview.RenderScriptBlur

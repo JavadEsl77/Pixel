@@ -16,7 +16,7 @@
 
 
     <application
-        android:name=".PixelApplication"
+        android:name=".application.PixelApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -29,7 +29,7 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name="com.javadEsl.pixel.MainActivity"
+            android:name="com.javadEsl.pixel.ui.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -39,7 +39,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".DownloaderService"
+        <service android:name=".service.DownloaderService"
             android:enabled="true"
             android:exported="false" />
 

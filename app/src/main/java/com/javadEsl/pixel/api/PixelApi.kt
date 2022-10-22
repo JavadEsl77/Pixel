@@ -1,11 +1,11 @@
 package com.javadEsl.pixel.api
 
-import com.javadEsl.pixel.data.allPhotos.AllPhotosItem
-import com.javadEsl.pixel.data.autocomplete.AutocompleteModel
-import com.javadEsl.pixel.data.detail.ModelPhoto
-import com.javadEsl.pixel.data.search.PixelPhoto
-import com.javadEsl.pixel.data.topics.TopicsModelItem
-import com.javadEsl.pixel.data.update.Update
+import com.javadEsl.pixel.data.model.allPhotos.AllPhotosItem
+import com.javadEsl.pixel.data.model.autocomplete.AutocompleteModel
+import com.javadEsl.pixel.data.model.detail.ModelPhoto
+import com.javadEsl.pixel.data.model.search.PixelPhoto
+import com.javadEsl.pixel.data.model.topics.TopicsModelItem
+import com.javadEsl.pixel.data.model.update.Update
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -41,7 +41,7 @@ interface PixelApi {
     suspend fun getTopics(
         @Query("page") page: Int,
         @Query("per_page") perPage: Int
-    ): List<TopicsModelItem>
+    ): List<com.javadEsl.pixel.data.model.topics.TopicsModelItem>
 
 
     @GET("napi/photos/random")

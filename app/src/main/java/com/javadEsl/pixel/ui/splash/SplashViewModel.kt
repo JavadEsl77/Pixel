@@ -4,10 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.javadEsl.pixel.NetworkHelper
-import com.javadEsl.pixel.Resource
-import com.javadEsl.pixel.data.PixelRepository
-import com.javadEsl.pixel.data.update.Update
+import com.javadEsl.pixel.helper.NetworkHelper
+import com.javadEsl.pixel.helper.Resource
+import com.javadEsl.pixel.data.repository.PixelRepository
+import com.javadEsl.pixel.data.model.update.Update
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

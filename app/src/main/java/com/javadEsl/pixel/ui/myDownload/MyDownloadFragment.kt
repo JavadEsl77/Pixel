@@ -34,7 +34,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.javadEsl.pixel.*
-import com.javadEsl.pixel.data.detail.Position
+import com.javadEsl.pixel.data.model.detail.Position
 import com.javadEsl.pixel.databinding.FragmentMyDownloadBinding
 import com.javadEsl.pixel.databinding.LayoutBottomSheetPhotoBinding
 import dagger.hilt.android.AndroidEntryPoint

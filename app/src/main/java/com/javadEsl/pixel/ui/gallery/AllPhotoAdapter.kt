@@ -16,8 +16,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.javadEsl.pixel.BuildConfig
 import com.javadEsl.pixel.R
-import com.javadEsl.pixel.data.allPhotos.AllPhotosItem
-import com.javadEsl.pixel.data.search.convertedUrl
+import com.javadEsl.pixel.data.model.allPhotos.AllPhotosItem
+import com.javadEsl.pixel.data.model.search.convertedUrl
 import com.javadEsl.pixel.databinding.ItemUnsplashAdsBinding
 import com.javadEsl.pixel.databinding.ItemUnsplashPhotoBinding
 import com.javadEsl.pixel.isBrightColor

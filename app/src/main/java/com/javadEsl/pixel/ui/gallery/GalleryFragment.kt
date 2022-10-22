@@ -22,9 +22,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.javadEsl.pixel.R
-import com.javadEsl.pixel.data.allPhotos.AllPhotosItem
-import com.javadEsl.pixel.data.search.convertedUrl
-import com.javadEsl.pixel.data.topics.TopicsModelItem
+import com.javadEsl.pixel.data.model.allPhotos.AllPhotosItem
+import com.javadEsl.pixel.data.model.search.convertedUrl
+import com.javadEsl.pixel.data.model.topics.TopicsModelItem
 import com.javadEsl.pixel.databinding.FragmentGalleryBinding
 import com.javadEsl.pixel.fadeIn
 import com.javadEsl.pixel.hide
@@ -147,7 +147,7 @@ class GalleryFragment :
                     recTopics.scrollToPosition(topicIdAndPosition.second)
 
                     val topicId = topicIdAndPosition.first
-                    if (topicId == TopicsModelItem.Type.USER) {
+                    if (topicId == com.javadEsl.pixel.data.model.topics.TopicsModelItem.Type.USER) {
                         textViewTitleTopicCover.text = "تازه ترین ها"
                         textViewDescriptionTopicCover.text =
                             "بیش از 3 میلیون تصویر با وضوح بالا رایگان توسط سخاوتمندترین جامعه عکاسان جهان برای شما آورده شده است."
@@ -287,10 +287,10 @@ class GalleryFragment :
         dialog.show()
     }
 
-    override fun onTopicsItemClick(topicsModelItem: TopicsModelItem, position: Int) {
+    override fun onTopicsItemClick(topicsModelItem: com.javadEsl.pixel.data.model.topics.TopicsModelItem, position: Int) {
         binding.apply {
             if (topicsModelItem.id != viewModel.getTopicIdAndPosition().first) {
-                if (topicsModelItem.id == TopicsModelItem.Type.USER) {
+                if (topicsModelItem.id == com.javadEsl.pixel.data.model.topics.TopicsModelItem.Type.USER) {
                     textViewTitleTopicCover.text = "تازه ترین ها"
                     textViewDescriptionTopicCover.text =
                         "بیش از 3 میلیون تصویر با وضوح بالا رایگان توسط سخاوتمندترین جامعه عکاسان جهان برای شما آورده شده است."
@@ -311,7 +311,7 @@ class GalleryFragment :
         viewModel.onTopicItemClick(topicsModelItem, position)
     }
 
-    private fun setCoverImage(topicsModelItem: TopicsModelItem) = binding.apply {
+    private fun setCoverImage(topicsModelItem: com.javadEsl.pixel.data.model.topics.TopicsModelItem) = binding.apply {
 
         if (topicsModelItem.coverPhoto?.premium != true) {
             val urlCover = topicsModelItem.coverPhoto?.urls?.regular
@@ -335,7 +335,7 @@ class GalleryFragment :
         textViewDescriptionTopicCover.text = topicsModelItem.description
     }
 
-    private fun setCoverImage(position: Int, list: List<TopicsModelItem>) = binding.apply {
+    private fun setCoverImage(position: Int, list: List<com.javadEsl.pixel.data.model.topics.TopicsModelItem>) = binding.apply {
         val urlCover = list[position].coverPhoto?.urls?.regular
         Glide.with(requireContext())
             .load(urlCover?.convertedUrl)

@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.javadEsl.pixel.api.PixelApi
-import com.javadEsl.pixel.data.search.PixelPhoto
+import com.javadEsl.pixel.data.model.search.PixelPhoto
 import javax.inject.Inject
 
 private const val UNSPLASH_STARTING_PAGE_INDEX = 1

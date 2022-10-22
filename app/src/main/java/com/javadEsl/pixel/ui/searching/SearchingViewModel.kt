@@ -4,11 +4,11 @@ import android.content.SharedPreferences
 import android.util.Log
 import androidx.lifecycle.*
 import androidx.paging.cachedIn
-import com.javadEsl.pixel.NetworkHelper
-import com.javadEsl.pixel.data.PixelRepository
-import com.javadEsl.pixel.data.allPhotos.AllPhotosItem
-import com.javadEsl.pixel.data.autocomplete.Suggestion
-import com.javadEsl.pixel.data.detail.ModelPhoto
+import com.javadEsl.pixel.helper.NetworkHelper
+import com.javadEsl.pixel.data.repository.PixelRepository
+import com.javadEsl.pixel.data.model.allPhotos.AllPhotosItem
+import com.javadEsl.pixel.data.model.autocomplete.Suggestion
+import com.javadEsl.pixel.data.model.detail.ModelPhoto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch

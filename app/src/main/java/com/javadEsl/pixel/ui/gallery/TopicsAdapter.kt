@@ -15,12 +15,12 @@ import androidx.core.text.color
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.javadEsl.pixel.*
-import com.javadEsl.pixel.data.topics.TopicsModelItem
+import com.javadEsl.pixel.data.model.topics.TopicsModelItem
 import com.javadEsl.pixel.databinding.ItemTopicsBinding
 
 class TopicsAdapter(
     private val listener: OnItemClickListener,
-    private val topicList: List<TopicsModelItem>,
+    private val topicList: List<com.javadEsl.pixel.data.model.topics.TopicsModelItem>,
     private val lastPosition: Int,
 ) : RecyclerView.Adapter<TopicsAdapter.TodoViewHolder>() {
 
@@ -62,7 +62,7 @@ class TopicsAdapter(
         }
 
         @SuppressLint("NotifyDataSetChanged")
-        fun bind(item: TopicsModelItem) {
+        fun bind(item: com.javadEsl.pixel.data.model.topics.TopicsModelItem) {
             val textBuilder = SpannableStringBuilder()
             binding.apply {
 
@@ -92,7 +92,7 @@ class TopicsAdapter(
     }
 
     interface OnItemClickListener {
-        fun onTopicsItemClick(topicsModelItem: TopicsModelItem, position: Int)
+        fun onTopicsItemClick(topicsModelItem: com.javadEsl.pixel.data.model.topics.TopicsModelItem, position: Int)
     }
 }
 
