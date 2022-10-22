@@ -84,10 +84,11 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
                         }, 1500)
                     } else {
 
-                        animationView.slideUp(1000, 0)
-                        animationView.isVisible = true
-                        layoutLoading.isVisible = true
-                        layoutError.isVisible = false
+//                        animationView.slideUp(1000, 0)
+//                        animationView.isVisible = true
+//                        layoutLoading.isVisible = true
+//                        layoutError.isVisible = false
+
                         Handler(Looper.getMainLooper()).postDelayed({
                             val action =
                                 SplashFragmentDirections.actionSplashFragmentToGalleryFragment()
