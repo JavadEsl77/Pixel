@@ -2,11 +2,14 @@ package com.javadEsl.pixel.ui.gallery
 
 import android.content.SharedPreferences
 import android.util.Log
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import com.javadEsl.pixel.helper.NetworkHelper
-import com.javadEsl.pixel.data.repository.PixelRepository
 import com.javadEsl.pixel.data.model.topics.TopicsModelItem
+import com.javadEsl.pixel.data.repository.PixelRepository
+import com.javadEsl.pixel.helper.NetworkHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,8 +26,8 @@ class GalleryViewModel @Inject constructor(
     fun topicPhotos(topicId: String) =
         pixelRepository.getTopicsPhotos(topicId).cachedIn(viewModelScope)
 
-    private val _liveDataTopics = MutableLiveData<List<com.javadEsl.pixel.data.model.topics.TopicsModelItem>>()
-    val liveDataTopics: LiveData<List<com.javadEsl.pixel.data.model.topics.TopicsModelItem>> = _liveDataTopics
+    private val _liveDataTopics = MutableLiveData<List<TopicsModelItem>>()
+    val liveDataTopics: LiveData<List<TopicsModelItem>> = _liveDataTopics
     fun topicsList() {
         viewModelScope.launch {
             if (!networkHelper.hasInternetConnection()) {
@@ -40,8 +43,7 @@ class GalleryViewModel @Inject constructor(
                     if (currentEvents != null) {
                         topics.remove(currentEvents)
                     }
-                    topics.add(0,
-                        com.javadEsl.pixel.data.model.topics.TopicsModelItem(
+                    topics.add(0, TopicsModelItem(
                             id = "user_type",
                             title = "recommended for you"
                         )
@@ -58,7 +60,7 @@ class GalleryViewModel @Inject constructor(
         }
     }
 
-    private fun getTranslatedPhotos(photos: List<com.javadEsl.pixel.data.model.topics.TopicsModelItem>) = buildList {
+    private fun getTranslatedPhotos(photos: List<TopicsModelItem>) = buildList {
         photos.forEach {
             val title = getTranslatedTitle(it.title)
             val description = getTranslatedDescription(it.title)
@@ -122,7 +124,7 @@ class GalleryViewModel @Inject constructor(
         }
     }
 
-    fun onTopicItemClick(topicsModelItem: com.javadEsl.pixel.data.model.topics.TopicsModelItem, position: Int) {
+    fun onTopicItemClick(topicsModelItem: TopicsModelItem, position: Int) {
         val editor = pref.edit()
         editor.putInt("topic_position_item", position)
         editor.putString("topic_id_item", topicsModelItem.id)
@@ -133,7 +135,7 @@ class GalleryViewModel @Inject constructor(
 
         val position = pref.getInt("topic_position_item", liveDataTopics.value?.lastIndex ?: 0)
         val id =
-            pref.getString("topic_id_item", com.javadEsl.pixel.data.model.topics.TopicsModelItem.Type.USER) ?: com.javadEsl.pixel.data.model.topics.TopicsModelItem.Type.USER
+            pref.getString("topic_id_item",TopicsModelItem.Type.USER) ?: TopicsModelItem.Type.USER
         return Pair(id, position)
     }
 
