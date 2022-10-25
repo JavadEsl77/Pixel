@@ -326,6 +326,7 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
                     }
                 }
                 recSearching.verticalScrollbarPosition = 0
+                edtSearch.clearFocus()
                 setSearchCash()
                 viewModel.searchPhotos(edtSearch.text.toString())
                 binding.recSearching.scrollToPosition(0)

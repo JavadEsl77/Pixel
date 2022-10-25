@@ -148,7 +148,7 @@ class GalleryViewModel @Inject constructor(
 
     fun getTopicIdAndPosition(): Pair<String, Int> {
 
-        val position = pref.getInt("topic_position_item", liveDataTopics.value?.lastIndex ?: 0)
+        val position = pref.getInt("topic_position_item", 19)
         val id =
             pref.getString("topic_id_item", TopicsModelItem.Type.USER) ?: TopicsModelItem.Type.USER
         return Pair(id, position)
