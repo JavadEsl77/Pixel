@@ -2,12 +2,10 @@ package com.javadEsl.pixel.ui.gallery
 
 import android.content.SharedPreferences
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import androidx.paging.cachedIn
 import com.javadEsl.pixel.data.model.topics.TopicsModelItem
+import com.javadEsl.pixel.data.model.topics.TopicsModelItem.Type.USER
 import com.javadEsl.pixel.data.repository.PixelRepository
 import com.javadEsl.pixel.helper.NetworkHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,12 +17,28 @@ class GalleryViewModel @Inject constructor(
     private val pixelRepository: PixelRepository,
     private val networkHelper: NetworkHelper,
     private val pref: SharedPreferences,
+    state: SavedStateHandle
 ) : ViewModel() {
 
-    val allPhotos = pixelRepository.getAllPhotos().cachedIn(viewModelScope)
+    companion object {
+        private const val DEFAULT_TOPIC = USER
+        private const val CURRENT_TOPIC = "current_topic"
+    }
 
-    fun topicPhotos(topicId: String) =
-        pixelRepository.getTopicsPhotos(topicId).cachedIn(viewModelScope)
+    private val currentUserTopic = state.getLiveData(CURRENT_TOPIC, DEFAULT_TOPIC)
+    val newPhotos = currentUserTopic.switchMap {
+        pixelRepository.getAllPhotos().cachedIn(viewModelScope)
+    }
+
+    private val currentTopics = state.getLiveData(CURRENT_TOPIC, DEFAULT_TOPIC)
+    val topicsPhotos = currentTopics.switchMap { topicId ->
+        pixelRepository.getTopicsPhotos(topicId = topicId).cachedIn(viewModelScope)
+    }
+
+    fun allTopicPhotos(topicId: String) {
+        currentTopics.value = topicId
+    }
+
 
     private val _liveDataTopics = MutableLiveData<List<TopicsModelItem>>()
     val liveDataTopics: LiveData<List<TopicsModelItem>> = _liveDataTopics
@@ -43,7 +57,8 @@ class GalleryViewModel @Inject constructor(
                     if (currentEvents != null) {
                         topics.remove(currentEvents)
                     }
-                    topics.add(0, TopicsModelItem(
+                    topics.add(
+                        0, TopicsModelItem(
                             id = "user_type",
                             title = "recommended for you"
                         )
@@ -135,8 +150,7 @@ class GalleryViewModel @Inject constructor(
 
         val position = pref.getInt("topic_position_item", liveDataTopics.value?.lastIndex ?: 0)
         val id =
-            pref.getString("topic_id_item",TopicsModelItem.Type.USER) ?: TopicsModelItem.Type.USER
+            pref.getString("topic_id_item", TopicsModelItem.Type.USER) ?: TopicsModelItem.Type.USER
         return Pair(id, position)
     }
-
 }

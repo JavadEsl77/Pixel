@@ -9,6 +9,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -51,6 +52,12 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
                 ""
             )
         )
+        val wic = WindowInsetsControllerCompat(
+            requireActivity().window,
+            requireActivity().window.decorView
+        )
+        wic.isAppearanceLightStatusBars = false
+
         animationView.slideUp(1000, 0)
         val versionName: String = BuildConfig.VERSION_NAME
         textViewVersion.text = "نسخه   $versionName"

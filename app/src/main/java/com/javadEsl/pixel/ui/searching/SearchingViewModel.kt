@@ -106,7 +106,6 @@ class SearchingViewModel @Inject constructor(
         private const val DEFAULT_QUERY = "tehran"
     }
 
-
     fun setSuccessSearchInCash(
         searchValue: String,
         previousSearchArrayList: MutableList<String>

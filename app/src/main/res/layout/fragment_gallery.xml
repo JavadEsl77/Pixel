@@ -90,7 +90,7 @@
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
             tools:itemCount="7"
-            tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/item_topics" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
@@ -106,6 +106,7 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collaps_banner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_scrollFlags="scroll">

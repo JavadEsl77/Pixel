@@ -6,6 +6,7 @@ import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.Window
@@ -14,9 +15,12 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.LiveData
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -25,64 +29,51 @@ import com.javadEsl.pixel.data.model.allPhotos.AllPhotosItem
 import com.javadEsl.pixel.data.model.search.convertedUrl
 import com.javadEsl.pixel.data.model.topics.TopicsModelItem
 import com.javadEsl.pixel.databinding.FragmentGalleryBinding
-import com.javadEsl.pixel.helper.extensions.fadeIn
-import com.javadEsl.pixel.helper.extensions.hide
-import com.javadEsl.pixel.helper.extensions.show
+import com.javadEsl.pixel.helper.extensions.*
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class GalleryFragment :
     Fragment(R.layout.fragment_gallery),
     TopicsAdapter.OnItemClickListener,
-    AllPhotoAdapter.OnItemClickListener {
+    AllPhotoAdapter.OnItemClickListener, TopicsPhotoAdapter.OnItemClickListener {
 
     private val viewModel by viewModels<GalleryViewModel>()
     private var _binding: FragmentGalleryBinding? = null
     private var emptyDataReceiver = false
     private val binding get() = _binding!!
     private lateinit var allPhotoAdapter: AllPhotoAdapter
+    private lateinit var topicsPhotoAdapter: TopicsPhotoAdapter
     private lateinit var topicsAdapter: TopicsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         allPhotoAdapter = AllPhotoAdapter(this, requireActivity())
+        topicsPhotoAdapter = TopicsPhotoAdapter(this, requireActivity())
         viewModel.topicsList()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentGalleryBinding.bind(view)
-
         setupViews()
         observe()
-
     }
 
     private fun observe() = binding.apply {
-        shrimmerViewContaner.show()
-        shrimmerViewContaner.startShimmer()
         viewModel.liveDataTopics.observe(viewLifecycleOwner) {
             it?.let {
                 if (it.isNotEmpty()) {
-                    layoutTopics.show()
-                    layoutRecommended.show()
                     buttonRetry.hide()
                     textViewError.hide()
                     emptyDataReceiver = false
 
-                    val layoutManager =
-                        LinearLayoutManager(
-                            requireContext(),
-                            LinearLayoutManager.HORIZONTAL,
-                            false
-                        )
                     topicsAdapter = TopicsAdapter(
                         this@GalleryFragment,
                         it,
                         viewModel.getTopicIdAndPosition().second
                     )
                     recTopics.adapter = topicsAdapter
-                    recTopics.layoutManager = layoutManager
                     toolbarTopics.fadeIn()
                     toolbarHome.fadeIn()
                     shrimmerViewContaner.hide()
@@ -92,6 +83,7 @@ class GalleryFragment :
 
                     val topicId = topicIdAndPosition.first
                     if (topicId == TopicsModelItem.Type.USER) {
+                        layoutRecommended.show()
                         textViewTitleTopicCover.text = "تازه ترین ها"
                         textViewDescriptionTopicCover.text =
                             "بیش از 3 میلیون تصویر با وضوح بالا رایگان توسط سخاوتمندترین جامعه عکاسان جهان برای شما آورده شده است."
@@ -103,8 +95,35 @@ class GalleryFragment :
                             .error(R.drawable.ic_error_photos)
                             .into(binding.imageViewTopicCover)
                     } else {
+                        layoutTopics.show()
                         setCoverImage(topicIdAndPosition.second, it)
-                        getTopicPhotoList(allPhotoAdapter, topicId)
+                        if (topicsPhotoAdapter.itemCount <= 0) {
+                            viewModel.allTopicPhotos(topicId)
+                            collapsBanner.expand()
+                        }
+                        topicsPhotoAdapter.addLoadStateListener { loadState ->
+                            binding.apply {
+                                shrimmerViewContaner.isVisible =
+                                    loadState.source.refresh is LoadState.NotLoading
+                                shrimmerViewContaner.isVisible =
+                                    loadState.source.refresh is LoadState.Loading
+                                recyclerViewTopics.isVisible =
+                                    loadState.source.refresh is LoadState.NotLoading
+                                layoutGallery.isVisible =
+                                    loadState.source.refresh is LoadState.NotLoading
+                                textViewError.isVisible =
+                                    loadState.source.refresh is LoadState.Error
+                                buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
+                                if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && topicsPhotoAdapter.itemCount < 1) {
+                                    recyclerViewTopics.isVisible = false
+                                    shrimmerViewContaner.isVisible = false
+                                    if (shrimmerViewContaner.isShimmerStarted) shrimmerViewContaner.stopShimmer()
+                                    textViewEmpty.isVisible = true
+                                } else {
+                                    textViewEmpty.isVisible = false
+                                }
+                            }
+                        }
                     }
                 } else {
                     layoutTopics.hide()
@@ -116,9 +135,17 @@ class GalleryFragment :
                 }
             }
         }
+
+        viewModel.topicsPhotos.observe(viewLifecycleOwner) {
+            it.let {
+                topicsPhotoAdapter.submitData(viewLifecycleOwner.lifecycle, it)
+            }
+        }
+
     }
 
     private fun setupViews() = binding.apply {
+        collapsBanner.collapse()
         val nightModeFlags = requireActivity().resources.configuration.uiMode and
                 Configuration.UI_MODE_NIGHT_MASK
         when (nightModeFlags) {
@@ -144,6 +171,18 @@ class GalleryFragment :
         requireActivity().window.statusBarColor = ContextCompat.getColor(
             requireActivity(),
             R.color.status_bar_color
+        )
+
+        recyclerViewRecommended.itemAnimator = null
+        recyclerViewRecommended.adapter = allPhotoAdapter.withLoadStateHeaderAndFooter(
+            header = AllPhotoLoadStateAdapter { allPhotoAdapter.retry() },
+            footer = AllPhotoLoadStateAdapter { allPhotoAdapter.retry() },
+        )
+
+        recyclerViewTopics.itemAnimator = null
+        recyclerViewTopics.adapter = topicsPhotoAdapter.withLoadStateHeaderAndFooter(
+            header = TopicsPhotoLoadStateAdapter { topicsPhotoAdapter.retry() },
+            footer = TopicsPhotoLoadStateAdapter { topicsPhotoAdapter.retry() },
         )
 
         buttonRetry.setOnClickListener {
@@ -175,13 +214,7 @@ class GalleryFragment :
         layoutRecommended.show()
         layoutTopics.hide()
 
-        recyclerViewRecommended.itemAnimator = null
-        recyclerViewRecommended.adapter = allPhotoAdapter.withLoadStateHeaderAndFooter(
-            header = AllPhotoLoadStateAdapter { allPhotoAdapter.retry() },
-            footer = AllPhotoLoadStateAdapter { allPhotoAdapter.retry() },
-        )
-
-        viewModel.allPhotos.observe(viewLifecycleOwner) {
+        viewModel.newPhotos.observe(viewLifecycleOwner) {
             it.let {
                 allPhotoAdapter.submitData(viewLifecycleOwner.lifecycle, it)
             }
@@ -202,49 +235,6 @@ class GalleryFragment :
                 }
             }
         }
-    }
-
-    private fun getTopicPhotoList(allPhotoAdapter: AllPhotoAdapter, topicId: String) {
-        binding.apply {
-            layoutRecommended.hide()
-            layoutTopics.show()
-
-            recyclerViewTopics.itemAnimator = null
-            recyclerViewTopics.adapter = allPhotoAdapter.withLoadStateHeaderAndFooter(
-                header = AllPhotoLoadStateAdapter { allPhotoAdapter.retry() },
-                footer = AllPhotoLoadStateAdapter { allPhotoAdapter.retry() },
-            )
-
-            viewModel.topicPhotos(topicId).observe(viewLifecycleOwner) {
-                it.let {
-                    allPhotoAdapter.submitData(viewLifecycleOwner.lifecycle, it)
-                }
-            }
-
-            allPhotoAdapter.addLoadStateListener { loadState ->
-                binding.apply {
-                    shrimmerViewContaner.isVisible =
-                        loadState.source.refresh is LoadState.NotLoading
-                    shrimmerViewContaner.isVisible =
-                        loadState.source.refresh is LoadState.Loading
-                    recyclerViewTopics.isVisible =
-                        loadState.source.refresh is LoadState.NotLoading
-                    layoutGallery.isVisible =
-                        loadState.source.refresh is LoadState.NotLoading
-                    textViewError.isVisible = loadState.source.refresh is LoadState.Error
-                    buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
-                    if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && allPhotoAdapter.itemCount < 1) {
-                        recyclerViewTopics.isVisible = false
-                        shrimmerViewContaner.isVisible = false
-                        if (shrimmerViewContaner.isShimmerStarted) shrimmerViewContaner.stopShimmer()
-                        textViewEmpty.isVisible = true
-                    } else {
-                        textViewEmpty.isVisible = false
-                    }
-                }
-            }
-        }
-
     }
 
     override fun onItemClick(photo: AllPhotosItem) {
@@ -298,9 +288,15 @@ class GalleryFragment :
                         .error(R.drawable.ic_error_photos)
                         .into(binding.imageViewTopicCover)
                     getRecommendedData()
+                    collapsBanner.expand()
+                    recyclerViewRecommended.scrollToPosition(0)
                 } else {
+                    layoutRecommended.hide()
+                    collapsBanner.expand()
                     setCoverImage(topicsModelItem)
-                    getTopicPhotoList(allPhotoAdapter, topicsModelItem.id)
+                    viewModel.allTopicPhotos(topicsModelItem.id)
+                    layoutTopics.show()
+                    recyclerViewTopics.scrollToPosition(0)
                 }
             }
         }
@@ -308,7 +304,6 @@ class GalleryFragment :
     }
 
     private fun setCoverImage(topicsModelItem: TopicsModelItem) = binding.apply {
-
         if (topicsModelItem.coverPhoto?.premium != true) {
             val urlCover = topicsModelItem.coverPhoto?.urls?.regular
             Glide.with(requireContext())

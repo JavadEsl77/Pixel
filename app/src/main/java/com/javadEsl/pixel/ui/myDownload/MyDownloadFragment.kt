@@ -95,7 +95,9 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
         }
 
         adapter = MyDownloadAdapter(this)
-        adapter.submitList(viewModel.getDownloadPictures())
+        adapter.submitList(viewModel.getDownloadPictures().sortedByDescending {
+            it.lastModified()
+        })
         binding.apply {
 
             layoutToolbar.textViewTitleToolbarScreens.text =
@@ -103,17 +105,21 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
             layoutToolbar.cardViewBackToolbarScreens.setOnClickListener {
                 findNavController().popBackStack()
             }
+            updateViews()
 
-            if (adapter.currentList.isEmpty()) {
-                recyclerViewMyDownload.isVisible = false
-                layoutMyDownloadError.isVisible = true
-            } else {
-                recyclerViewMyDownload.isVisible = true
-                layoutMyDownloadError.isVisible = false
-                recyclerViewMyDownload.setHasFixedSize(true)
-                recyclerViewMyDownload.itemAnimator = null
-                recyclerViewMyDownload.adapter = adapter
-            }
+        }
+    }
+    private fun updateViews() = binding.apply{
+        val photo = viewModel.getDownloadPictures()
+        if (photo.isEmpty()) {
+            recyclerViewMyDownload.isVisible = false
+            layoutMyDownloadError.isVisible = true
+        } else {
+            recyclerViewMyDownload.isVisible = true
+            layoutMyDownloadError.isVisible = false
+            recyclerViewMyDownload.setHasFixedSize(true)
+            recyclerViewMyDownload.itemAnimator = null
+            recyclerViewMyDownload.adapter = adapter
         }
     }
 
@@ -203,6 +209,7 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
                     if (it) {
                         alert(getString(R.string.string_alert_delete_photo))
                         adapter.submitList(viewModel.getDownloadPictures())
+                        updateViews()
                     }
                 }
             }

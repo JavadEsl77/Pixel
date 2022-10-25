@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.Window
@@ -16,6 +17,8 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
@@ -30,6 +33,7 @@ import com.javadEsl.pixel.R
 import com.javadEsl.pixel.data.model.allPhotos.AllPhotosItem
 import com.javadEsl.pixel.data.model.search.PixelPhoto
 import com.javadEsl.pixel.databinding.FragmentSearchBinding
+import com.javadEsl.pixel.helper.extensions.collapse
 import com.javadEsl.pixel.helper.extensions.fadeOut
 import com.javadEsl.pixel.helper.extensions.hide
 import com.javadEsl.pixel.helper.extensions.show
@@ -42,6 +46,7 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
     UnsplashPhotoAdapter.OnItemClickListener {
     private val viewModel by viewModels<SearchingViewModel>()
     private var _binding: FragmentSearchBinding? = null
+    private lateinit var adapter: UnsplashPhotoAdapter
     private val binding get() = _binding!!
 
     private var previousSearchArrayList: MutableList<String> = ArrayList()
@@ -53,7 +58,7 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSearchBinding.bind(view)
-        val adapter = UnsplashPhotoAdapter(this, requireActivity())
+        adapter = UnsplashPhotoAdapter(this, requireActivity())
         binding.apply {
 
             setStatusBarConfig()
@@ -141,36 +146,9 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
                         requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
                     inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
 
-                    adapter.addLoadStateListener { loadState ->
-                        binding.apply {
-                            shrimmerViewContanerSearch.isVisible =
-                                loadState.source.refresh is LoadState.Loading
-                            recSearching.isVisible =
-                                loadState.source.refresh is LoadState.NotLoading
-                            layoutSearch.isVisible =
-                                loadState.source.refresh is LoadState.NotLoading
-                            layoutSearch.isVisible =
-                                loadState.source.refresh is LoadState.NotLoading
-                            textViewError.isVisible = loadState.source.refresh is LoadState.Error
-                            buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
-                            if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && adapter.itemCount < 1) {
-                                shrimmerViewContanerSearch.isVisible = false
-                                recSearching.isVisible = false
-                                textViewEmpty.isVisible = true
-                            } else {
-                                textViewEmpty.isVisible = false
-                            }
-                        }
-                    }
+
                     performSearch()
 
-                    shrimmerViewContanerSearch.show()
-                    shrimmerViewContanerSearch.startShimmer()
-                    layoutSearchList.show()
-                    layoutPreviousSearchList.hide()
-                    layoutSuggestionList.hide()
-
-                    recSearching.verticalScrollbarPosition = 0
                     return@OnEditorActionListener true
                 }
                 false
@@ -182,32 +160,7 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
                     requireContext().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
 
-                adapter.addLoadStateListener { loadState ->
-                    binding.apply {
-                        shrimmerViewContanerSearch.isVisible = loadState.source.refresh is LoadState.Loading
-                        recSearching.isVisible = loadState.source.refresh is LoadState.NotLoading
-                        layoutSearch.isVisible = loadState.source.refresh is LoadState.NotLoading
-                        textViewError.isVisible = loadState.source.refresh is LoadState.Error
-                        buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
-                        if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && adapter.itemCount < 1) {
-                            shrimmerViewContanerSearch.isVisible = false
-                            recSearching.isVisible = false
-                            textViewEmpty.isVisible = true
-                        } else {
-                            textViewEmpty.isVisible = false
-                        }
-                    }
-                }
-
                 performSearch()
-
-                shrimmerViewContanerSearch.show()
-                shrimmerViewContanerSearch.startShimmer()
-                layoutSearchList.show()
-                layoutPreviousSearchList.hide()
-                layoutSuggestionList.hide()
-
-                recSearching.verticalScrollbarPosition = 0
             }
 
             textViewClearPrevious.setOnClickListener {
@@ -260,23 +213,24 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
 
         viewModel.liveDataSuggestPhoto.observe(viewLifecycleOwner) { data ->
             data?.let {
-                val suggestAdapter =
-                    SuggestPhotoAdapter(
-                        data.shuffled(),
-                        this@SearchingFragment
-                    )
-                recSuggest.itemAnimator = null
-                val suggestLayoutManager =
-                    StaggeredGridLayoutManager(3, RecyclerView.VERTICAL)
-                suggestLayoutManager.reverseLayout = true
-                recSuggest.layoutManager = suggestLayoutManager
-                recSuggest.adapter = suggestAdapter
-                layoutSuggestion.show()
-                textViewEmpty.hide()
-                buttonRetry.hide()
-                textViewError.hide()
-                shrimmerViewContanerSuggestion.hide()
-                shrimmerViewContanerSuggestion.stopShimmer()
+                    val suggestAdapter =
+                        SuggestPhotoAdapter(
+                            data.shuffled(),
+                            this@SearchingFragment
+                        )
+                    recSuggest.itemAnimator = null
+                    val suggestLayoutManager =
+                        StaggeredGridLayoutManager(3, RecyclerView.VERTICAL)
+                    suggestLayoutManager.reverseLayout = true
+
+                    recSuggest.layoutManager = suggestLayoutManager
+                    recSuggest.adapter = suggestAdapter
+                    layoutSuggestion.show()
+                    textViewEmpty.hide()
+                    buttonRetry.hide()
+                    textViewError.hide()
+                    shrimmerViewContanerSuggestion.hide()
+                    shrimmerViewContanerSuggestion.stopShimmer()
             }
         }
     }
@@ -338,13 +292,45 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
         )
     }
 
-    private fun performSearch() {
+    private fun performSearch() = binding.apply {
         if (binding.edtSearch.text.toString().isEmpty()) {
             binding.edtSearch.error = getString(R.string.string_error_edittext_search)
         } else {
-            setSearchCash()
-            viewModel.searchPhotos(binding.edtSearch.text.toString())
-            binding.recSearching.scrollToPosition(0)
+            if (edtSearch.text.toString() != viewModel.getSearchStatus()) {
+                shrimmerViewContanerSearch.show()
+                shrimmerViewContanerSearch.startShimmer()
+                layoutSearchList.show()
+                layoutPreviousSearchList.hide()
+                layoutSuggestionList.hide()
+
+
+                adapter.addLoadStateListener { loadState ->
+                    binding.apply {
+                        shrimmerViewContanerSearch.isVisible =
+                            loadState.source.refresh is LoadState.Loading
+                        recSearching.isVisible =
+                            loadState.source.refresh is LoadState.NotLoading
+                        layoutSearch.isVisible =
+                            loadState.source.refresh is LoadState.NotLoading
+                        layoutSearch.isVisible =
+                            loadState.source.refresh is LoadState.NotLoading
+                        textViewError.isVisible = loadState.source.refresh is LoadState.Error
+                        buttonRetry.isVisible = loadState.source.refresh is LoadState.Error
+                        if (loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && adapter.itemCount < 1) {
+                            shrimmerViewContanerSearch.isVisible = false
+                            recSearching.isVisible = false
+                            textViewEmpty.isVisible = true
+                        } else {
+                            textViewEmpty.isVisible = false
+                        }
+                    }
+                }
+                recSearching.verticalScrollbarPosition = 0
+                setSearchCash()
+                viewModel.searchPhotos(edtSearch.text.toString())
+                binding.recSearching.scrollToPosition(0)
+            }
+
         }
     }
 
@@ -403,6 +389,7 @@ class SearchingFragment : Fragment(R.layout.fragment_search),
 
     override fun onItemClick(suggest: String) {
         binding.apply {
+            edtSearch.error = null
             edtSearch.setText(suggest)
             cardViewSearch.performClick()
         }
