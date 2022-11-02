@@ -6,7 +6,6 @@ import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.Window
@@ -15,12 +14,8 @@ import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -45,6 +40,7 @@ class GalleryFragment :
     private lateinit var allPhotoAdapter: AllPhotoAdapter
     private lateinit var topicsPhotoAdapter: TopicsPhotoAdapter
     private lateinit var topicsAdapter: TopicsAdapter
+    private lateinit var listTopics:List<TopicsModelItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,18 +63,19 @@ class GalleryFragment :
                     buttonRetry.hide()
                     textViewError.hide()
                     emptyDataReceiver = false
-
+                    val topicIdAndPosition = viewModel.getTopicIdAndPosition(it)
+                    listTopics = it
                     topicsAdapter = TopicsAdapter(
                         this@GalleryFragment,
                         it,
-                        viewModel.getTopicIdAndPosition().second
+                        topicIdAndPosition.second
                     )
                     recTopics.adapter = topicsAdapter
                     toolbarTopics.fadeIn()
                     toolbarHome.fadeIn()
                     shrimmerViewContaner.hide()
 
-                    val topicIdAndPosition = viewModel.getTopicIdAndPosition()
+
                     recTopics.scrollToPosition(topicIdAndPosition.second)
 
                     val topicId = topicIdAndPosition.first
@@ -276,7 +273,7 @@ class GalleryFragment :
 
     override fun onTopicsItemClick(topicsModelItem: TopicsModelItem, position: Int) {
         binding.apply {
-            if (topicsModelItem.id != viewModel.getTopicIdAndPosition().first) {
+            if (topicsModelItem.id != viewModel.getTopicIdAndPosition(listTopics).first) {
                 if (topicsModelItem.id == TopicsModelItem.Type.USER) {
                     textViewTitleTopicCover.text = "تازه ترین ها"
                     textViewDescriptionTopicCover.text =
