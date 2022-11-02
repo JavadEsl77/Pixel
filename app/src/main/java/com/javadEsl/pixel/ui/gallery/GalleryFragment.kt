@@ -57,6 +57,7 @@ class GalleryFragment :
     }
 
     private fun observe() = binding.apply {
+        shrimmerViewContaner.startShimmer()
         viewModel.liveDataTopics.observe(viewLifecycleOwner) {
             it?.let {
                 if (it.isNotEmpty()) {
@@ -73,7 +74,6 @@ class GalleryFragment :
                     recTopics.adapter = topicsAdapter
                     toolbarTopics.fadeIn()
                     toolbarHome.fadeIn()
-                    shrimmerViewContaner.hide()
 
 
                     recTopics.scrollToPosition(topicIdAndPosition.second)
@@ -274,6 +274,9 @@ class GalleryFragment :
     override fun onTopicsItemClick(topicsModelItem: TopicsModelItem, position: Int) {
         binding.apply {
             if (topicsModelItem.id != viewModel.getTopicIdAndPosition(listTopics).first) {
+                shrimmerViewContaner.show()
+                shrimmerViewContaner.startShimmer()
+                layoutRecommended.hide()
                 if (topicsModelItem.id == TopicsModelItem.Type.USER) {
                     textViewTitleTopicCover.text = "تازه ترین ها"
                     textViewDescriptionTopicCover.text =
