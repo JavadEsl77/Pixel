@@ -195,8 +195,11 @@ class GalleryFragment :
         }
 
         cardMyDownload.setOnClickListener {
-            val action =
-                GalleryFragmentDirections.actionGalleryFragmentToMyDownloadFragment()
+//            val action =
+//                GalleryFragmentDirections.actionGalleryFragmentToMyDownloadFragment()
+//            findNavController().navigate(action)
+
+            val action = GalleryFragmentDirections.actionGalleryFragmentToAuthFragment()
             findNavController().navigate(action)
         }
 

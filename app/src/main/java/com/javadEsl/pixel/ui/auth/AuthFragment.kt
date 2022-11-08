@@ -10,12 +10,14 @@ import androidx.lifecycle.ViewModel
 import com.javadEsl.pixel.R
 import com.javadEsl.pixel.databinding.FragmentAuthBinding
 import com.javadEsl.pixel.databinding.FragmentDetailsBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class AuthFragment : Fragment(R.layout.fragment_auth) {
 
     private var _binding: FragmentAuthBinding? = null
     private val binding get() = _binding!!
-    private val viewModel by viewModels<AuthViewModel>()
+//    private val viewModel by viewModels<AuthViewModel>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

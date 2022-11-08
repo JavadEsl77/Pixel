@@ -4,6 +4,7 @@
 
     <solid
         android:color="@color/color_background_edittext" />
+
     <corners
         android:radius="15dp"/>
 

@@ -31,6 +31,9 @@
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right"/>
+        <action
+            android:id="@+id/action_galleryFragment_to_authFragment"
+            app:destination="@id/authFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailsFragment"
@@ -70,4 +73,8 @@
             android:id="@+id/action_searchingFragment_to_detailsFragment"
             app:destination="@id/detailsFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/authFragment"
+        android:name="com.javadEsl.pixel.ui.auth.AuthFragment"
+        android:label="AuthFragment" />
 </navigation>
