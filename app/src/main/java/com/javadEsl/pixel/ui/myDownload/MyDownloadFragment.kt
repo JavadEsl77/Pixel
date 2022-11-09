@@ -145,8 +145,7 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
             requireContext(), R.style.AppBottomSheetDialogTheme
         )
 
-        val sheetDialog =
-            LayoutBottomSheetPhotoBinding.inflate(LayoutInflater.from(requireContext()))
+        val sheetDialog = LayoutBottomSheetPhotoBinding.inflate(LayoutInflater.from(requireContext()))
         dialog.setContentView(sheetDialog.root)
         dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         dialog.behavior.isDraggable = false

@@ -169,6 +169,7 @@
 
 
                 <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/edittext_phone_number"
                     android:layout_width="match_parent"
                     android:layout_height="52dp"
                     android:layout_marginTop="10dp"
@@ -183,7 +184,20 @@
                     android:paddingEnd="15dp"
                     android:textSize="14dp" />
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/text_view_alert_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:textColor="@color/color_btn_admob"
+                    android:layout_marginTop="10dp"
+                    android:textStyle="bold"
+                    android:text="از آنجا که شماره جدیدی برای ارسال کد وارد کردید باید به مدت 00:15 صبر نمایید"
+                    android:textSize="12dp" />
+
                 <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/button_opt"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"

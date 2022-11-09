@@ -130,4 +130,7 @@ dependencies {
     //shimmer
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
+    //pinview
+    implementation 'io.github.chaosleung:pinview:1.4.4'
+
 }

@@ -52,3 +52,38 @@ val Int.toDp: Int
  */
 val Int.toPx: Int
     get() = (this * Resources.getSystem().displayMetrics.density).toInt()
+
+
+/**
+ * convert time in millis to readable time format
+ * ex: 10 : 05 : 58 : 60
+ * day : hour : minutes : seconds
+ *
+ * @return
+ */
+fun Long.toTime(giveDay: Boolean = false): String {
+    val timeMs = this
+    if (timeMs <= 0 || timeMs >= 30 * 24 * 60 * 60 * 1000L)
+        return "00:00"
+
+    val totalSeconds = timeMs / 1000
+    val seconds = (totalSeconds % 60)
+    val minutes = (totalSeconds % 3600 / 60)
+    val hours = (totalSeconds % 86400 / 3600)
+    val days = (totalSeconds % (86400 * 30) / 86400)
+
+    val mFormatter = Formatter(StringBuilder(), Locale.getDefault())
+
+    return when {
+        days > 0  -> {
+            if (giveDay)
+                mFormatter.format("%d", days).toString()
+            else
+                mFormatter.format("%d:%d:%02d:%02d", days, hours, minutes, seconds).toString()
+        }
+        hours > 0 ->
+            mFormatter.format("%d:%02d:%02d", hours, minutes, seconds).toString()
+        else      ->
+            mFormatter.format("%02d:%02d", minutes, seconds).toString()
+    }
+}

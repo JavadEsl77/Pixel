@@ -26,5 +26,6 @@
     <color name="color_download_button">#405aa5</color>
     <color name="color_download_popup">#E4F5FF</color>
     <color name="color_background_card_icon_delete_share">#80FFFFFF</color>
+    <color name="color_background_edittext_otp">#ECECEC</color>
 
 </resources>
