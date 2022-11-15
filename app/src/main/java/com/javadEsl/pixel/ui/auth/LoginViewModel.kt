@@ -4,13 +4,12 @@ import android.os.CountDownTimer
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.huxq17.download.DownloadProvider.DownloadTable.FINISHED
 import com.javadEsl.pixel.helper.extensions.toTime
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthViewModel @Inject constructor() : ViewModel() {
+class LoginViewModel @Inject constructor() : ViewModel() {
 
     private var timer: CountDownTimer? = null
 
@@ -25,7 +24,7 @@ class AuthViewModel @Inject constructor() : ViewModel() {
 
         if (timer != null) return
 
-        timer = object : CountDownTimer(20000, 1000) {
+        timer = object : CountDownTimer(120000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 _startTime.postValue(millisUntilFinished.toTime())
             }

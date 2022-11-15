@@ -1,14 +1,20 @@
 package com.javadEsl.pixel.ui.auth
 
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.javadEsl.pixel.R
-import com.javadEsl.pixel.databinding.FragmentAuthBinding
+import com.javadEsl.pixel.databinding.FragmentLoginBinding
 import com.javadEsl.pixel.databinding.LayoutBottomSheetOptBinding
 import com.javadEsl.pixel.helper.extensions.fadeIn
 import com.javadEsl.pixel.helper.extensions.fadeOut
@@ -18,11 +24,11 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class AuthFragment : Fragment(R.layout.fragment_auth) {
+class LoginFragment : Fragment(R.layout.fragment_login) {
 
-    private var _binding: FragmentAuthBinding? = null
+    private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: AuthViewModel by viewModels()
+    private val viewModel: LoginViewModel by viewModels()
     private var phone = ""
 
     override fun onCreateView(
@@ -31,7 +37,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
         savedInstanceState: Bundle?
     ): View {
         if (_binding == null) {
-            _binding = FragmentAuthBinding.inflate(inflater, container, false)
+            _binding = FragmentLoginBinding.inflate(inflater, container, false)
         }
         return binding.root
     }
@@ -64,24 +70,40 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
                     }
                 }
 
+            }
 
-                viewModel.startTime.observe(viewLifecycleOwner) {
-                    if (AuthViewModel.FINISHED == it) {
-                        phone = ""
-                        buttonOpt.text = "دریافت کد"
-                        textViewAlertPhone.fadeOut()
-                    } else {
-                        buttonOpt.text = "وارد کردن کد تایید"
-                        textViewAlertPhone.text =
-                            " از آنجا که شماره جدیدی برای ارسال کد وارد کردید باید به مدت  $it  صبر نمایید "
-                    }
-                }
+            textViewRegister.setOnClickListener {
+                val action = LoginFragmentDirections.actionAuthFragmentToRegisterFragment()
+                findNavController().navigate(action)
+            }
+
+            edittextPhoneNumber.setOnFocusChangeListener { view, b ->
+                Handler(Looper.getMainLooper()).postDelayed({
+                    scrollViewLogin.fullScroll(View.FOCUS_DOWN)
+                }, 300)
+            }
+
+            edittextPhoneNumber.setOnClickListener {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    scrollViewLogin.fullScroll(View.FOCUS_DOWN)
+                }, 300)
+
             }
         }
     }
 
-    private fun observe() {
-
+    private fun observe() = binding.apply {
+        viewModel.startTime.observe(viewLifecycleOwner) {
+            if (LoginViewModel.FINISHED == it) {
+                phone = ""
+                buttonOpt.text = "دریافت کد"
+                textViewAlertPhone.fadeOut()
+            } else {
+                buttonOpt.text = "وارد کردن کد تایید"
+                textViewAlertPhone.text =
+                    " از آنجا که شماره جدیدی برای ارسال کد وارد کردید باید به مدت  $it  صبر نمایید "
+            }
+        }
     }
 
     private fun showOptBottomSheetDialog(phoneNumber: String) {
@@ -95,7 +117,7 @@ class AuthFragment : Fragment(R.layout.fragment_auth) {
             textViewAlertInfoNumber.text = " کد تایید به شماره تلفن  $phoneNumber  ارسال شد "
 
             viewModel.startTime.observe(viewLifecycleOwner) {
-                if (AuthViewModel.FINISHED == it) {
+                if (LoginViewModel.FINISHED == it) {
                     textViewOptTimer.hide()
                     layoutRetrySend.show()
                 } else {

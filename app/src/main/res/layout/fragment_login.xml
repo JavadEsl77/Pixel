@@ -6,9 +6,8 @@
     android:background="@color/color_background_action_bar"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_toolbar_screens" />
-
     <ScrollView
+        android:id="@+id/scrollView_login"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -131,14 +130,6 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="7dp"
-                android:layout_marginRight="7dp"
-                android:layout_marginBottom="16dp"
-                android:background="#EAEAEA" />
-
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -215,6 +206,7 @@
                     android:orientation="horizontal">
 
                     <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/text_view_register"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/text_title"
