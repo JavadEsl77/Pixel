@@ -57,7 +57,6 @@ class WallpaperWorker(appContext: Context, workerParams: WorkerParameters) :
             }
 
             setWall(imgFile)
-            saveFileName(imgFile.name)
         }
     }
 

@@ -74,6 +74,8 @@ import me.saket.cascade.CascadePopupMenu
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.*
 
 @AndroidEntryPoint
 class DetailsFragment : Fragment(R.layout.fragment_details),
@@ -646,9 +648,12 @@ class DetailsFragment : Fragment(R.layout.fragment_details),
             }
         }
 
+        val sdf = SimpleDateFormat("dd-M-yyyy hh:mm:ss")
+        val currentDate = sdf.format(Date())
+
         val root = Environment.getExternalStorageDirectory()
         val myDir = File(
-            "${root}/${getString(R.string.app_name)}/${modelPhoto.id}/${typeFile}.jpg"
+            "${root}/${getString(R.string.app_name)}/${modelPhoto.id}/${"$typeFile-$currentDate"}.jpg"
         )
         myDir.mkdirs()
 
