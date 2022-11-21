@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
+import androidx.work.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -25,7 +26,9 @@ import com.javadEsl.pixel.data.model.search.convertedUrl
 import com.javadEsl.pixel.data.model.topics.TopicsModelItem
 import com.javadEsl.pixel.databinding.FragmentGalleryBinding
 import com.javadEsl.pixel.helper.extensions.*
+import com.javadEsl.pixel.service.WallpaperWorker
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class GalleryFragment :
@@ -47,6 +50,31 @@ class GalleryFragment :
         allPhotoAdapter = AllPhotoAdapter(this, requireActivity())
         topicsPhotoAdapter = TopicsPhotoAdapter(this, requireActivity())
         viewModel.topicsList()
+
+        myPeriodicWork()
+
+
+    }
+
+    private fun myPeriodicWork() {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.NOT_REQUIRED)
+            .build()
+
+        val myRequest = PeriodicWorkRequest.Builder(
+            WallpaperWorker::class.java,
+            15,
+            TimeUnit.MINUTES
+        ).setConstraints(constraints)
+            .addTag("my_id")
+            .build()
+
+        WorkManager.getInstance(requireContext())
+            .enqueueUniquePeriodicWork(
+                "my_id",
+                ExistingPeriodicWorkPolicy.KEEP,
+                myRequest
+            )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -195,12 +223,12 @@ class GalleryFragment :
         }
 
         cardMyDownload.setOnClickListener {
-//            val action =
-//                GalleryFragmentDirections.actionGalleryFragmentToMyDownloadFragment()
-//            findNavController().navigate(action)
-
-            val action = GalleryFragmentDirections.actionGalleryFragmentToAuthFragment()
+            val action =
+                GalleryFragmentDirections.actionGalleryFragmentToMyDownloadFragment()
             findNavController().navigate(action)
+
+//            val action = GalleryFragmentDirections.actionGalleryFragmentToAuthFragment()
+//            findNavController().navigate(action)
         }
 
     }

@@ -23,6 +23,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.transition.AutoTransition
+import androidx.transition.TransitionManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -31,9 +33,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.javadEsl.pixel.*
 import com.javadEsl.pixel.databinding.FragmentMyDownloadBinding
 import com.javadEsl.pixel.databinding.LayoutBottomSheetPhotoBinding
-import com.javadEsl.pixel.helper.extensions.alert
-import com.javadEsl.pixel.helper.extensions.collapse
-import com.javadEsl.pixel.helper.extensions.expand
+import com.javadEsl.pixel.helper.extensions.*
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.File
 import java.io.FileOutputStream
@@ -85,6 +85,25 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
 
         isOnOpeningPage = true
         getFileGallery()
+
+        binding.apply {
+
+            headerView.setOnClickListener {
+
+                if (hiddenView.visibility == View.GONE) {
+                    hiddenView.expand()
+                }else{
+                    hiddenView.collapse()
+                }
+
+
+//                if (hiddenView.isVisible) {
+//                    hiddenView.hide()
+//                } else {
+//                    hiddenView.show()
+//                }
+            }
+        }
     }
 
     private fun getFileGallery() {
@@ -109,7 +128,8 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
 
         }
     }
-    private fun updateViews() = binding.apply{
+
+    private fun updateViews() = binding.apply {
         val photo = viewModel.getDownloadPictures()
         if (photo.isEmpty()) {
             recyclerViewMyDownload.isVisible = false
@@ -145,7 +165,8 @@ class MyDownloadFragment : Fragment(R.layout.fragment_my_download),
             requireContext(), R.style.AppBottomSheetDialogTheme
         )
 
-        val sheetDialog = LayoutBottomSheetPhotoBinding.inflate(LayoutInflater.from(requireContext()))
+        val sheetDialog =
+            LayoutBottomSheetPhotoBinding.inflate(LayoutInflater.from(requireContext()))
         dialog.setContentView(sheetDialog.root)
         dialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
         dialog.behavior.isDraggable = false
