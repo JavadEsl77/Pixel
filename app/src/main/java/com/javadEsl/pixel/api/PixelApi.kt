@@ -2,6 +2,7 @@ package com.javadEsl.pixel.api
 
 import com.javadEsl.pixel.data.model.allPhotos.AllPhotosItem
 import com.javadEsl.pixel.data.model.autocomplete.AutocompleteModel
+import com.javadEsl.pixel.data.model.collections.Collections
 import com.javadEsl.pixel.data.model.detail.ModelPhoto
 import com.javadEsl.pixel.data.model.search.PixelPhoto
 import com.javadEsl.pixel.data.model.topics.TopicsModelItem
@@ -72,4 +73,12 @@ interface PixelApi {
 
     @GET("pixel/update")
     suspend fun checkUpdate(): ApiResponse<Update>
+
+
+    @GET("napi/search/collections")
+    suspend fun searchCollection(
+        @Query("query") query: String,
+        @Query("page") page: Int,
+        @Query("per_page") perPage: Int
+    ): Collections
 }
