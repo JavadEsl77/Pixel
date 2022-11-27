@@ -155,7 +155,7 @@ class GalleryViewModel @Inject constructor(
     }
 
     fun getTopicIdAndPosition(list:List<TopicsModelItem>): Pair<String, Int> {
-        var position = pref.getInt("topic_position_item", 0)
+        var position = pref.getInt("topic_position_item", list.lastIndex)
         if (list.size < position){
             position = list.lastIndex
         }

@@ -27,6 +27,7 @@
                 android:layout_weight="1"
                 android:clipToPadding="false"
                 android:orientation="vertical"
+                android:paddingLeft="6dp"
                 android:paddingBottom="45dp"
                 app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 app:spanCount="2"
@@ -64,7 +65,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:background="@drawable/shape_bottom_sheet_preview"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <LinearLayout
                 android:id="@+id/header_view"
@@ -151,8 +153,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:textSize="14dp"
-                        android:text="ثبت خودکار تصویر پس زمینه" />
+                        android:text="ثبت خودکار تصویر پس زمینه"
+                        android:textSize="14dp" />
 
                     <CheckBox
                         android:layout_width="wrap_content"

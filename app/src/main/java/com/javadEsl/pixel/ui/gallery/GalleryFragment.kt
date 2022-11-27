@@ -51,11 +51,9 @@ class GalleryFragment :
         topicsPhotoAdapter = TopicsPhotoAdapter(this, requireActivity())
         viewModel.topicsList()
 
-        myPeriodicWork()
-
-
     }
 
+    //در اپدیت جدید از سرویس ثبت خود کار والپیپر استفاده کن
     private fun myPeriodicWork() {
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.NOT_REQUIRED)

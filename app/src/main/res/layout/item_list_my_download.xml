@@ -5,8 +5,10 @@
     android:id="@+id/card_view_item_my_download"
     android:layout_width="match_parent"
     android:layout_height="150dp"
-    app:cardCornerRadius="0dp"
-    app:cardElevation="5dp">
+    android:layout_marginTop="6dp"
+    android:layout_marginRight="6dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="6dp">
 
     <View
         android:layout_width="match_parent"
@@ -23,7 +25,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="55dp"
+        android:layout_height="35dp"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom">
 
@@ -31,16 +33,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="10dp"
+            android:layout_centerHorizontal="false"
+            android:layout_margin="7dp"
             app:cardBackgroundColor="#CCFFFFFF"
-            app:cardCornerRadius="10dp"
+            app:cardCornerRadius="7dp"
             app:cardElevation="0dp">
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_alignParentBottom="true"
                 android:gravity="center"
                 android:paddingTop="3dp"
                 android:paddingBottom="3dp"
@@ -49,21 +50,9 @@
                 android:paddingRight="12dp">
 
                 <TextView
-                    android:id="@+id/text_view_quality"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:textColor="@color/purple_200"
-                    android:textSize="11dp"
-                    android:textStyle="bold"
-                    tools:text="Full-HD" />
-
-
-                <TextView
                     android:id="@+id/text_view_file_size"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="7dp"
                     android:gravity="center"
                     android:textSize="10dp"
                     tools:text="9.33 MB" />

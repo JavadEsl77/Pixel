@@ -44,9 +44,6 @@ class MyDownloadAdapter(
         fun bind(photo: File) {
 
             binding.apply {
-
-                val quality = photo.name.replace(".jpg", "")
-                textViewQuality.text = quality
                 textViewFileSize.text = "( " + photo.size() + " )"
 
                 Glide.with(itemView)
